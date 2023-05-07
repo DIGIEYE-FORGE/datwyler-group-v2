@@ -1,0 +1,103 @@
+# Default values for apps.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  containerPort: ""
+  repository: ""
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: __enabledIngress__
+  host: __ingressHost__
+  className: ""
+  annotations:
+    {}
+    #kubernetes.io/ingress.class: nginx
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+
+certificate:
+  enabled: __enabledCertificate__
+  issuerRef:
+    name: ""
+    kind: ""
+
+resources:
+  {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. Thi.s also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+extraVolumeMounts:
+  ## Additional volumeMounts to the pod.
+  #  - name: additional-volume-mount
+  #    mountPath: /var/additional-volume-path
+  - mountPath: /usr/src/app/uploads
+    name: backend-uploads-data
+
+extraVolumes:
+  ## Additional volumes to the pod.
+  #  - name: additional-volume
+  #    emptyDir: {}
+  - name: backend-uploads-data
+    persistentVolumeClaim:
+      claimName: digi-forge-backend-data-dev
+
+envVars:
+  - name: HTTP_PORT
+    value: "3000"
+  - name: GRPC_PORT
+    value: "5000"
+  - name: JWT_SECRET
+    value: 2d7400ef9dead7e6f2ebf576a029060c9a4804865403cce984
+  - name: ACCESS_TOKEN_EXPIRES_IN
+    value: "15m"
+  - name: REFRESH_TOKEN_EXPIRES_IN
+    value: "1h"
+  - name: REDIS_HOST
+    value: redis-dev-master.db-dev.svc.cluster.local
+  - name: REDIS_PORT
+    value: "6379"
+  - name: REDIS_PASSWORD
+    value: cUzgbcagGu
+  - name: DATABASE_URL
+    value: "postgresql://digiauth:8u5Mz8ET9FYU@postgres-dev-postgresql.db-dev.svc.cluster.local:5432/digiauth?schema=public"
+  - name: GRPC_MULTI_SERVICE
+    value: "digi-forge-multi-tenant-backend-dev-grpc-svc:3001"
+## Add environment variables here
+# - name: MONGO_URL
+#   value: "http://127.0.0.1"
+# - name: AMQP_URL
+#   value: "http://127.0.0.1"
+
+customPorts:
+  - name: grpc
+    containerPort: 5000

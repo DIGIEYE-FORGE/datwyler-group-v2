@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package authPackage;
+
+service Auth {
+	rpc Verify(VerifyRequest) returns (VerifyResponse) {};
+}
+message VerifyRequest {
+	 string accessToken = 1;
+}
+
+message VerifyResponse {
+	int32 id = 1;
+	 string email = 2;
+}
+
+
+ 

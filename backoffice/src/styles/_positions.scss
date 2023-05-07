@@ -1,0 +1,43 @@
+.absolute {
+  position: absolute;
+}
+.relative {
+  position: relative;
+}
+.fixed {
+  position: fixed;
+}
+.sticky {
+  position: sticky;
+}
+
+@for $i from 1 through 10 {
+  .z-#{$i} {
+    z-index: $i;
+  }
+}
+
+@for $i from 0 through 10 {
+  .t-#{$i} {
+    top: $i * 0.25rem;
+  }
+  .r-#{$i} {
+    right: $i * 0.25rem;
+  }
+  .b-#{$i} {
+    bottom: $i * 0.25rem;
+  }
+  .l-#{$i} {
+    left: $i * 0.25rem;
+  }
+  .z-#{$i} {
+    z-index: $i;
+  }
+}
+
+.absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

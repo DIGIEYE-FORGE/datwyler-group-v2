@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model License {
+  id               Int       @id @default(autoincrement())
+  description      String?
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+  tenantId         Int       @map("tenant_id")
+  startDate        DateTime  @default(now()) @map("start_date")
+  expiredAt        DateTime? @map("expired_at")
+  numberUser       Int       @map("number_user")
+  numberAdmin      Int       @map("number_admin")
+  numberDataCenter Int       @map("number_data_center")
+  users            Int[]     @default([])
+  dataCenters      Int[]     @default([]) @map("data_centers")
+  admins           Int[]     @default([])
+
+  @@index([tenantId])
+}

@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package multi_tenancy_package;
+
+service MultiTenancy {
+	rpc UserTenant(UserTenantRequest) returns (UserTenantResponse) {};
+
+	rpc GetMe(GetMeRequest) returns (GetMeResponse) {};
+}
+
+message UserTenantRequest {
+	 int32 userId = 1;
+	 int32 tenantId = 2;
+} 
+message UserTenantResponse {
+	repeated int32 tenantIds = 1;
+}
+
+message Tenant {
+		 int32 id = 1;
+	 string name = 2;
+	 enum Role{
+		 ADMIN = 0;
+		 USER = 1;
+	 }
+	 Role role = 3;
+}
+
+message GetMeRequest {
+	 int32 userId = 1;
+}
+
+message GetMeResponse {
+	 repeated Tenant tenants = 1;
+}

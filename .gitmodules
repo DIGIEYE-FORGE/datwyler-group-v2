@@ -1,0 +1,18 @@
+[submodule "front-end"]
+	path = front-end
+	url = https://github.com/DIGIEYE-FORGE/datwyler.git
+[submodule "backoffice"]
+	path = backoffice
+	url = https://github.com/DIGIEYE-FORGE/front-end.git
+[submodule "backend"]
+	path = backend
+	url = https://github.com/DIGIEYE-FORGE/back-end-devices.git
+[submodule "auth"]
+	path = auth
+	url = https://github.com/DIGIEYE-FORGE/auth.git
+[submodule "multi-tenancy"]
+	path = multi-tenancy
+	url = https://github.com/DIGIEYE-FORGE/multi-tenancy.git
+[submodule "licences"]
+	path = licences
+	url = https://github.com/DIGIEYE-FORGE/license-devices.git

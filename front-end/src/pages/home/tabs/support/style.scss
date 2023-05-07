@@ -1,0 +1,12 @@
+#scroll{
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.animate-scroll{
+    transition: all 1s ease;
+}

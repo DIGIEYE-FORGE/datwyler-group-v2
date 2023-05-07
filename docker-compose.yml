@@ -1,0 +1,137 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: postgres
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: digi-forge
+    volumes:
+      - ./db/postgres:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    restart: always
+    networks:
+      - default
+
+  redis:
+    build: ./redis
+    container_name: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - ./db/redis:/data
+    restart: always
+    networks:
+      - default
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile.k8s
+    container_name: backend
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/digi-forge?schema=public
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - 3000:3000
+    restart: always
+    networks:
+      - default
+  backoffce:
+    build: 
+      context: ./backoffice
+      dockerfile: Dockerfile.k8s
+    container_name: backoffice
+    ports:
+      - 8081:8081
+    environment:
+      - VITE_AUTH_AUTH="http://auth:5000"
+      - VITE_BACK_API="http://backend:3000/"
+      - VITE_MULTI_TENANCY_API="http://multitenancy:4000/"
+    restart: always
+    networks:
+      - default
+  auth:
+    build: 
+      context: ./auth
+      dockerfile: Dockerfile
+    container_name: auth
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/authe?schema=public
+      JWT_SECRET: secret
+      ACCESS_TOKEN_EXPIRES_IN: 5m
+      REFRESH_TOKEN_EXPIRES_IN: 7d
+      REDIS_URL: redis://redis:6379
+      LOG_LEVEL: debug
+      REDIS_PORT: 6379
+      REDIS_HOST: redis
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - 5000:5000
+      - 5001:5001
+    restart: always
+    networks:
+      - default
+  license:
+    build: 
+      context: ./licences
+      dockerfile: Dockerfile
+    container_name: license
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/license?schema=public
+      HTTP_PORT: 2000
+      GRPC_PORT: 2001
+    depends_on:
+      - postgres
+    ports:
+      - 2000:2000
+      - 2001:2001
+    restart: always
+    networks:
+      - default
+  multitenancy:
+    build: 
+      context: ./multi-tenancy
+      dockerfile: Dockerfile
+    container_name: multitenancy
+    environment:
+      -DATABASE_URL: postgresql://postgres:postgres@postgres:5432/multitenancy?schema=public
+      HTTP_PORT: 4000
+      GRPC_PORT: 4001
+      LISCENSE_SEVER_URL: "license:2001"
+      AUTH_SERVER_URL: "auth:5001"
+      LOG_LEVEL : "debug"
+      NODE_ENV: "development"
+      VITE_AUTH_AUTH : "auth:5001"
+    depends_on:
+      - postgres
+    ports:
+      - 4000:4000
+      - 4001:4001
+    restart: always
+    networks:
+      - default
+  frontend:
+    build: 
+      context: ./front-end
+      dockerfile: Dockerfile
+    container_name: frontend
+    volumes:
+      - ./frontend:/app
+    ports:
+      - 8080:8080
+    environment:
+      - AUTH_API=auth:5000
+      - BACK_API=backend:3000
+      - VITE_AUTH_API=auth:5000
+      - VITE_BACK_API=backend:3000
+      - VITE_MULTI_TENANCY_API=multitenancy:4000
+    restart: always
+    networks:
+      - default

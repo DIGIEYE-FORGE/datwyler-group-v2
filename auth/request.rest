@@ -1,0 +1,54 @@
+GET http://localhost:5000/users
+	?take=2
+	&skip=0
+	&orderBy={"email":"asc"}
+	&select={"id":true,"email":true,"firstName":true,"lastName":true, "tenants": true}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJvdXNzYW1AZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE2NzgwOTIzNzgsImV4cCI6MTY3ODY5NzE3OH0.329mRB2wkvxcKfvT_xbtos4gbf96HIPx7PI12rs0MO0
+
+### find one
+GET http://localhost:5000/users/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJvdXNzYW1AZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE2NzgwOTIzNzgsImV4cCI6MTY3ODY5NzE3OH0.329mRB2wkvxcKfvT_xbtos4gbf96HIPx7PI12rs0MO0
+
+### get me
+GET http://localhost:5000/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJpc2VsamFvQGdtYWlsLmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTY3ODEwMTQxNCwiZXhwIjoxNjc4NzA2MjE0fQ.1Qkd7PhrNqk5rAKY8bCY10kl2fGeIfeMYDmE1UHNurc
+
+### register
+POST http://localhost:5000/register
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im91c3NhbUBnbWFpbC5jb20iLCJpZCI6Miwicm9sZSI6IlVTRVIiLCJpYXQiOjE2Nzc4NTMyNTEsImV4cCI6MTY3Nzg1MzU1MX0.wZvscR-wbjUykxF_eLyfxIms3E8NgqhRDrRhssxbnIg4
+
+{
+	"email": "yahya@gmail.com",
+	"firstName": "isel",
+	"lastName": "jao",
+	"password": "12345678",
+	"role": "USER"
+}
+
+### login
+POST http://localhost:5000/login
+Content-Type: application/json
+{
+	"email": "oussamajamil01@gmail.com",
+	"password": "123456"
+}
+
+### refresh
+POST http://localhost:5000/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im91c3NhbUBnbWFpbC5jb20iLCJpZCI6Miwicm9sZSI6IlVTRVIiLCJpYXQiOjE2Nzc4NTM3ODMsImV4cCI6MTY3ODQ1ODU4M30.QfgSJalxIX9X-pVFuBoHvOTb33yZBW-0Xzp5QICvLP4"
+}
+
+### logout
+POST http://localhost:500o/logout
+Content-Type: application/json
+
+
+{
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJvdXNzYW1AZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE2NzgwOTIzNzgsImV4cCI6MTY3ODA5MjY3OH0.syLz8qpgre1YpBlZqYXaoDCQPTd3z8gUsIhSxhRHfgM",
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJvdXNzYW1AZ21haWwuY29tIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE2NzgwOTIzNzgsImV4cCI6MTY3ODY5NzE3OH0.329mRB2wkvxcKfvT_xbtos4gbf96HIPx7PI12rs0MO0"
+}
+

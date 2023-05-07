@@ -1,0 +1,41 @@
+
+syntax="proto3";
+
+package licensePackage;
+service LicenseService {
+		rpc GetLicensePermission (LicenseRequest) returns (LicenseResponse) {}
+		rpc AffectUser(AffectUserRequest) returns (ResultRequestAffectation) {}
+		rpc DeleteAffictation(DeleteAffictaionRequest)returns (DeleteAffictaionResponse){}
+}
+
+message AffectUserRequest {
+	LicenseRequest licenseRequest = 1;
+	int32 licenseId = 2;
+	int32 injectedId = 3;
+}
+message DeleteAffictaionRequest {
+	LicenseRequest licenseRequest = 1;
+	int32 deletedId = 2;
+}
+
+message DeleteAffictaionResponse{
+	string message= 0;
+}
+
+message ResultRequestAffectation {
+		bool result = 1;
+}
+message LicenseRequest {
+		int32 tenantId = 1;
+		enum Type{
+			USER = 0;
+			ADMIN = 1;
+			DATACENTER = 2;
+		}
+		Type type = 2;
+}
+message Empty {}
+message LicenseResponse {
+		bool permission = 1;
+		int32 licenseId = 2;
+}

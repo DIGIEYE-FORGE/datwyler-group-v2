@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package authPackage;
+
+service Auth {
+	rpc Verify(VerifyRequest) returns (VerifyResponse) {};
+
+	rpc AddTenant(AddTenantRequest) returns (AddTenantResponse) {};
+
+	rpc RemoveTenant(RemoveTenantRequest) returns (RemoveTenantResponse) {};
+}
+
+
+message VerifyRequest {
+	 string accessToken = 1;
+}
+
+message VerifyResponse {
+	int32 id = 1;
+	 string email = 2;
+}
+
+message AddTenantRequest {
+	int32 id = 1;
+	int32 tenantId = 2;
+}
+
+message AddTenantResponse {
+	repeated int32 tenantIds = 1;
+}
+
+message RemoveTenantRequest {
+	int32 id = 1;
+	int32 tenantId = 2;
+}
+
+message RemoveTenantResponse {
+	repeated int32 tenantIds = 1;
+}

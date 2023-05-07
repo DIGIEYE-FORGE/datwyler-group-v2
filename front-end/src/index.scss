@@ -1,0 +1,258 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url("leaflet/dist/leaflet.css");
+
+$up-bar-height: 4rem;
+$side-bar-width: 18rem;
+$compact-side-bar-width: 3.5rem;
+$h: 2rem;
+
+.debug {
+  border: 1px solid red;
+
+  & > * {
+    border: 1px solid green;
+
+    & > * {
+      border: 1px solid blue;
+    }
+  }
+}
+
+.absolute-center {
+  @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
+}
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.layout {
+  @apply h-screen w-screen select-none;
+
+  .up-bar {
+    @apply fixed  top-0 right-0 w-full z-10 bg-primary transition-[width] flex items-center justify-end px-[1rem] shadow shadow-black/25 text-white capitalize gap-[1rem];
+    width: calc(100% - #{$compact-side-bar-width});
+    height: $up-bar-height;
+    & > * {
+      @apply h-[2.5rem] flex items-center p-2 rounded hover:bg-white/10 active:bg-white/20 transition-colors cursor-pointer;
+    }
+  }
+  input:checked ~ .up-bar {
+    width: calc(100% - #{$side-bar-width});
+  }
+
+  .side-bar {
+    @apply fixed top-0 left-0 h-full z-10 flex flex-col  px-[0.25rem] bg-primary transition-[width,padding] shadow shadow-black/25;
+    width: $compact-side-bar-width;
+
+    .logo {
+      @apply flex  items-center gap-2;
+      height: $up-bar-height;
+      & > .logo-shape {
+        @apply min-w-[3rem] h-[2rem];
+      }
+      & > .logo-name {
+        @apply w-[0rem];
+      }
+    }
+
+    .link {
+      @apply flex items-center text-white  transition-colors cursor-pointer h-[2.5rem] rounded my-1;
+      .name {
+        @apply bg-[#00323B] h-full flex items-center rounded transition-[margin] capitalize;
+        overflow: hidden;
+        max-width: 0;
+        white-space: nowrap;
+      }
+
+      .icon {
+        @apply w-[3rem] min-w-[3rem] flex-center stroke-light;
+        svg {
+          @apply w-1/2 h-1/2;
+        }
+      }
+      &:hover .name {
+        max-width: 10rem;
+        overflow: visible;
+        margin-left: 0.5rem;
+        padding: 0 0.5rem;
+      }
+    }
+    .active {
+      @apply bg-accent;
+      animation: active 1.5s linear;
+      @keyframes active {
+        0% {
+          stroke-dasharray: 0 100;
+        }
+        100% {
+          stroke-dasharray: 100 0;
+        }
+      }
+    }
+    .toggle {
+      @apply mt-auto w-[2.5rem] aspect-square flex-center hover:bg-white/10 active:bg-white/20 rounded-full cursor-pointer rotate-180 mb-[0.5rem] transition-[background-color,transform];
+    }
+  }
+  .router-view {
+    @apply fixed top-[4rem] right-0 bottom-0 left-[4rem] peer-checked:left-[16rem] transition-[left] [&>*]:h-full;
+    top: $up-bar-height;
+    left: $compact-side-bar-width;
+  }
+  input:checked {
+    & ~ .side-bar {
+      @apply px-[1rem];
+      .logo {
+        .logo-name {
+          @apply w-[7rem];
+        }
+      }
+      width: $side-bar-width;
+      .link:hover > .name,
+      .name {
+        background: transparent;
+        overflow: visible;
+        padding: 0;
+        margin: 0;
+      }
+      .toggle {
+        @apply rotate-0;
+      }
+    }
+    & ~ .router-view {
+      @media (min-width: 768px) {
+        left: $side-bar-width;
+      }
+    }
+  }
+}
+
+.btn {
+  @apply px-4 py-2 rounded-md text-light bg-primary hover:brightness-90 active:brightness-75 transition-colors relative;
+}
+
+.tab-label {
+  @apply rounded-lg h-full min-w-[16rem] max-w-[16rem] flex-1 py-4 relative flex items-center px-2 gap-2;
+  // scroll-bar style
+  border-radius: 0.5rem 0.5rem 0 0;
+  &.active {
+    @apply bg-[#F3F3F4];
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+  }
+  .close-tab {
+    @apply ml-auto opacity-50 hover:opacity-100 hover:bg-dark/5 p-2 rounded-full;
+  }
+}
+
+.tab {
+  @apply bg-[#F3F3F4]  bg-[#F3F3F4] rounded-lg h-full overflow-y-auto;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 0.5rem 0.5rem 0 0;
+  & > * {
+    @apply mx-auto w-full  min-h-full overflow-x-hidden;
+
+    @media (min-width: 1920px) {
+      max-width: 1920px;
+    }
+  }
+}
+.support-tab {
+  padding: 0;
+}
+
+.fixed-center {
+  position: fixed;
+  z-index: 9999;
+  opacity: 0.2;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.hide-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.card {
+  @apply bg-light rounded-lg shadow-lg;
+  // box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.25);
+  .card-header {
+    @apply flex items-center justify-between border-b h-[3rem] px-4;
+    .options {
+      @apply flex gap-2 items-center text-black/50 transition-[opacity];
+      opacity: 0;
+    }
+  }
+  &:hover {
+    .options {
+      opacity: 1;
+    }
+  }
+}
+
+.dashed {
+  border: 1px dashed black;
+}
+
+[disabled] {
+  filter: grayscale(75%) !important;
+  opacity: 0.5 !important;
+  pointer-events: none !important;
+}
+
+.metric-card {
+  @apply card p-4 flex flex-col h-[7.125rem] flex-1 min-w-[10rem];
+}
+
+.card-body {
+  @apply flex-1;
+}
+
+*::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 1rem;
+}
+
+*::-webkit-scrollbar-thumb {
+  @apply bg-dark/10 rounded-full;
+  &:hover {
+    @apply bg-primary;
+  }
+}
+
+*:hover {
+  &::-webkit-scrollbar-thumb {
+    @apply bg-primary;
+  }
+}
+
+input,
+select {
+  @apply bg-light px-2 py-1 outline-none rounded-md border border-dark/10 hover:border-dark/20 focus:border-primary focus:border-2 relative;
+  height: $h;
+}
+
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+}
+
+.blur-background {
+  backdrop-filter: blur(0.5rem);
+}
+
+.leaflet-popup-content-wrapper {
+  background-color: rgba($color: #ffffff, $alpha: 0.3);
+  backdrop-filter: blur(0.25rem);
+}

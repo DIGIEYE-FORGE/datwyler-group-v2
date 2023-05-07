@@ -1,0 +1,142 @@
+name: Build and Publich Deploy app to Dev Environment
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [dev]
+
+env:
+  ENVIRONMENT: dev
+  APP_NAME: digi-forge-license-backend-dev
+  NAMESPACE: endpoint-dev
+  DOMAIN_NAME: license.digieye.io
+  CONTAINER_PORT: 3000
+
+jobs:
+  build:
+    name: build and push image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+        # This step will run only when deploy_dev branch trigger ther workflow
+      - name: Set build tag
+        shell: bash
+        run: |
+          echo "BUILD_TAG=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+      - name: Build and push image to DockerHub
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          context: .
+          file: ./Dockerfile
+          tags: digieye/${{ env.APP_NAME}}:${{ env.BUILD_TAG }}
+
+  migration:
+    name: migrate schema to DATABASE
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16.x"
+
+      - name: Setup prisma
+        run: npm i -g prisma
+
+      - name: Setup ts-node
+        run: npm i -g ts-node
+
+      - name: Setup kubectl
+        uses: ThomasKliszowski/setup-kubectl@v1
+        with:
+          kube-config: ${{ secrets.KUBE_CONFIG_DATA }}
+
+      - name: Database port forward
+        run: "kubectl port-forward svc/postgres-dev-postgresql 5432:5432 -n db-dev &"
+      - name: Apply migrations
+        run: npm run migrate:postgres:deploy
+        env:
+          DATABASE_URL: postgresql://${{ secrets.DB_DEV_USER }}:${{ secrets.DB_DEV_PASSWD }}@localhost:5432/digi_forge_liscence?schema=public
+
+  deploy:
+    needs: migration
+    name: deploy image to k8s
+    runs-on: ubuntu-latest
+    env:
+      GCLOUD_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_SERVICE_ACCOUNT_KEY }}
+      GCS_BUCKET_NAME: ${{ secrets.GCS_BUCKET_NAME }}
+      CHART_NAME: digieye-wkr
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set build tag
+        shell: bash
+        run: |
+          echo "BUILD_TAG=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+      - name: replace
+        uses: falnyr/replace-env-vars-action@master
+        env:
+          enabledIngress: true
+          enabledCertificate: true
+          ingressHost: ${{ env.DOMAIN_NAME }}
+          DB_DEV_PASSWD: ${{ secrets.DB_DEV_PASSWD }}
+          DB_DEV_USERNAME: ${{ secrets.DB_DEV_USERNAME }}
+        with:
+          filename: ./k8s/helm/values-${{ env.ENVIRONMENT }}.yaml
+
+      - name: Setup kubectl
+        uses: ThomasKliszowski/setup-kubectl@v1
+        with:
+          kube-config: ${{ secrets.KUBE_CONFIG_DATA }}
+
+      - name: Install helm
+        run: |
+          curl -LO https://get.helm.sh/helm-v3.8.0-linux-amd64.tar.gz
+          tar -zxvf helm-v3.8.0-linux-amd64.tar.gz
+          mv linux-amd64/helm /usr/local/bin/helm
+          helm version
+      - name: Add credentials
+        env:
+          GCLOUD_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_SERVICE_ACCOUNT_KEY }}
+        run: |
+          echo "${GCLOUD_SERVICE_ACCOUNT_KEY}" > service-account.json
+          echo "GOOGLE_APPLICATION_CREDENTIALS=service-account.json" >> $GITHUB_ENV
+      - name: Helm config
+        env:
+          GCS_BUCKET_NAME: ${{ secrets.GCS_BUCKET_NAME }}
+          HELM_GCS_VERSION: 0.3.1
+        run: |
+          helm plugin install https://github.com/hayorov/helm-gcs --version ${HELM_GCS_VERSION}
+          helm repo add digieye ${{ env.GCS_BUCKET_NAME }}
+          #helm pull digieye/${{ env.CHART_NAME }}
+          #helm fetch digieye/${{ env.CHART_NAME }}
+          #sed -i -E -e s/appVersion:\ \"[0-9.]*\"/appVersion:\ \"${{ env.BUILD_TAG }}\"/ charts/${{ env.CHART_NAME }}/Chart.yaml
+      - name: Debug
+        run: |
+          helm upgrade --install --dry-run --debug --atomic --timeout 1m ${{ env.APP_NAME }} \
+            digieye/${{ env.CHART_NAME }}  -f ./k8s/helm/values-${{ env.ENVIRONMENT }}.yaml \
+            --namespace ${{ env.NAMESPACE }} \
+            --set image.tag=${{ env.BUILD_TAG }} --set image.containerPort=${{ env.CONTAINER_PORT }} \
+            --set image.repository=digieye/${{ env.APP_NAME}}
+      - name: Deploy
+        run: |
+          helm upgrade --install --atomic --timeout 3m ${{ env.APP_NAME }} digieye/${{ env.CHART_NAME }}  \
+            -f ./k8s/helm/values-${{ env.ENVIRONMENT }}.yaml \
+            --namespace ${{ env.NAMESPACE }} \
+            --set image.tag=${{ env.BUILD_TAG }} --set image.containerPort=${{ env.CONTAINER_PORT }} \
+            --set image.repository=digieye/${{ env.APP_NAME}}

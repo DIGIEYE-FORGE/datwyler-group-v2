@@ -1,0 +1,25 @@
+{
+	"schema": "../prisma/schema.prisma",
+	"types": {
+		"Int": {
+			"type": "number",
+			"validations": ["IsInt()"]
+		},
+		"BigInt":{
+				"type": "number",
+				"validations":["IsInt()"]
+		},
+		"String": {
+			"type": "string",
+			"validations": ["IsString()", "MinLength(2)", "MaxLength(255)"]
+		},
+		"Boolean": {
+			"type": "boolean",
+			"validations": ["IsBoolean()"]
+		},
+		"DateTime": {
+			"type": "Date",
+			"validations": ["IsDateString()"]
+		}
+	}
+}
