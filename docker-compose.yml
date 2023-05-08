@@ -123,11 +123,11 @@ services:
     volumes:
       - ./frontend/src:/app/src
     environment:
-      - AUTH_API=auth:5000
-      - BACK_API=backend:3000
-      - VITE_AUTH_API=auth:5000
-      - VITE_BACK_API=backend:3000
-      - VITE_MULTI_TENANCY_API=multitenancy:4000
+      - AUTH_API=http://localhost:5000
+      - BACK_API=http://localhost:3000
+      - VITE_AUTH_API=http://localhost:5000
+      - VITE_BACK_API=http://localhost:3000
+      - VITE_MULTI_TENANCY_API=http://localhost:4000
     restart: always
     networks:
       - default
@@ -140,11 +140,11 @@ services:
     ports:
       - 8081:8081
     environment:
-      - AUTH_API=auth:5000
-      - BACK_API=backend:3000
-      - VITE_AUTH_API=auth:5000
-      - VITE_BACK_API=backend:3000
-      - VITE_MULTI_TENANCY_API=multitenancy:4000
+      - AUTH_API=http://localhost:5000
+      - BACK_API=http://localhost:3000
+      - VITE_AUTH_API=http://localhost:5000
+      - VITE_BACK_API=http://localhost:3000
+      - VITE_MULTI_TENANCY_API=http://localhost:4000
     volumes:
       - ./backoffice/src:/app/src
     restart: always
