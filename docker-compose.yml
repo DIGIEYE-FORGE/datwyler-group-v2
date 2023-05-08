@@ -32,6 +32,8 @@ services:
       dockerfile: Dockerfile.k8s
     container_name: backend
     environment:
+      GRPC_TRACE: all
+      GRPC_VERBOSITY: DEBUG
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/digi-forge?schema=public
     depends_on:
       - postgres
@@ -47,6 +49,8 @@ services:
       dockerfile: Dockerfile
     container_name: auth
     environment:
+      GRPC_TRACE: all
+      GRPC_VERBOSITY: DEBUG
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/auth?schema=public
       JWT_SECRET: secret
       ACCESS_TOKEN_EXPIRES_IN: 5m
@@ -71,6 +75,8 @@ services:
       dockerfile: Dockerfile
     container_name: license
     environment:
+      GRPC_TRACE: all
+      GRPC_VERBOSITY: DEBUG
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/license?schema=public
       HTTP_PORT: 2000
       GRPC_PORT: 2001
@@ -88,7 +94,9 @@ services:
       dockerfile: Dockerfile
     container_name: multitenancy
     environment:
-      -DATABASE_URL: postgresql://postgres:postgres@postgres:5432/multitenancy?schema=public
+      GRPC_TRACE: all
+      GRPC_VERBOSITY: DEBUG
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/multitenancy?schema=public
       HTTP_PORT: 4000
       GRPC_PORT: 4001
       LISCENSE_SEVER_URL: "license:2001"
@@ -138,7 +146,7 @@ services:
       - VITE_BACK_API=backend:3000
       - VITE_MULTI_TENANCY_API=multitenancy:4000
     volumes:
-      - ./backoffce/src:/app/src
+      - ./backoffice/src:/app/src
     restart: always
     networks:
       - default

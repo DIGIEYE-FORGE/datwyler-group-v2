@@ -56,8 +56,12 @@ async function seedUsers() {
   return Promise.all(
     users.map(async (user) => {
       const hashedPassword = await hashPassword(user.password);
-      const newUser = await prisma.user.create({
-        data: {
+      const newUser = await prisma.user.upsert({
+        where:{
+          id:user.id
+        },
+        update:{},
+        create: {
           ...user,
           password: hashedPassword,
         },

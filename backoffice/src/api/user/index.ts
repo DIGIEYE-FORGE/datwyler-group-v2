@@ -10,31 +10,31 @@ const multiTenancyApi = axios.create({
 
 
 
-api.interceptors.response.use(
-	(response) => {
-		return response;
-	},
-	(error) => {
-		if (error.response.status === 401) {
-			const auth = axios.create({
-				baseURL: import.meta.env.VITE_AUTH_AUTH,
-			});
-			auth
-				.post("refresh", {
-					refreshToken: localStorage.getItem("refreshToken"),
-				})
-				.then((response) => {
-					localStorage.setItem("accessToken", response.data.accessToken);
-					localStorage.setItem("refreshToken", response.data.refreshToken);
-				}).catch((error) => {
-					localStorage.removeItem("accessToken");
-					localStorage.removeItem("refreshToken");
-					window.location.href = "/login";
-				});
-		}
-		return Promise.reject(error);
-	}
-);
+// api.interceptors.response.use(
+// 	(response) => {
+// 		return response;
+// 	},
+// 	(error) => {
+// 		if (error.response.status === 401) {
+// 			const auth = axios.create({
+// 				baseURL: import.meta.env.VITE_AUTH_AUTH,
+// 			});
+// 			auth
+// 				.post("refresh", {
+// 					refreshToken: localStorage.getItem("refreshToken"),
+// 				})
+// 				.then((response) => {
+// 					localStorage.setItem("accessToken", response.data.accessToken);
+// 					localStorage.setItem("refreshToken", response.data.refreshToken);
+// 				}).catch((error) => {
+// 					localStorage.removeItem("accessToken");
+// 					localStorage.removeItem("refreshToken");
+// 					window.location.href = "/login";
+// 				});
+// 		}
+// 		return Promise.reject(error);
+// 	}
+// );
 
 interface Params {
 	take?: number;
