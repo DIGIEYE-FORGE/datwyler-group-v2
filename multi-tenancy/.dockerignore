@@ -1,3 +1,4 @@
 k8s
 .github
-node_modules
+node_modulesyarn.lock
+package-lock.json
