@@ -103,7 +103,7 @@ function HomePage() {
                   <span className="text-accent mr-2">No</span>
                   <span>tab selected</span>
                 </h1>
-                <p className="mt-2 text-2xl">
+                <p className="mt-2 text-2xl dark:text-light">
                   Please select a tab from the sidebar
                 </p>
               </div>

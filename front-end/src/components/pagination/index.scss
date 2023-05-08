@@ -5,18 +5,18 @@
 $h: 2rem;
 
 .pagination {
-  @apply flex border bg-light rounded overflow-hidden;
+  @apply bg-light dark:bg-primary-dark flex border dark:border-primary-darker rounded overflow-hidden;
   & > * {
-    @apply px-2 flex justify-center items-center border-r;
+    @apply px-2 flex justify-center items-center border-r dark:border-primary-darker;
     height: $h;
   }
   & > button {
     @apply transition-colors;
     &:hover {
-      @apply bg-dark/5;
+      @apply bg-dark/5 dark:bg-light/10;
     }
     &:active {
-      @apply bg-dark/10;
+      @apply bg-dark/10 dark:bg-light/20;
     }
   }
   & > .active {

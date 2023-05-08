@@ -1,44 +1,23 @@
-import { motion } from "framer-motion";
 import { memo, useEffect, useState } from "react";
-import SwipeableTabs from "../../../../components/swipeable-tabs";
-import Tabs from "../../../../components/tabs";
-import useReactState from "../../../../hooks/user-react-state";
-
-let globalCount = 0;
-const Counter = () => {
-  useEffect(() => {
-    globalCount++;
-    console.log("Counter mounted", globalCount);
-  });
-  return (
-    <div className="outline outline-dark px-4 py-2 text-center min-w-[6rem] text-lg">
-      count
-    </div>
-  );
-};
-
-const MemoCounter = memo(Counter);
+import Card from "../../../../components/card";
 
 function DevTab() {
-  const user = useReactState({
-    name: {
-      first: "John",
-      last: "Smith",
-    },
-    age: 25,
-  });
-
   return (
-    <div className="w-full h-full flex-col flex-center relative debu">
-      <input
-        type="text"
-        placeholder="first name"
-        value={user.name.first}
-        onChange={(e) => {
-          user.name = { ...user.name, first: e.target.value };
-        }}
-      />
-      <MemoCounter />
+    <div className="w-full h-full ">
+      <div className="flex flex-wrap gap-12 p-12">
+        <Card className="w-[20rem] p-6">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad nulla vel
+          eos quibusdam cumque sequi eveniet, dolorum officia vitae accusantium
+          sint deleniti id atque facere? Delectus ut consequuntur quae
+          voluptate.
+        </Card>
+        <Card className="w-[20rem] p-6">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad nulla vel
+          eos quibusdam cumque sequi eveniet, dolorum officia vitae accusantium
+          sint deleniti id atque facere? Delectus ut consequuntur quae
+          voluptate.
+        </Card>
+      </div>
     </div>
   );
 }

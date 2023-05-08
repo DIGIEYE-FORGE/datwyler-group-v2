@@ -40,6 +40,22 @@ export type Group = {
     alerts: number;
     [other: string]: any;
   };
+  lastTelemetries?: {
+    [other: string]: any;
+  };
+  [other: string]: any;
+};
+
+export type Device = {
+  id: number;
+  name: string;
+  serial: string;
+  attributes?: {
+    [other: string]: any;
+  };
+  groupId?: number;
+  group?: Group;
+  [other: string]: any;
 };
 
 export type LoginState = "idle" | "loading" | "error";

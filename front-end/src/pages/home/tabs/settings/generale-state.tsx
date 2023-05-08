@@ -6,14 +6,17 @@ import { useProvider } from "../../../../components/provider";
 import { User } from "../../../../utils";
 
 function GeneraleState() {
+  <div className=""></div>;
   const { user } = useProvider<AppContext>();
   const [data, setData] = useState<User>(user!);
   return (
     <div className="w-full h-full p-[2rem] flex gap-[2rem] overflow-y-auto  flex-col md:flex-col lg:flex-row ">
       <div className="w-[100%] min-w-[30rem] ">
-        <div className="bg-white/95 w-[100%] p-[3rem] ">
+        <div className="card w-[100%] p-[3rem] ">
           <div className="w-[100] min-h-[20%] flex flex-col gap-[2rem]">
-            <h3 className="text-black font-bold text-2xl">Profile details</h3>
+            <h3 className="text-black dark:text-light font-bold text-2xl">
+              Profile details
+            </h3>
             <div className="flex gap-[3rem] items-center sm:flex-col md:flex-row lg-fex-row xl:flex-row flex-row ">
               <div className="w-[8rem] h-[8rem] flex items-center justify-center">
                 <img
@@ -101,15 +104,19 @@ function GeneraleState() {
         </div>
       </div>
       <div className="flex flex-col min-w-[30rem] w-[25%] gap-[2rem]  max-h-[50rem] ">
-        <div className="bg-white/95 w-[100%] h-[25%] min-h-[20rem] p-[3rem] flex flex-col gap-[2rem] ">
-          <div className="text-black font-bold text-2xl">Change password</div>
+        <div className="card w-[100%] h-[25%] min-h-[20rem] p-[3rem] flex flex-col gap-[2rem] ">
+          <div className="text-black dark:text-white font-bold text-2xl">
+            Change password
+          </div>
           <div className="text-[#656868]">
             You can permanently delete or temporarily freeze your account
           </div>
           <Button className="h-[3rem] bg-[#0091AE]/90">Change Password</Button>
         </div>
-        <div className="bg-white/95 w-[100%] h-[25%] min-h-[20rem] p-[3rem] flex flex-col gap-[2rem]">
-          <div className="text-black font-bold text-2xl">Close account</div>
+        <div className="card w-[100%] h-[25%] min-h-[20rem] p-[3rem] flex flex-col gap-[2rem]">
+          <div className="text-black dark:text-white font-bold text-2xl">
+            Close account
+          </div>
           <div className="text-[#656868]">
             You can permanently delete or temporarily freeze your account
           </div>

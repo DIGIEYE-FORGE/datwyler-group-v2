@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.2'
 
 services:
   postgres:
@@ -41,27 +41,13 @@ services:
     restart: always
     networks:
       - default
-  backoffce:
-    build: 
-      context: ./backoffice
-      dockerfile: Dockerfile.k8s
-    container_name: backoffice
-    ports:
-      - 8081:8081
-    environment:
-      - VITE_AUTH_AUTH="http://auth:5000"
-      - VITE_BACK_API="http://backend:3000/"
-      - VITE_MULTI_TENANCY_API="http://multitenancy:4000/"
-    restart: always
-    networks:
-      - default
   auth:
     build: 
       context: ./auth
       dockerfile: Dockerfile
     container_name: auth
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/authe?schema=public
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/auth?schema=public
       JWT_SECRET: secret
       ACCESS_TOKEN_EXPIRES_IN: 5m
       REFRESH_TOKEN_EXPIRES_IN: 7d
@@ -78,6 +64,7 @@ services:
     restart: always
     networks:
       - default
+
   license:
     build: 
       context: ./licences
@@ -117,21 +104,41 @@ services:
     restart: always
     networks:
       - default
+
   frontend:
     build: 
       context: ./front-end
       dockerfile: Dockerfile
     container_name: frontend
-    volumes:
-      - ./frontend:/app
     ports:
       - 8080:8080
+    volumes:
+      - ./front-end/src:/app/src
     environment:
       - AUTH_API=auth:5000
       - BACK_API=backend:3000
       - VITE_AUTH_API=auth:5000
       - VITE_BACK_API=backend:3000
       - VITE_MULTI_TENANCY_API=multitenancy:4000
+    restart: always
+    networks:
+      - default
+
+  backoffce:
+    build: 
+      context: ./backoffice
+      dockerfile: Dockerfile.k8s
+    container_name: backoffice
+    ports:
+      - 8081:8081
+    environment:
+      - AUTH_API=auth:5000
+      - BACK_API=backend:3000
+      - VITE_AUTH_API=auth:5000
+      - VITE_BACK_API=backend:3000
+      - VITE_MULTI_TENANCY_API=multitenancy:4000
+    volumes:
+      - ./backoffce/src:/app/src
     restart: always
     networks:
       - default

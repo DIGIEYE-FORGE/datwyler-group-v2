@@ -6,6 +6,7 @@ COPY package*.json ./
 RUN yarn  
 COPY ./ ./ 
 RUN yarn generate
+# RUN npx prisma migrate dev --name "multi"
 RUN yarn build 
 COPY *.proto ./build
 # set an environment variable for the port numbers

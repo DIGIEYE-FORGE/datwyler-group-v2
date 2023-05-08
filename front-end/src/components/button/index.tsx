@@ -11,7 +11,7 @@ function Button({
 }: Props) {
   const variants = {
     contained: `text-white bg-${color}`,
-    outlined: `outline outline-2 outline-${color} text-${color}`,
+    outlined: `border-2 box-border border-${color} text-${color}`,
     text: `text-${color}`,
   };
   return (

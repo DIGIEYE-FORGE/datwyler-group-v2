@@ -118,7 +118,7 @@ const DataGrid = (props: DataGridProps) => {
                   <div className=" p-2 rounded-full hover:bg-black/5 active:bg-black/10 transition-colors ">
                     <SelectColumnsIcon />
                   </div>
-                  <div className="bg-light/50 blur-background  rounded shadow-lg  mr-[9rem] w-[11.5rem] p-4">
+                  <div className="bg-light/50 dark:bg-dark/50  dark:text-light blur-background  rounded shadow-lg  mr-[9rem] w-[11.5rem] p-4">
                     <div className="flex  w-full h-[2rem] items-center gap-4">
                       <input
                         type="checkbox"

@@ -110,26 +110,27 @@ function AlertsTab() {
 
   const columns: Column[] = [
     {
-      label: "date",
-      header: "Date",
-      valueGetter: (row) => format(new Date(row.createdAt), "dd/MM/yyyy HH:mm"),
+      label: "location",
+      header: "Location",
+      field: "location",
       filter: {
-        type: "date",
+        type: "select",
+        options: [
+          {
+            label: "Site1",
+            value: "site1",
+          },
+          {
+            label: "Site2",
+            value: "site2",
+          },
+        ],
         onChange: () => {},
       },
     },
     {
-      label: "deviceID",
-      header: "Device ID",
-      field: "deviceID",
-      filter: {
-        type: "text",
-        onChange: () => {},
-      },
-    },
-    {
-      label: "deviceType",
-      header: "Device Type",
+      label: "System",
+      header: "System",
       field: "deviceType",
       filter: {
         type: "select",
@@ -154,6 +155,16 @@ function AlertsTab() {
         onChange: () => {},
       },
     },
+    {
+      label: "deviceID",
+      header: "Device ID",
+      field: "deviceID",
+      filter: {
+        type: "text",
+        onChange: () => {},
+      },
+    },
+
     {
       label: "alertType",
       header: "Alert Type",
@@ -188,21 +199,11 @@ function AlertsTab() {
       },
     },
     {
-      label: "location",
-      header: "Location",
-      field: "location",
+      label: "date",
+      header: "Date",
+      valueGetter: (row) => format(new Date(row.createdAt), "dd/MM/yyyy HH:mm"),
       filter: {
-        type: "select",
-        options: [
-          {
-            label: "Site1",
-            value: "site1",
-          },
-          {
-            label: "Site2",
-            value: "site2",
-          },
-        ],
+        type: "date",
         onChange: () => {},
       },
     },
@@ -258,8 +259,8 @@ function AlertsTab() {
       </div>
       <DataGrid
         className="table-fixed  w-full  text-left "
-        headClassName="h-[5.5rem] bg-[#E7EAEB] text-[#697681] [&>*]:px-2 "
-        rowClassName="h-[4rem] [&>*]:px-2 even:bg-[#E7EAEB] hover:bg-[#d1d8da]"
+        headClassName="h-[5.5rem] bg-dark/5 dark:bg-light/5 text-[#697681] [&>*]:px-2 "
+        rowClassName="h-[4rem] [&>*]:px-2 even:bg-dark/5 dark:even:bg-light/5 hover:bg-dark/10 dark:hover:bg-light/10"
         columns={columns}
         rows={rows.slice(
           (params.pagination.page - 1) * params.pagination.perPage,

@@ -33,7 +33,7 @@ $h: 2rem;
   @apply h-screen w-screen select-none;
 
   .up-bar {
-    @apply fixed  top-0 right-0 w-full z-10 bg-primary transition-[width] flex items-center justify-end px-[1rem] shadow shadow-black/25 text-white capitalize gap-[1rem];
+    @apply fixed  top-0 right-0 w-full z-10 bg-light dark:bg-primary-dark transition-[width] flex items-center justify-end px-[1rem] shadow shadow-black/25 text-primary dark:text-light capitalize gap-[1rem];
     width: calc(100% - #{$compact-side-bar-width});
     height: $up-bar-height;
     & > * {
@@ -45,7 +45,7 @@ $h: 2rem;
   }
 
   .side-bar {
-    @apply fixed top-0 left-0 h-full z-10 flex flex-col  px-[0.25rem] bg-primary transition-[width,padding] shadow shadow-black/25;
+    @apply fixed top-0 left-0 h-full z-10 flex flex-col  px-[0.25rem] bg-light dark:bg-primary-dark transition-[width,padding] shadow shadow-black/25;
     width: $compact-side-bar-width;
 
     .logo {
@@ -60,16 +60,16 @@ $h: 2rem;
     }
 
     .link {
-      @apply flex items-center text-white  transition-colors cursor-pointer h-[2.5rem] rounded my-1;
+      @apply flex items-center text-primary dark:text-light  transition-colors cursor-pointer h-[2.5rem] rounded my-1;
       .name {
-        @apply bg-[#00323B] h-full flex items-center rounded transition-[margin] capitalize;
+        @apply bg-light dark:bg-primary-dark text-primary dark:text-light h-full flex items-center rounded transition-[margin] capitalize;
         overflow: hidden;
         max-width: 0;
         white-space: nowrap;
       }
 
       .icon {
-        @apply w-[3rem] min-w-[3rem] flex-center stroke-light;
+        @apply w-[3rem] min-w-[3rem] flex-center stroke-primary dark:stroke-light;
         svg {
           @apply w-1/2 h-1/2;
         }
@@ -83,6 +83,9 @@ $h: 2rem;
     }
     .active {
       @apply bg-accent;
+      .icon {
+        @apply stroke-light;
+      }
       animation: active 1.5s linear;
       @keyframes active {
         0% {
@@ -98,12 +101,18 @@ $h: 2rem;
     }
   }
   .router-view {
-    @apply fixed top-[4rem] right-0 bottom-0 left-[4rem] peer-checked:left-[16rem] transition-[left] [&>*]:h-full;
+    @apply fixed top-[4rem] right-0 bottom-0 left-[4rem] peer-checked:left-[16rem] transition-[left] [&>*]:h-full dark:bg-dark/80;
     top: $up-bar-height;
     left: $compact-side-bar-width;
   }
   input:checked {
     & ~ .side-bar {
+      .link.active {
+        .name {
+          @apply text-light;
+        }
+      }
+
       @apply px-[1rem];
       .logo {
         .logo-name {
@@ -130,16 +139,36 @@ $h: 2rem;
   }
 }
 
+.hybrid {
+  .up-bar,
+  .side-bar {
+    @apply bg-primary text-light;
+    .link {
+      @apply text-light;
+      .icon {
+        @apply stroke-light;
+      }
+    }
+  }
+  input:checked ~ .side-bar {
+    .link {
+      .name {
+        @apply text-light;
+      }
+    }
+  }
+}
+
 .btn {
   @apply px-4 py-2 rounded-md text-light bg-primary hover:brightness-90 active:brightness-75 transition-colors relative;
 }
 
 .tab-label {
-  @apply rounded-lg h-full min-w-[16rem] max-w-[16rem] flex-1 py-4 relative flex items-center px-2 gap-2;
+  @apply dark:text-light/75 dark:stroke-light/75 rounded-lg h-full min-w-[16rem] max-w-[16rem] flex-1 py-4 relative flex items-center px-2 gap-2;
   // scroll-bar style
   border-radius: 0.5rem 0.5rem 0 0;
   &.active {
-    @apply bg-[#F3F3F4];
+    @apply bg-[#F3F3F4] dark:bg-primary-darker text-lg dark:stroke-light dark:text-light;
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
   }
   .close-tab {
@@ -148,7 +177,7 @@ $h: 2rem;
 }
 
 .tab {
-  @apply bg-[#F3F3F4]  bg-[#F3F3F4] rounded-lg h-full overflow-y-auto;
+  @apply bg-[#F3F3F4] dark:bg-primary-darker rounded-lg h-full overflow-y-auto text-dark dark:text-light;
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
   border-radius: 0.5rem 0.5rem 0 0;
   & > * {
@@ -180,7 +209,7 @@ $h: 2rem;
 }
 
 .card {
-  @apply bg-light rounded-lg shadow-lg;
+  @apply bg-light dark:bg-primary-dark text-dark dark:text-light rounded shadow-lg;
   // box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.25);
   .card-header {
     @apply flex items-center justify-between border-b h-[3rem] px-4;
@@ -207,7 +236,7 @@ $h: 2rem;
 }
 
 .metric-card {
-  @apply card p-4 flex flex-col h-[7.125rem] flex-1 min-w-[10rem];
+  @apply p-4 flex flex-col h-[7.125rem] flex-1 min-w-[10rem];
 }
 
 .card-body {
@@ -239,7 +268,7 @@ $h: 2rem;
 
 input,
 select {
-  @apply bg-light px-2 py-1 outline-none rounded-md border border-dark/10 hover:border-dark/20 focus:border-primary focus:border-2 relative;
+  @apply bg-light dark:bg-primary-dark px-2 py-1 outline-none rounded-md border border-dark/10 dark:border-light/10 dark:hover:border-light/20 dark:focus:border-primary hover:border-dark/20 focus:border-primary focus:border-2 relative;
   height: $h;
 }
 

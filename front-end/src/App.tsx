@@ -9,8 +9,10 @@ import useLocalStorage from "./hooks/use-local-storage";
 import { useNavigate, useLocation } from "react-router-dom";
 import AuthApi from "./api/auth";
 import Loader from "./components/loader";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Login2Page from "./pages/login2";
+import DevPage from "./pages/dev";
 
 export type AppContext = {
   tabs: Tab[];
@@ -29,7 +31,10 @@ export type AppContext = {
   loginState: LoginState;
   setLoginState: React.Dispatch<React.SetStateAction<LoginState>>;
   authApi: AuthApi;
+  theme: Theme;
+  setTheme: React.Dispatch<React.SetStateAction<Theme>>;
 };
+type Theme = "light" | "dark" | "hybrid";
 
 function App() {
   const [selectedTabs, setSelectedTabs] = useLocalStorage<number[]>(
@@ -40,6 +45,7 @@ function App() {
     "activeTab",
     0
   );
+  const [theme, setTheme] = useLocalStorage<Theme>("theme", "hybrid");
 
   const [loginState, setLoginState] = useState<LoginState>("loading");
 
@@ -105,7 +111,11 @@ function App() {
 
   if (loginState === "loading")
     return (
-      <div className="h-screen w-screen flex-center">
+      <div
+        className={`h-screen w-screen flex-center ${
+          theme === "dark" && "bg-primary-darker"
+        }`}
+      >
         <Loader />
       </div>
     );
@@ -127,14 +137,20 @@ function App() {
         setRtl,
         authApi,
         setLoginState,
+        theme,
+        setTheme,
       }}
     >
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-      <ToastContainer theme="colored" />
+      <div className={theme}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/login2" element={<Login2Page />} />
+          <Route path="/dev" element={<DevPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+        <ToastContainer theme="colored" />
+      </div>
     </Provider>
   );
 }

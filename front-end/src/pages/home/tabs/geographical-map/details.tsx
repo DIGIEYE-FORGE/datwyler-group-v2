@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { AiOutlineUnorderedList, AiOutlineDoubleLeft } from "react-icons/ai";
-import { GrClose } from "react-icons/gr";
+import { MdClose } from "react-icons/md";
 import { GeographicalMapTabContext } from ".";
 import Button from "../../../../components/button";
 import For from "../../../../components/for";
@@ -22,7 +22,10 @@ import {
   FaHandHoldingWater,
   FaTemperatureHigh,
   FaTemperatureLow,
+  FaTint,
+  FaTintSlash,
 } from "react-icons/fa";
+import Accordion from "../../../../components/acordion";
 const defaultParams: Params = {
   pagination: {
     page: 1,
@@ -146,7 +149,7 @@ function Group({ groupId }: { groupId?: number | null }) {
         <div className="border-b-2 border-b-dark/10 pl-4">
           <Tabs
             index={tabIndex}
-            labels={["Details", "Alerts"]}
+            labels={["Details", "status", "Alerts"]}
             labelClassName="text-primary"
             onChange={(tabIndex) => {
               setTabIndex(tabIndex);
@@ -163,7 +166,7 @@ function Group({ groupId }: { groupId?: number | null }) {
             <For each={Object.entries(group.attributes || {})}>
               {([key, value]) => (
                 <div className="grid grid-cols-5 my-1">
-                  <div className="col-span-2 text-slate-600 capitalize">
+                  <div className="col-span-2 text-slate-600 dark:text-slate-300 capitalize">
                     {key}:
                   </div>
                   <div className="col-span-3">{value}</div>
@@ -171,26 +174,67 @@ function Group({ groupId }: { groupId?: number | null }) {
               )}
             </For>
             <div className="grid grid-cols-5 my-4">
-              <div className="col-span-2 text-slate-600 capitalize">date:</div>
+              <div className="col-span-2 text-slate-600 dark:text-slate-300 capitalize">
+                date:
+              </div>
               <div className="col-span-3">{new Date().toLocaleString()}</div>
             </div>
             <Button className="mt-auto py-2">Access Remote Controller</Button>
           </div>
+          <div className="h-full overflow-y-auto p-4 flex flex-col">
+            <Accordion
+              items={[
+                {
+                  title: "UPS",
+                  content: (
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center gap-2 text-gray-400">
+                        low battery <GiBattery25 />
+                      </div>
+                      <div className="flex items-center gap-2 text-gray-400">
+                        high temperature <FaTemperatureHigh />
+                      </div>
+                    </div>
+                  ),
+                },
+                {
+                  title: "Temperature",
+                  content: (
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center gap-2 text-blue-400">
+                        high temperature <FaTemperatureHigh />
+                      </div>
+                      <div className="flex items-center gap-2 text-blue-400">
+                        low temperature <FaTemperatureLow />
+                      </div>
+                    </div>
+                  ),
+                },
+                {
+                  title: "Humidity",
+                  content: (
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center gap-2 text-green-400">
+                        high humidity <FaTint />
+                      </div>
+                      <div className="flex items-center gap-2 text-green-400">
+                        low humidity <FaTintSlash />
+                      </div>
+                    </div>
+                  ),
+                },
+              ]}
+            />
+          </div>
           <div className="h-full overflow-auto">
             <DataGrid
               className="table-fixed  w-full  text-left "
-              headClassName="h-[5.5rem] bg-[#E7EAEB] text-[#697681] [&>*]:px-2 "
-              rowClassName="h-[4rem] [&>*]:px-2 even:bg-[#E7EAEB] hover:bg-[#d1d8da]"
+              headClassName="h-[4rem] bg-dark/5 dark:bg-light/5 text-[#697681] [&>*]:px-2 "
+              rowClassName="h-[4rem] [&>*]:px-2 even:bg-dark/5 dark:even:bg-light/5 hover:bg-dark/10 dark:hover:bg-light/10"
               columns={columns}
               rows={rows}
               hideAction
             ></DataGrid>
-          </div>
-          <div className="h-full">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Officia
-            cupiditate saepe impedit expedita nulla ea provident neque
-            voluptate, reiciendis odio labore similique quis atque placeat?
-            Deleniti ipsum vero nostrum sunt.
           </div>
         </SwipeableTabs>
       </div>
@@ -218,7 +262,7 @@ function DetailsHeader() {
             setShowList(0);
           }}
         >
-          <GrClose className="text-xl " />
+          <MdClose className="text-2xl" />
         </div>
       </Show>
       <Show when={showList == 2}>
@@ -243,10 +287,9 @@ function Details() {
 
   return (
     <div
-      className="absolute top-[1rem] left-[1rem]    blur-background z-[400] shadow-lg rounded shadow-dark/10 overflow-hidden "
+      className="absolute top-[1rem] left-[1rem]    blur-background z-[400] shadow-lg rounded shadow-dark/10 overflow-hidden bg-light dark:bg-primary-dark"
       style={{
         transition: "width 150ms, 150ms, background-color 1s",
-        backgroundColor: showList ? "#ffffff3f" : "#ffffff",
         height: showList ? "calc(100% - 2rem)" : "3rem",
         width: (showList && (showList == 2 ? "40rem" : "20rem")) || "3rem",
       }}

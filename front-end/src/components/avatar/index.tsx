@@ -6,12 +6,12 @@ interface AppProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 function Avatar({ user, className }: AppProps) {
   const [error, setError] = useState(false);
-  const FirstLetter = user?.firstName[0].toUpperCase() || "F";
-  const SecondLetter = user?.lastName[0].toUpperCase() || "L";
+  const FirstLetter = user?.firstName[0]?.toUpperCase() || "F";
+  const SecondLetter = user?.lastName[0]?.toUpperCase() || "L";
   if (user?.avatar && !error)
     return (
       <img
-        src={user.avatar}
+        src={user?.avatar}
         className={` aspect-square rounded-full ${className} `}
         onError={(e) => {
           setError(true);

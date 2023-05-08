@@ -51,13 +51,13 @@ function Modal({ children, className, ...props }: ModalProps) {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className={`absolute left-1/2 top-1/2 ${className}`}
+            className={`card absolute left-1/2 top-1/2 ${className}`}
             {...props}
             onClick={(e) => {
               e.stopPropagation();
             }}
           >
-            <div className="mt-4">{children}</div>
+            {children}
           </motion.div>
         </Backdrop>
       )}

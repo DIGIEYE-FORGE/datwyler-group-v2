@@ -17,6 +17,7 @@ import GeographicalMapTab from "./geographical-map";
 import { MdDeveloperMode } from "react-icons/md";
 import SettingsTab from "./settings";
 import AdminTab from "./admin";
+import DevicesTab from "./devices";
 const tabs: Tab[] = [
   {
     name: "dashboard",
@@ -36,7 +37,7 @@ const tabs: Tab[] = [
   {
     name: "List of devices",
     icon: <ListIcon />,
-    component: <div className="w-full h-full">List of devices</div>,
+    component: <DevicesTab />,
   },
   {
     name: "Reports",
@@ -48,11 +49,11 @@ const tabs: Tab[] = [
     icon: <AdminIcon />,
     component: <AdminTab />,
   },
-  {
-    name: "Library",
-    icon: <OpenedbookIcon />,
-    component: <div className="w-full h-full">Library</div>,
-  },
+  // {
+  //   name: "Library",
+  //   icon: <OpenedbookIcon />,
+  //   component: <div className="w-full h-full">Library</div>,
+  // },
   {
     name: "support",
     icon: <SupportIcon />,
@@ -63,11 +64,11 @@ const tabs: Tab[] = [
     icon: <SettingsIcon />,
     component: <SettingsTab />,
   },
-  {
-    name: "dev",
-    icon: <MdDeveloperMode />,
-    component: <DevTab />,
-  },
+  // {
+  //   name: "dev",
+  //   icon: <MdDeveloperMode />,
+  //   component: <DevTab />,
+  // },
 ];
 
 export default tabs;

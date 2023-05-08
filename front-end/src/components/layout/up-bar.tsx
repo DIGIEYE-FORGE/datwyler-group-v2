@@ -11,8 +11,9 @@ import Avatar from "../avatar";
 import { BsFullscreen, BsFullscreenExit } from "react-icons/bs";
 import { BiLogOutCircle } from "react-icons/bi";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { CgDarkMode } from "react-icons/cg";
+import { RxMoon, RxSun } from "react-icons/rx";
 function UpBar() {
   const {
     user,
@@ -21,6 +22,8 @@ function UpBar() {
     setRtl,
     setLoginState,
     authApi,
+    theme,
+    setTheme,
   } = useProvider<AppContext>();
   const [isFullScreen, setIsFullScreen] = useState(false);
   const { t, i18n } = useTranslation();
@@ -53,13 +56,49 @@ function UpBar() {
       </div>
       <Tooltip>
         <div className="h-[2rem] flex items-center">
+          {theme === "hybrid" && <CgDarkMode className="h-[2rem] w-[1.5rem]" />}
+          {theme === "light" && <RxSun className="h-[2rem] w-[1.5rem] " />}
+          {theme === "dark" && <RxMoon className="h-[2rem] w-[1.5rem]" />}
+        </div>
+        <div className="mt-5 card !shadow-lg p-2 flex flex-col gap-2 text-dark">
+          <div
+            className="rounded p-2 hover:bg-primary/10 active:bg-primary/20 flex justify-between items-center"
+            onClick={() => {
+              setTheme("hybrid");
+            }}
+          >
+            <span>default</span>
+            <CgDarkMode className="ml-2 h-[2rem] w-[1.5rem]" />
+          </div>
+          <div
+            className="rounded p-2 hover:bg-primary/10 active:bg-primary/20 flex justify-between items-center"
+            onClick={() => {
+              setTheme("light");
+            }}
+          >
+            <span>light</span>
+            <RxSun className="ml-2 h-[2rem] w-[1.5rem]" />
+          </div>
+          <div
+            className="rounded p-2 hover:bg-primary/10 active:bg-primary/20 flex justify-between items-center"
+            onClick={() => {
+              setTheme("dark");
+            }}
+          >
+            <span>dark</span>
+            <RxMoon className="ml-2 h-[2rem] w-[1.5rem]" />
+          </div>
+        </div>
+      </Tooltip>
+      <Tooltip>
+        <div className="h-[2rem] flex items-center">
           {i18n.language === "en" && (
             <UsaIcon className="h-[2rem] w-[1.5rem] " />
           )}
           {i18n.language === "fr" && <FrIcon className="h-[2rem] w-[1.5rem]" />}
           {i18n.language === "ar" && <SaIcon className="h-[2rem] w-[1.5rem]" />}
         </div>
-        <div className="bg-light rounded p-2 mt-5 shadow-lg flex flex-col gap-2 text-dark">
+        <div className="card !shadow-lg p-2 mt-5 flex flex-col gap-2 text-dark">
           <div
             className="rounded p-2 hover:bg-primary/10 active:bg-primary/20 flex justify-between items-center"
             onClick={() => {
@@ -90,16 +129,18 @@ function UpBar() {
         </div>
       </Tooltip>
       <div className="notifacations">
-        <BellIcon />
+        <BellIcon
+          className={theme === "light" ? "fill-primary" : "fill-white"}
+        />
       </div>
 
       <Tooltip>
         <div className="user flex items-center gap-2">
-          <Avatar user={user} className="w-[2rem]" />
+          <Avatar user={user} className="w-[2rem] text-light" />
           <div className="full-name">{`${user?.firstName} ${user?.lastName}`}</div>
           <ArrowDownIcon />
         </div>
-        <div className="bg-light rounded p-2 mt-5 shadow-lg flex flex-col gap-2 text-dark">
+        <div className="card !shadow-lg p-2 mt-5 flex flex-col gap-2 text-dark">
           <div
             onClick={logout}
             className="rounded p-2 hover:bg-primary/10 active:bg-primary/20 whitespace-nowrap"
