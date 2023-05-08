@@ -115,13 +115,13 @@ services:
 
   frontend:
     build: 
-      context: ./front-end
+      context: ./frontend
       dockerfile: Dockerfile
     container_name: frontend
     ports:
       - 8080:8080
     volumes:
-      - ./front-end/src:/app/src
+      - ./frontend/src:/app/src
     environment:
       - AUTH_API=auth:5000
       - BACK_API=backend:3000
