@@ -15,6 +15,8 @@ ARG GRPC_PORT=5000
 
 # expose the ports
 EXPOSE ${HTTP_PORT} ${GRPC_PORT}
-
-CMD yarn start:prod
+RUN chown -R node:node /usr/src/app
+USER node
+# && yarn deploy:seed
+CMD yarn deploy:migration  && yarn start:prod
 

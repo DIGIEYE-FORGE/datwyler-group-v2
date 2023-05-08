@@ -7,6 +7,8 @@
     "dev": "nodemon",
     "build": "npx tsc",
     "start:prod": "node build/src/main",
+    "deploy:seed":"npx prisma db seed --preview-feature",
+    "deploy:migration":"npx prisma migrate deploy  --schema=./prisma/schema.prisma",
     "generate": "npx prisma generate --schema=./prisma/schema.prisma",
     "migrate:postgres:deploy": "npx prisma migrate deploy --schema=./prisma/schema.prisma"
   },
