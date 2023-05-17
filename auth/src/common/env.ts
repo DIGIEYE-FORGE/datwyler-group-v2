@@ -10,7 +10,7 @@ const envSchema = z.object({
   REFRESH_TOKEN_EXPIRES_IN: z.string(),
   REDIS_HOST: z.string(),
   REDIS_PORT: z.string(),
-  REDIS_PASSWORD: z.string(),
+  // REDIS_PASSWORD: z.string(),
   LOG_LEVEL: z.string().default("debug"),
   GRPC_MULTI_SERVICE: z.string(),
 });
