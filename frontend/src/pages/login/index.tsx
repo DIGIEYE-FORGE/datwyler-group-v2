@@ -4,7 +4,6 @@ import { BiShow, BiHide, BiKey } from "react-icons/bi";
 import { useState } from "react";
 import { z } from "zod";
 import { ReactComponent as Logo } from "../../assets/logo-colored.svg";
-import { useNavigate } from "react-router-dom";
 import Button from "../../components/button";
 import { useProvider } from "../../components/provider";
 import { AppContext } from "../../App";

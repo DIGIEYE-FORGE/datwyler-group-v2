@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import Provider from "./components/provider";
 import { Routes, Route } from "react-router-dom";
 import HomePage from "./pages/home";
-import LoginPage from "./pages/login";
+import LoginPage from "./pages/login2";
 import NotFoundPage from "./pages/notfound";
 import { LoginState, Tab, User } from "./utils";
 import useLocalStorage from "./hooks/use-local-storage";

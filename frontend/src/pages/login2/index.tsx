@@ -2,15 +2,53 @@ import React, { useState } from "react";
 import loginBg from "../../assets/login-bg.png";
 import { ReactComponent as Logo } from "../../assets/logo-colored.svg";
 import Button from "../../components/button";
-import { BiShow, BiHide } from "react-icons/bi";
+import { BiShow, BiHide, BiKey } from "react-icons/bi";
+import { z } from "zod";
+import { useProvider } from "../../components/provider";
+import { AppContext } from "../../App";
+import { toast } from "react-toastify";
+const loginSchema = z.object({
+  email: z.string().email({
+    message: "email is not valid",
+  }),
+  password: z.string().min(8, {
+    message: "password must be at least 8 characters",
+  }),
+});
+
 function Login2Page() {
-  const [email, setEmeil] = useState("");
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const { setAccessToken, setRefreshToken, setUser, authApi, setLoginState } =
+    useProvider<AppContext>();
+
+  async function submit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    try {
+      const formData = new FormData(e.currentTarget);
+      const data = loginSchema.parse({
+        email: formData.get("email"),
+        password: formData.get("password"),
+      });
+      const { accessToken, refreshToken, user } = await authApi.login(data);
+      setAccessToken(accessToken);
+      setRefreshToken(refreshToken);
+      setUser(user);
+      setLoginState("idle");
+    } catch (err) {
+      const e: any = err;
+      if (e.response?.status === 404)
+        toast.error("email or password is incorrect");
+      else toast.error("something went wrong. please try again later");
+    }
+  }
 
   return (
     <div className=" h-screen w-screen flex [&>*]:flex-1 [&>*]:h-full ">
-      <div className="flex flex-col items-center justify-center gap-8 text-xl overflow-auto ">
+      <form
+        className="flex flex-col items-center justify-center gap-8 text-xl overflow-auto "
+        onSubmit={submit}
+      >
         <Logo className="scale-[125%] my-6" />
         <div className="flex flex-col items-center justify-center ">
           <span className=" text-3xl font-bold">Sign In</span>
@@ -27,8 +65,6 @@ function Login2Page() {
             id="login-email"
             type="text"
             name="email"
-            value={email}
-            onChange={(e) => setEmeil(e.target.value)}
             placeholder="Enter your email"
             className="w-full !bg-white h-[3rem]"
           />
@@ -41,8 +77,6 @@ function Login2Page() {
             <input
               id="login-password"
               type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               name="password"
               placeholder="Enter your password"
               className="w-full !bg-white h-[3rem] pr-8"
@@ -55,8 +89,10 @@ function Login2Page() {
             </button>
           </span>
         </div>
-        <Button className="w-11/12 max-w-[30rem] h-[3rem]">login</Button>
-      </div>
+        <Button type="submit" className="w-11/12 max-w-[30rem] h-[3rem]">
+          login
+        </Button>
+      </form>
       <div
         style={{
           backgroundImage: `url(${loginBg})`,
