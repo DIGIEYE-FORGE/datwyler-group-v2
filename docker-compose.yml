@@ -26,6 +26,7 @@ services:
     restart: always
     networks:
       - default
+  
   backend:
     build: 
       context: ./backend
@@ -38,7 +39,7 @@ services:
       GRPC_AUTH_SERVICE: "auth:5001"
       GRPC_MULTI_SERVICE: "multitenancy:4001"
     volumes:
-      - ./backend:/app
+      - ./backend/src:/app/src
     depends_on:
       - postgres
       - redis
@@ -47,6 +48,7 @@ services:
     restart: always
     networks:
       - default
+  
   auth:
     build: 
       context: ./auth
@@ -58,7 +60,7 @@ services:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/auth?schema=public
       GRPC_MULTI_SERVICE: "multitenancy:4001"
       JWT_SECRET: secret
-      ACCESS_TOKEN_EXPIRES_IN: 5m
+      ACCESS_TOKEN_EXPIRES_IN: 1h
       REFRESH_TOKEN_EXPIRES_IN: 7d
       REDIS_URL: redis://redis:6379
       LOG_LEVEL: debug
@@ -77,6 +79,7 @@ services:
     restart: always
     networks:
       - default
+  
   license:
     build: 
       context: ./licences
@@ -100,6 +103,7 @@ services:
     restart: always
     networks:
       - default
+  
   multitenancy:
     build: 
       context: ./multi-tenancy
@@ -134,7 +138,7 @@ services:
       dockerfile: Dockerfile
     container_name: frontend
     ports:
-      - 8080:8080
+      - 8085:8080
     volumes:
       - ./frontend/src:/app/src
     environment:
@@ -153,7 +157,7 @@ services:
       dockerfile: Dockerfile.k8s
     container_name: backoffice
     ports:
-      - 8081:8081
+      - 8086:8081
     environment:
       - AUTH_API=http://localhost:5000
       - BACK_API=http://localhost:3001

@@ -91,7 +91,7 @@ const Add = () => {
               placeholder="password"
             />
           </div>
-          <label>Upload File</label>
+          <label>image</label>
           <Dropzone setFile={setFile} />
         </div>
       </div>
