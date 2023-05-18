@@ -246,7 +246,7 @@ const alerts = [
 function RecentAlarms() {
   return (
     <Chart title="UPS" className="flex h-full">
-      <div className="flex gap-3 debug h-[calc(100%-3rem)] p-3">
+      <div className="flex gap-3  h-[calc(100%-3rem)] p-3">
         <div className="flex-1 flex justify-center items-center h-full">
           <div className="!w-5/6 aspect-square rounded-full  outline outline-8 outline-primary mx-auto my-auto relative">
             <div className="absolute-center flex flex-col items-center">
@@ -293,10 +293,11 @@ function WaterFlow() {
           />
         </div>
         <div className="flex-1 flex">
-          <div className="w-[70%]">
+          <div className="w-[70%] flex justify-center items-center">
             <ReactApexChart
-              width={"100%"}
-              height={"100%"}
+              width={"90%"}
+              // height={"100%"}
+              max
               type="donut"
               options={{
                 chart: {
@@ -490,8 +491,8 @@ function DashboardTab() {
       <div className="w-full h-full  grid xl:grid-cols-3 gap-4 auto-rows-fr">
         <RecentAlarms />
         <GeographicalMap />
-        {/* <WaterFlow />
-        <Overview /> */}
+        <WaterFlow />
+        <Overview />
       </div>
     </div>
   );
