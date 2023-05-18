@@ -37,6 +37,8 @@ services:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/digi-forge?schema=public
       GRPC_AUTH_SERVICE: "auth:5001"
       GRPC_MULTI_SERVICE: "multitenancy:4001"
+    volumes:
+      - ./backend:/app
     depends_on:
       - postgres
       - redis
@@ -64,6 +66,8 @@ services:
       REDIS_HOST: redis
       HTTP_PORT: 5000
       GRPC_PORT: 5001
+    volumes:
+      - ./auth:/app
     depends_on:
       - postgres
       - redis
@@ -88,6 +92,8 @@ services:
       - postgres
       - auth
       - multitenancy
+    volumes:
+      - ./licences:/app
     ports:
       - 2000:2000
       - 2001:2001
@@ -110,6 +116,8 @@ services:
       LOG_LEVEL : "debug"
       NODE_ENV: "development"
       VITE_AUTH_AUTH : "auth:5001"
+    volumes:
+      - ./multi-tenancy:/app
     depends_on:
       - postgres
       - auth
