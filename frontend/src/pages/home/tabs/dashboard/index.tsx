@@ -157,7 +157,7 @@ function GeographicalMap() {
 
   return (
     <Chart
-      title="Geographical map"
+      title="Geographical map "
       className="xl:col-span-2  w-full overflow-x-hidden "
     >
       <div className="card-body text-dark  relative  h-[calc(100%-4rem)] w-full  ">
@@ -245,10 +245,10 @@ const alerts = [
 ];
 function RecentAlarms() {
   return (
-    <Chart title="UPS">
-      <div className="card-body flex">
-        <div className="flex-1 mt-[2rem]">
-          <div className="min-w-[12rem] w-[80%] aspect-square rounded-full border-[0.6rem] border-primary mx-auto my-auto relative">
+    <Chart title="UPS" className="flex h-full">
+      <div className="flex gap-3 debug h-[calc(100%-3rem)] p-3">
+        <div className="flex-1 flex justify-center items-center h-full">
+          <div className="!w-5/6 aspect-square rounded-full  outline outline-8 outline-primary mx-auto my-auto relative">
             <div className="absolute-center flex flex-col items-center">
               <div className="text-5xl text-black dark:text-white">
                 {alerts.length}
@@ -257,7 +257,7 @@ function RecentAlarms() {
             </div>
           </div>
         </div>
-        <div className="flex-1 h-[60%]   p-1 overflow-y-auto flex-col gap-2">
+        <div className="flex-1 flex flex-col gap-2  overflow-auto">
           <For each={alerts}>
             {(alert) => (
               <div className="flex items-center gap-2 p-2 shadow-inner">
@@ -485,13 +485,13 @@ function Overview() {
 
 function DashboardTab() {
   return (
-    <div className="container items-center w-full min-h-full flex flex-col gap-6 overflow-x-hidden p-6">
+    <div className="container items-center w-full min-h-full flex flex-col gap-6 overflow-x-hidden p-6 ">
       <Metrics />
       <div className="w-full h-full  grid xl:grid-cols-3 gap-4 auto-rows-fr">
         <RecentAlarms />
         <GeographicalMap />
-        <WaterFlow />
-        <Overview />
+        {/* <WaterFlow />
+        <Overview /> */}
       </div>
     </div>
   );

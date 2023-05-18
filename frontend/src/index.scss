@@ -239,10 +239,6 @@ $h: 2rem;
   @apply p-4 flex flex-col h-[7.125rem] flex-1 min-w-[10rem];
 }
 
-.card-body {
-  @apply flex-1;
-}
-
 *::-webkit-scrollbar {
   width: 0.5rem;
   height: 0.5rem;
