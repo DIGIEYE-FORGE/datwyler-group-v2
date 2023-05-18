@@ -6,6 +6,7 @@
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
   },
+  
   "scripts": {
     "dev": "nodemon",
     "build": "npx tsc   ",

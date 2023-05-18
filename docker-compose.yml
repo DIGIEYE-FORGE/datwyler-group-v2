@@ -73,7 +73,6 @@ services:
     restart: always
     networks:
       - default
-
   license:
     build: 
       context: ./licences
@@ -87,6 +86,8 @@ services:
       GRPC_PORT: 2001
     depends_on:
       - postgres
+      - auth
+      - multitenancy
     ports:
       - 2000:2000
       - 2001:2001
@@ -111,6 +112,7 @@ services:
       VITE_AUTH_AUTH : "auth:5001"
     depends_on:
       - postgres
+      - auth
     ports:
       - 4000:4000
       - 4001:4001

@@ -1,4 +1,4 @@
-import { PrismaClient, Tenant, Role } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient(); 
 
 type License= {
@@ -59,6 +59,9 @@ const main = async (): Promise<void> => {
         await seedLicense(license);
     }
 }
+
+
+main()
 
 
 
