@@ -7,7 +7,7 @@
     "seed": "npx ts-node ./prisma/seed.ts"
   },
   "scripts": {
-    "dev": "npx nodemon",
+    "dev": "nodemon",
     "build": "npx tsc",
     "start:prod": "node build/src/main",
     "deploy:seed": "npx prisma db seed --preview-feature",
