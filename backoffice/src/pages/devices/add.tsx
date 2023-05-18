@@ -70,6 +70,16 @@ const Add = () => {
   const [attributes, setAttributes] = React.useState<[string, string][]>([
     ["", ""],
   ]);
+  function isEmty(obj: obj) {
+    let objs: {
+      [key: string]: any;
+    } = {};
+    for (let key in obj) {
+      if (obj[key] != "") objs[key] = obj[key];
+      else objs[key] = undefined;
+    }
+    return objs;
+  }
   const updatePage = context.updatePage;
   const [deviceProfile, setDeviceProfile] = context.deviceProfiles;
   const [index, setIndex] = React.useState(0);
@@ -194,7 +204,7 @@ const Add = () => {
       ...deviceData,
       tenantId: tenantSelected + "" || undefined,
       credential: {
-        ...credntialsData,
+        ...isEmty(credntialsData),
       },
       attributes: attributes.reduce((acc: any, v) => {
         if (v[0] && v[1])

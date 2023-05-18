@@ -168,7 +168,7 @@ const SignUp = () => {
             fontWeight: "600",
           }}
           onClick={() => {
-            signUp(data)
+            signUp(data, 1)
               .then((res) => {
                 if (res) {
                   setIndex(0);

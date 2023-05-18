@@ -468,7 +468,7 @@ const DataGrid = ({ columns, rows, ...props }: DataGridProps) => {
       ) : (
         <></>
       )}
-      {rows.length === 0 && (
+      {(rows.length === 0 && state != "loading") && (
         <div className="flex flex-col gap-6 justify-center align-center  h-full w-full">
           <span>{props.noData || "No data"}</span>
         </div>

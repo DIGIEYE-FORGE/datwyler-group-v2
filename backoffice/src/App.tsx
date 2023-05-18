@@ -32,30 +32,30 @@ export type UserContext = {
   tenantSelected: [number, React.Dispatch<React.SetStateAction<number>>];
 };
 
-// axios.interceptors.response.use(
-//   (respone) => {
-//     return respone;
-//   },
-//   function (error) {
-//     if (error.response.status === 401) {
-//       const auth = axios.create({
-//         baseURL: import.meta.env.VITE_AUTH_AUTH,
-//       });
-//       auth
-//         .post("/refresh", {
-//           refreshToken: localStorage.getItem("refreshToken"),
-//         })
-//         .then((res) => {
-//           localStorage.setItem("accessToken", res.data.accessToken);
-//         })
-//         .catch((err) => {
-//           toast.error("Please login first");
-//           window.location.href = "/login";
-//         });
-//     }
-//     return Promise.reject(error);
-//   }
-// );
+axios.interceptors.response.use(
+  (respone) => {
+    return respone;
+  },
+  function (error) {
+    if (error.response.status === 401) {
+      const auth = axios.create({
+        baseURL: import.meta.env.VITE_AUTH_AUTH,
+      });
+      auth
+        .post("/refresh", {
+          refreshToken: localStorage.getItem("refreshToken"),
+        })
+        .then((res) => {
+          localStorage.setItem("accessToken", res.data.accessToken);
+        })
+        .catch((err) => {
+          toast.error("Please login first");
+          window.location.href = "/login";
+        });
+    }
+    return Promise.reject(error);
+  }
+);
 const theme: Theme = {
   mode: "light",
   palette: {
@@ -103,7 +103,7 @@ export const getUserConnecter = async () => {
     return data;
   } catch (err) {
     console.log("error", err);
-    // window.location.href = "/login";
+    window.location.href = "/login";
   }
 };
 function App() {
@@ -155,7 +155,7 @@ function App() {
       if (!user) {
         localStorage.clear();
         toast.error("Please login first");
-        // window.location.href = "/login";
+        window.location.href = "/login";
       }
     }
   }, [location.pathname]);
@@ -173,7 +173,7 @@ function App() {
             {location.pathname !== "/login" &&
             location.pathname !== "/signup" ? (
               <>
-                {getUserQuery.isLoading && location.pathname != "/" ? (
+                {/* {getUserQuery.isLoading && location.pathname != "/" ? (
                   <div className="h-screen w-screen flex justify-center align-center">
                     <Lottie
                       options={{
@@ -185,11 +185,11 @@ function App() {
                       width={600}
                     />
                   </div>
-                ) : (
+                ) : ( */}
                   <Layout groups={groups}>
                     <RouterView />
                   </Layout>
-                )}
+                {/* )} */}
               </>
             ) : (
               <RouterView />
@@ -199,7 +199,6 @@ function App() {
         <ToastContainer theme="colored" />
       </ThemeProvider>
     </>
-    
   );
 }
 
