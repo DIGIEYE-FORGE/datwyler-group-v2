@@ -112,7 +112,11 @@ function App() {
       authApi
         .verify()
         .then((u) => {
-          if (u.tenants && !u.tenants.find((t: Tenant) => t.id === tenantId))
+          if (
+            u.tenants &&
+            tenantId &&
+            !u.tenants.find((t: Tenant) => t.id === tenantId)
+          )
             setTenantId(u.tenants[0].id);
           setLoginState("idle");
           setUser(u);

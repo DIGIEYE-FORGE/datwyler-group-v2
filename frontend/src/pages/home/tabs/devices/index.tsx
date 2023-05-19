@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useState } from "react";
 import DataGrid, { Column } from "../../../../components/data-grid";
 import Pagination from "../../../../components/pagination";
 import { Device, Params, classNames } from "../../../../utils";
@@ -6,34 +6,6 @@ import Button from "../../../../components/button";
 import { BiExport } from "react-icons/bi";
 import { useProvider } from "../../../../components/provider";
 import { AppContext } from "../../../../App";
-import { t } from "i18next";
-import axios from "axios";
-
-// const getDevices = async (
-//   accessToken: string,
-//   tenantId: number | undefined
-// ) => {
-//   try {
-//     const res = await axios.get("http://localhost:3001/device", {
-//       headers: {
-//         Authorization: `Bearer ${accessToken}`,
-//       },
-//       params: {
-//         where: JSON.stringify({
-//           tenantId,
-//         }),
-//         include: JSON.stringify({
-//           group: true,
-//           _count: true,
-//           deviceProfile: true,
-//         }),
-//       },
-//     });
-//     console.log(res.data);
-
-//     return res.data as Response;
-//   } catch (error) {}
-// };
 
 function DevicesTab() {
   const { tenantId, refreshToken, backendApi } = useProvider<AppContext>();
