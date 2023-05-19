@@ -34,7 +34,7 @@ function Login2Page() {
       setAccessToken(accessToken);
       setRefreshToken(refreshToken);
       setUser(user);
-      setLoginState("idle");
+      setLoginState("loading");
     } catch (err) {
       const e: any = err;
       if (e.response?.status === 404)

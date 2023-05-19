@@ -4,7 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import HomePage from "./pages/home";
 import LoginPage from "./pages/login2";
 import NotFoundPage from "./pages/notfound";
-import { LoginState, Tab, User } from "./utils";
+import { LoginState, Tab, Tenant, User } from "./utils";
 import useLocalStorage from "./hooks/use-local-storage";
 import { useNavigate, useLocation } from "react-router-dom";
 import AuthApi from "./api/auth";
@@ -13,6 +13,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Login2Page from "./pages/login2";
 import DevPage from "./pages/dev";
+import BackendApi from "./api/backend";
 
 export type AppContext = {
   tabs: Tab[];
@@ -33,6 +34,9 @@ export type AppContext = {
   authApi: AuthApi;
   theme: Theme;
   setTheme: React.Dispatch<React.SetStateAction<Theme>>;
+  tenantId: number | undefined;
+  setTenantId: React.Dispatch<React.SetStateAction<number | undefined>>;
+  backendApi: BackendApi;
 };
 type Theme = "light" | "dark" | "hybrid";
 
@@ -48,6 +52,10 @@ function App() {
   const [theme, setTheme] = useLocalStorage<Theme>("theme", "hybrid");
 
   const [loginState, setLoginState] = useState<LoginState>("loading");
+  const [tenantId, setTenantId] = useLocalStorage<number | undefined>(
+    "tenantId",
+    undefined
+  );
 
   const [user, setUser] = useState<User | null>({
     id: 1,
@@ -67,6 +75,16 @@ function App() {
         refreshToken,
       }),
     []
+  );
+
+  const backendApi = useMemo(
+    () =>
+      new BackendApi({
+        tenantId,
+        accessToken,
+        refreshToken,
+      }),
+    [tenantId, refreshToken, accessToken]
   );
 
   function selectTab(index: number) {
@@ -94,6 +112,8 @@ function App() {
       authApi
         .verify()
         .then((u) => {
+          if (u.tenants && !u.tenants.find((t: Tenant) => t.id === tenantId))
+            setTenantId(u.tenants[0].id);
           setLoginState("idle");
           setUser(u);
         })
@@ -139,6 +159,9 @@ function App() {
         setLoginState,
         theme,
         setTheme,
+        tenantId,
+        setTenantId,
+        backendApi,
       }}
     >
       <div className={theme}>

@@ -175,6 +175,9 @@ export class UpdateDeviceDto {
   @IsNumberString()
   @IsOptional()
   groupId: number;
+  @ApiProperty({ required: false })
+  @IsOptional()
+  tenantId: number;
 }
 
 export class AddGroupsDto {

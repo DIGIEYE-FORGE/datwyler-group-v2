@@ -1,66 +1,73 @@
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import DataGrid, { Column } from "../../../../components/data-grid";
 import Pagination from "../../../../components/pagination";
-import { Params, classNames } from "../../../../utils";
-import { format } from "date-fns";
+import { Device, Params, classNames } from "../../../../utils";
 import Button from "../../../../components/button";
-import { AiOutlineCheckCircle } from "react-icons/ai";
 import { BiExport } from "react-icons/bi";
+import { useProvider } from "../../../../components/provider";
+import { AppContext } from "../../../../App";
+import { t } from "i18next";
+import axios from "axios";
 
-const defaultParams: Params = {
-  pagination: {
-    page: 1,
-    perPage: 10,
-  },
-};
+// const getDevices = async (
+//   accessToken: string,
+//   tenantId: number | undefined
+// ) => {
+//   try {
+//     const res = await axios.get("http://localhost:3001/device", {
+//       headers: {
+//         Authorization: `Bearer ${accessToken}`,
+//       },
+//       params: {
+//         where: JSON.stringify({
+//           tenantId,
+//         }),
+//         include: JSON.stringify({
+//           group: true,
+//           _count: true,
+//           deviceProfile: true,
+//         }),
+//       },
+//     });
+//     console.log(res.data);
 
-type Device = {
-  deviceID?: string;
-  deviceType?: "ups" | "temperature" | "humidity" | "water cooler";
-  site: string;
-  alertsCount?: number;
-};
-
-const paramsReducer = (
-  state: Params,
-  action: { type: string; payload: any }
-) => {
-  switch (action.type) {
-    case "setParams":
-      return action.payload;
-    case "pagination":
-      return {
-        ...state,
-        pagination: action.payload,
-      };
-    default:
-      return state;
-  }
-};
-
-const generateDummyData = (total: number): Device[] => {
-  return Array.from({ length: total }, (_, i) => ({
-    createdAt: new Date(Math.random() * 1000000000000).toISOString(),
-    deviceID: `deviceID${i}`,
-    deviceType: ["ups", "temperature", "humidity", "water cooler"][
-      Math.floor(Math.random() * 4)
-    ] as any,
-    name: `deviceName${i}`,
-    site: ["site1", "site2"][Math.floor(Math.random() * 2)],
-    alertsCount: Math.floor(Math.random() * 10),
-  }));
-};
+//     return res.data as Response;
+//   } catch (error) {}
+// };
 
 function DevicesTab() {
-  const [params, setParams] = useReducer(paramsReducer, defaultParams);
+  const { tenantId, refreshToken, backendApi } = useProvider<AppContext>();
   const [total, setTotal] = useState(100);
-  const [rows, setRows] = useState(generateDummyData(total));
+  const [params, setParams] = useState<Params>({
+    pagination: {
+      page: 1,
+      perPage: 6,
+    },
+    include: {
+      group: true,
+      _count: true,
+      deviceProfile: true,
+    },
+  });
+
+  const [rows, setRows] = useState<Device[]>([]);
+
+  useEffect(() => {
+    try {
+      backendApi.getDevices(params).then((res) => {
+        setRows(res.results);
+        setTotal(res.totalResult);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }, [tenantId, params]);
 
   const columns: Column[] = [
     {
       label: "location",
       header: "Location",
-      field: "site",
+      valueGetter: (row) => row.group?.name,
       filter: {
         type: "select",
         options: [
@@ -79,7 +86,7 @@ function DevicesTab() {
     {
       label: "system",
       header: "System",
-      field: "deviceType",
+      valueGetter: (row) => row.deviceProfile.name,
       filter: {
         type: "select",
         options: [
@@ -106,7 +113,7 @@ function DevicesTab() {
     {
       label: "Serial",
       header: "Serial",
-      field: "deviceID",
+      field: "serial",
       filter: {
         type: "text",
         onChange: () => {},
@@ -118,12 +125,11 @@ function DevicesTab() {
       header: "alerts Count",
       valueGetter: (row) => (
         <span
-          className={classNames("text-lg", {
-            "text-primary": row.alertsCount === 0,
-            "text-accent": row.alertsCount > 0,
+          className={classNames("text-lg text-primary", {
+            "!text-accent": row._count?.alerts > 0,
           })}
         >
-          {row.alertsCount}
+          {row._count?.alerts}
         </span>
       ),
       filter: {
@@ -141,7 +147,7 @@ function DevicesTab() {
         </select>
         <Pagination
           value={params.pagination}
-          onChange={(v) => setParams({ type: "pagination", payload: v })}
+          onChange={(v) => setParams({ ...params, pagination: v })}
           total={total}
         />
         <Button className="flex items-center gap-2">
@@ -158,6 +164,11 @@ function DevicesTab() {
           (params.pagination.page - 1) * params.pagination.perPage,
           params.pagination.page * params.pagination.perPage
         )}
+        noData={
+          <div className="min-h-[50vh]   flex justify-center items-center text-4xl">
+            No data
+          </div>
+        }
       ></DataGrid>
     </div>
   );

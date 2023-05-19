@@ -27,7 +27,7 @@ export type User = {
   lastName: string;
   email: string;
   avatar?: string | null;
-  tenants?: number[];
+  tenants?: Tenant[];
   [other: string]: any;
 };
 
@@ -47,18 +47,30 @@ export type Group = {
 };
 
 export type Device = {
-  id: number;
-  name: string;
+  id: string;
   serial: string;
-  attributes?: {
-    [other: string]: any;
+  deviceProfile: {
+    name: string;
+    [key: string]: any;
   };
-  groupId?: number;
   group?: Group;
-  [other: string]: any;
+  _count?: {
+    alerts: number;
+  };
 };
 
 export type LoginState = "idle" | "loading" | "error";
+
+export type Tenant = {
+  id: number;
+  name: string;
+  [other: string]: any;
+};
+
+export type ManyResponse<T extends any = any> = {
+  results: T[];
+  totalResult: number;
+};
 
 export function toggleFullScreen() {
   if (!document.fullscreenElement) document.documentElement.requestFullscreen();
@@ -80,7 +92,7 @@ export type Params = {
   include?: JsonObject;
 };
 
-export function converParams(params: Params) {
+export function convertParams(params: Params) {
   const {
     pagination: { page, perPage },
     where,
