@@ -32,15 +32,12 @@ import { REQUEST } from '@nestjs/core';
 @ApiTags('device')
 @Controller('device')
 export class DeviceController {
-  constructor(private readonly deviceService: DeviceService) { }
+  constructor(private readonly deviceService: DeviceService) {}
 
   @ApiOkResponse({ type: [Device] })
   @Get('/')
   findAll(@Request() req, @Body() data: any, @Query() query: FindAllQuery) {
     try {
-      if (!req?.headers['Tenant-Id']) {
-        return [];
-      }
       return this.deviceService.findAll(query, data);
     } catch (e) {
       console.log(e);

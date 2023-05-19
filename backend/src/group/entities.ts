@@ -1,15 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsInt,
-  IsString,
-  MinLength,
-  MaxLength,
-  IsDateString,
-  IsOptional,
-  isNumber,
-  IsNumber,
-} from 'class-validator';
+import { IsInt, IsString, MinLength, MaxLength, IsDateString, IsOptional } from 'class-validator'
 import { IsPassword, IsPhoneNumber } from 'src/utils';
 
 export class Group {
@@ -25,10 +16,8 @@ export class Group {
   updatedAt: Date;
   @ApiProperty({ required: false })
   parentId: number;
-}
-
-interface Attributes {
-  [key: string]: string | number | boolean;
+  @ApiProperty({ required: false })
+  tenantId: number;
 }
 
 export class CreateGroupDto {
@@ -47,12 +36,9 @@ export class CreateGroupDto {
   @IsOptional()
   parentId: number;
   @ApiProperty({ required: false })
+  @IsInt()
   @IsOptional()
-  attributes: Attributes;
-
-  @IsNumber()
-  @IsOptional()
-  tenantId?: number;
+  tenantId: number;
 }
 
 export class UpdateGroupDto {
@@ -73,6 +59,8 @@ export class UpdateGroupDto {
   @IsOptional()
   parentId: number;
   @ApiProperty({ required: false })
+  @IsInt()
   @IsOptional()
-  attributes: Attributes;
+  tenantId: number;
 }
+

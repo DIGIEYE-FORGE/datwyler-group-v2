@@ -205,10 +205,13 @@ const DevicesPage = () => {
   const [deviceQuery, deviceProfileQuery, groupQuery] = useQueries({
     queries: [
       {
-        queryKey: ["devices", params, save, tenantSelected> 0 && tenantSelected],
+        queryKey: ["devices", params, save, tenantSelected],
         queryFn: () => {
           if (tenantSelected > 0) {
             return getDevices(params);
+          }
+          else {
+            return Promise.resolve({ results: [], totalResult: 0 });
           }
         } 
       },

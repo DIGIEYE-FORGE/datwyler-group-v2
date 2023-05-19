@@ -8,8 +8,6 @@ import {
   Delete,
   ParseIntPipe,
   Query,
-  Header,
-  Res,
 } from '@nestjs/common';
 import { GroupService } from './group.service';
 import { Group, CreateGroupDto, UpdateGroupDto } from './entities';
@@ -19,7 +17,7 @@ import { FindAllQuery, FindOneQuery } from 'src/utils';
 @ApiTags('group')
 @Controller('group')
 export class GroupController {
-  constructor(private readonly groupService: GroupService) {}
+  constructor(private readonly groupService: GroupService) { }
 
   @ApiOkResponse({ type: [Group] })
   @Get()
@@ -27,13 +25,6 @@ export class GroupController {
     return this.groupService.findAll(query);
   }
 
-  @ApiOkResponse({ type: Group })
-  @Get('/file/download')
-  @Header('Content-type', 'application/xlsx')
-  async download(@Res() res) {
-    const file = await this.groupService.download();
-    return res.download(file);
-  }
   @ApiOkResponse({ type: Group })
   @Get(':id')
   findOne(@Query() query: FindOneQuery, @Param('id', ParseIntPipe) id: number) {

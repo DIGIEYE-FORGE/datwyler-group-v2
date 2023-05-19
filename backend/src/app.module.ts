@@ -1,3 +1,4 @@
+import { GroupModule } from './group/group.module';
 import { VmqAuthAclModule } from './vmqauthacl/vmqauthacl.module';
 
 import { ProtocolModule } from './protocol/protocol.module';
@@ -12,7 +13,6 @@ import { FirmwareModule } from './firmware/firmware.module';
 import { DeviceTypeModule } from './devicetype/devicetype.module';
 import { join } from 'path';
 import { DecoderModule } from './decoder/decoder.module';
-import { GroupModule } from './group/group.module';
 import { MulterModule } from '@nestjs/platform-express';
 import {
   MiddlewareConsumer,
@@ -39,6 +39,7 @@ import { LicenseService } from './license/license.service';
 
 @Module({
   imports: [
+    GroupModule,
     ConfigModule.forRoot(),
     VmqAuthAclModule,
     ProtocolModule,
@@ -59,7 +60,6 @@ import { LicenseService } from './license/license.service';
     MultitenancyModule,
     DecoderModule,
     LicenseModule,
-    GroupModule,
     AuthModule,
     MulterModule.register({
       dest: './uploads',
@@ -76,8 +76,12 @@ export class AppModule implements NestModule {
     consumer
       .apply(AuthMiddleware)
       .forRoutes({ path: '*', method: RequestMethod.ALL });
-    consumer
-      .apply(MultitenancyMiddleware)
-      .exclude({ path: '/device', method: RequestMethod.GET });
+    consumer.apply(MultitenancyMiddleware).forRoutes(
+      { path: '/device', method: RequestMethod.ALL },
+      {
+        path: '/group',
+        method: RequestMethod.POST,
+      },
+    );
   }
 }

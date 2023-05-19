@@ -89,7 +89,7 @@ const Add = () => {
     description: "",
     tags: [""],
     deviceProfileId: "",
-    groupId: "",
+    groupId: undefined,
   });
 
   useEffect(() => {
@@ -479,7 +479,7 @@ const Add = () => {
                       groupId: e.target.value,
                     }));
                   }}
-                  value={deviceData.groupId}
+                  value={deviceData.groupId || ""}
                 >
                   <option value="">none</option>
                   {groups.map((group: Group) => (
