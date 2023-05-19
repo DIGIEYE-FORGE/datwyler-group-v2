@@ -245,10 +245,10 @@ const alerts = [
 ];
 function RecentAlarms() {
   return (
-    <Chart title="UPS" className="flex h-full">
+    <Chart title="UPS" className="flex h-full ">
       <div className="flex gap-3  h-[calc(100%-3rem)] p-3">
         <div className="flex-1 flex justify-center items-center h-full">
-          <div className="!w-5/6 aspect-square rounded-full  outline outline-8 outline-primary mx-auto my-auto relative">
+          <div className=" h-1/2 max-h-full aspect-square rounded-full  outline outline-8 outline-primary   relative">
             <div className="absolute-center flex flex-col items-center">
               <div className="text-5xl text-black dark:text-white">
                 {alerts.length}
@@ -283,7 +283,7 @@ function RecentAlarms() {
 function WaterFlow() {
   return (
     <Chart title="COOLING">
-      <div className="card-body  overflow-auto flex flex-col mt-2 px-2">
+      <div className="card-body  overflow-auto flex flex-col mt-2 px-2 ">
         <div className="h-[10%] ml-auto">
           <input
             type="date"
