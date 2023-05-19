@@ -39,7 +39,7 @@ services:
       GRPC_AUTH_SERVICE: "auth:5001"
       GRPC_MULTI_SERVICE: "multitenancy:4001"
     volumes:
-      - ./backend/src:/app/src
+      - ./backend/src:/usr/src/app/src
     depends_on:
       - postgres
       - redis
@@ -69,7 +69,7 @@ services:
       HTTP_PORT: 5000
       GRPC_PORT: 5001
     volumes:
-      - ./auth:/app
+      - ./auth/src:/usr/src/app/src
     depends_on:
       - postgres
       - redis
@@ -96,7 +96,7 @@ services:
       - auth
       - multitenancy
     volumes:
-      - ./licences:/app
+      - ./licences/src:/usr/src/app/src
     ports:
       - 2000:2000
       - 2001:2001
@@ -121,7 +121,7 @@ services:
       NODE_ENV: "development"
       VITE_AUTH_AUTH : "auth:5001"
     volumes:
-      - ./multi-tenancy:/app
+      - ./multi-tenancy/src:/usr/src/app/src
     depends_on:
       - postgres
       - auth
