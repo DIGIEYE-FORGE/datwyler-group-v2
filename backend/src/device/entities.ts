@@ -89,17 +89,20 @@ export class CreateDeviceDto {
   @IsOptional()
   configuration: string;
   @ApiProperty({ required: false })
-  @IsNumberString()
+  @Transform(({ value }) => toInt(value))
+  @IsInt()
   @IsOptional()
   deviceProfileId: number;
   @ApiProperty({ required: false })
   credential: credentialInterface;
   @ApiProperty({ required: false })
-  @IsNumberString()
+  @Transform(({ value }) => toInt(value))
+  @IsInt()
   @IsOptional()
   firmwareId: number;
   @ApiProperty({ required: false })
-  @IsNumberString()
+  @Transform(({ value }) => toInt(value))
+  @IsInt()
   @IsOptional()
   groupId: number;
   @ApiProperty({ required: false })
@@ -108,7 +111,8 @@ export class CreateDeviceDto {
   isdecoded: boolean;
   @ApiProperty({ required: false })
   @IsOptional()
-  @IsNumberString()
+  @Transform(({ value }) => toInt(value))
+  @IsInt()
   decoderId: number;
   @ApiProperty({ required: false })
   @IsOptional()
