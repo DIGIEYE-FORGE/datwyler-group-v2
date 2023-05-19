@@ -10,18 +10,29 @@ import { MultitenancyService } from 'src/multitenancy/multitanancy.service';
 
 @Injectable()
 export class MultitenancyMiddleware implements NestMiddleware {
-  constructor(private multitenancyService: MultitenancyService) { }
+  constructor(private multitenancyService: MultitenancyService) {}
   async use(req: Request, res: Response, next: NextFunction) {
-    if (req.body.id_auth) {
+    const tenant = +req?.headers['Tenant-Id'];
+    if (
+      req?.headers['id-auth'] &&
+      +req?.headers['Tenant-Id'] > 0 &&
+      req.method === 'GET'
+    ) {
       const res = await this.multitenancyService
         .MultiTenancy({
-          userId: req.body.id_auth,
-          tenantId: +req.headers['tenant-id'] || undefined,
+          userId: +req.headers['id-auth'] || undefined,
+          tenantId: tenant || undefined,
         })
         .toPromise();
-      if (res) {
-        req.body.tenantIds = res.tenantIds;
-      }
+      req.params.where = JSON.stringify({
+        ...JSON.parse(req.params.where),
+        tenantId: {
+          in: res.tenantIds,
+        },
+      });
+    }
+    if (tenant > 0 && req.method == 'POST' && !req.body.tenantId) {
+      req.body.tenantId = tenant;
     }
     next();
   }

@@ -12,6 +12,7 @@ import {
   Header,
   Res,
   UseInterceptors,
+  Request,
 } from '@nestjs/common';
 import { DeviceService } from './device.service';
 import {
@@ -26,6 +27,7 @@ import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { FindAllQuery, FindOneQuery } from 'src/utils';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Public } from 'src/common/decorator/public.decorator';
+import { REQUEST } from '@nestjs/core';
 
 @ApiTags('device')
 @Controller('device')
@@ -34,8 +36,11 @@ export class DeviceController {
 
   @ApiOkResponse({ type: [Device] })
   @Get('/')
-  findAll(@Body() data: any, @Query() query: FindAllQuery) {
+  findAll(@Request() req, @Body() data: any, @Query() query: FindAllQuery) {
     try {
+      if (!req?.headers['Tenant-Id']) {
+        return [];
+      }
       return this.deviceService.findAll(query, data);
     } catch (e) {
       console.log(e);

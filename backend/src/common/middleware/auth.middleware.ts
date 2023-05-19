@@ -4,7 +4,7 @@ import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {}
   async use(req: Request, res: Response, next: NextFunction) {
     try {
       if (req.headers['authorization']) {
@@ -13,10 +13,7 @@ export class AuthMiddleware implements NestMiddleware {
             accessToken: req.headers['authorization'].split(' ')[1],
           })
           .toPromise();
-        if (req.method === 'GET') {
-          req.body.email_auth = data.email;
-          req.body.id_auth = data.id;
-        }
+        req.headers['id-auth'] = '' + data.id;
         next();
       } else {
         res.status(401).send({ message: 'Unauthorized' });

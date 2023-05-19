@@ -631,12 +631,15 @@ const Layout = (props: Props) => {
             <div className="title">gestion device</div>
             <Select
               className="mt-6"
-              value={tenantSelected}
-              onChange={(e) => {
+              value={tenantSelected
+                ? tenantSelected
+                : user && user?.tenants?.[0]?.id || -1}
+              onChange={(e:any) => {
                 setTenantSelected(+e.target.value);
+                localStorage.setItem("tenant", e.target.value);
               }}
             >
-              <option value={-1} disabled>
+              <option value={""} disabled>
                 select tenant
               </option>
               {user &&
@@ -650,6 +653,7 @@ const Layout = (props: Props) => {
                   );
                 })}
             </Select>
+            {JSON.stringify(tenantSelected)}
             <span className="mt-6"></span>
             {props.groups[0].routes.map((route) => {
               return <RouterLink key={route.label} route={route} />;

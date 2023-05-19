@@ -205,8 +205,12 @@ const DevicesPage = () => {
   const [deviceQuery, deviceProfileQuery, groupQuery] = useQueries({
     queries: [
       {
-        queryKey: ["devices", params, save, tenantSelected],
-        queryFn: () => getDevices(params),
+        queryKey: ["devices", params, save, tenantSelected> 0 && tenantSelected],
+        queryFn: () => {
+          if (tenantSelected > 0) {
+            return getDevices(params);
+          }
+        } 
       },
       {
         queryKey: ["deviceProfiles"],

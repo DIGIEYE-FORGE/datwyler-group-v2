@@ -27,6 +27,7 @@ axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem(
   "accessToken"
 )}`;
 
+
 export type UserContext = {
   user: [any, React.Dispatch<React.SetStateAction<any>>];
   tenantSelected: [number, React.Dispatch<React.SetStateAction<number>>];
@@ -108,7 +109,7 @@ export const getUserConnecter = async () => {
 };
 function App() {
   const [tenantSelected, setTenantSelected] = useState<number>(0);
-  axios.defaults.headers.common["tenant-id"] = tenantSelected;
+  axios.defaults.headers.common["Tenant-Id"] = tenantSelected > 0 ? tenantSelected : localStorage.getItem("tenantId") ;
   const [lang, setLang] = useLocalStorage("lang", "en");
   const [user, setUser] = useState<any>({});
   const [islogin, setIslogin] = useState<boolean>(false);
@@ -121,7 +122,8 @@ function App() {
         onSuccess: (data: any) => {
           setUser(data);
           if (data.tenants.length > 0) {
-            setTenantSelected(data.tenants[0].id);
+            setTenantSelected(data?.tenants?.[0]?.id);
+            localStorage.setItem("tenantId", data?.tenants?.[0]?.id);
           }
         },
         enabled: islogin,

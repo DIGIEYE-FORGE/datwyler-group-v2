@@ -76,8 +76,8 @@ export class AppModule implements NestModule {
     consumer
       .apply(AuthMiddleware)
       .forRoutes({ path: '*', method: RequestMethod.ALL });
-    // consumer
-    //   .apply(MultitenancyMiddleware)
-    //   .forRoutes({ path: '/device', method: RequestMethod.GET });
+    consumer
+      .apply(MultitenancyMiddleware)
+      .exclude({ path: '/device', method: RequestMethod.GET });
   }
 }
