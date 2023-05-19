@@ -14,6 +14,8 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { CgDarkMode } from "react-icons/cg";
 import { RxMoon, RxSun } from "react-icons/rx";
+import For from "../for";
+import { te } from "date-fns/locale";
 function UpBar() {
   const {
     user,
@@ -24,6 +26,8 @@ function UpBar() {
     authApi,
     theme,
     setTheme,
+    tenantId,
+    setTenantId,
   } = useProvider<AppContext>();
   const [isFullScreen, setIsFullScreen] = useState(false);
   const { t, i18n } = useTranslation();
@@ -45,6 +49,25 @@ function UpBar() {
   return (
     <div className="up-bar">
       <span className="mx-4">{t("title")}</span>
+      <select
+        className="bg-transparent min-w-[10rem]"
+        onChange={(e) => {
+          console.log(typeof e.target.value);
+          setTenantId(parseInt(e.target.value));
+        }}
+        value={tenantId}
+      >
+        <For each={user?.tenants || []}>
+          {(tenant) => (
+            <option
+              value={tenant.id}
+              className="bg-white  dark:bg-primary-dark text-dark dark:text-light "
+            >
+              {tenant.name}
+            </option>
+          )}
+        </For>
+      </select>
       <div
         className="toggle-full-screen"
         onClick={() => {

@@ -41,9 +41,10 @@ model Alert {
   deviceId Int
   device   Device @relation(fields: [deviceId], references: [id])
 
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
-  attributes Json     @default("{}") @map("attributes") @db.Json
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  attributes     Json     @default("{}") @map("attributes") @db.Json
+  acknowledgedBy Int?     @map("acknowledged_by")
 
   @@map("alert")
 }

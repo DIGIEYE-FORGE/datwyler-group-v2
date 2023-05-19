@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
   IsInt,
   IsString,
@@ -126,6 +127,16 @@ export class CreateDeviceDto {
   tenantId: number;
 }
 
+const toInt = (value: string | undefined): number | undefined => {
+  if (value) return parseInt(value);
+  return undefined;
+};
+
+const toBoolean = (value: string | undefined): boolean | undefined => {
+  if (value) return value === 'true';
+  return undefined;
+};
+
 export class UpdateDeviceDto {
   @ApiProperty({ required: false })
   @IsString()
@@ -140,23 +151,27 @@ export class UpdateDeviceDto {
   @IsOptional()
   serial: string;
   @ApiProperty({ required: false })
+  @Transform(({ value }) => toInt(value))
   @IsInt()
   @IsOptional()
   deviceProfileId: number;
   @ApiProperty({ required: false })
-  @IsNumberString()
+  @Transform(({ value }) => toInt(value))
+  @IsInt()
   @IsOptional()
   credentialId: number;
   @ApiProperty({ required: false })
-  @IsNumberString()
+  @Transform(({ value }) => toInt(value))
+  @IsInt()
   @IsOptional()
   firmwareId: number;
   @ApiProperty({ required: false })
-  @IsNumberString()
+  @Transform(({ value }) => toInt(value))
+  @IsInt()
   @IsOptional()
   decoderId: number;
-  @ApiProperty({ required: false })
-  @IsBooleanString()
+  @Transform(({ value }) => toBoolean(value))
+  @IsBoolean()
   @IsOptional()
   isdecoded: boolean;
   @ApiProperty({ required: true })
@@ -172,9 +187,15 @@ export class UpdateDeviceDto {
   @MaxLength(255)
   ip: string;
   @ApiProperty({ required: false })
-  @IsNumberString()
+  @Transform(({ value }) => toInt(value))
+  @IsInt()
   @IsOptional()
   groupId: number;
+  @ApiProperty({ required: false })
+  @Transform(({ value }) => toInt(value))
+  @IsInt()
+  @IsOptional()
+  tenantId: number;
 }
 
 export class AddGroupsDto {
