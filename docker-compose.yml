@@ -40,6 +40,7 @@ services:
       GRPC_MULTI_SERVICE: "multitenancy:4001"
     volumes:
       - ./backend/src:/usr/src/app/src
+      - ./backend/prisma:/usr/src/app/prisma
     depends_on:
       - postgres
       - redis
@@ -70,6 +71,7 @@ services:
       GRPC_PORT: 5001
     volumes:
       - ./auth/src:/usr/src/app/src
+      - ./auth/prisma:/usr/src/app/prisma
     depends_on:
       - postgres
       - redis
@@ -97,6 +99,7 @@ services:
       - multitenancy
     volumes:
       - ./licences/src:/usr/src/app/src
+      - ./licences/prisma:/usr/src/app/prisma
     ports:
       - 2000:2000
       - 2001:2001
@@ -122,6 +125,7 @@ services:
       VITE_AUTH_AUTH : "auth:5001"
     volumes:
       - ./multi-tenancy/src:/usr/src/app/src
+      - ./multi-tenancy/prisma:/usr/src/app/prisma
     depends_on:
       - postgres
       - auth

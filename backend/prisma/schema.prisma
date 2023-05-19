@@ -57,6 +57,8 @@ model Decoder {
   updatedAt     DateTime        @default(now()) @updatedAt @map("updated_at")
   deviceProfile DeviceProfile[]
 
+  tenantId Int? @map("tenant_id")
+
   @@map("decoders")
 }
 
@@ -66,6 +68,8 @@ model DeviceType {
   createdAt      DateTime        @default(now()) @map("created_at")
   updatedAt      DateTime        @updatedAt @map("updated_at")
   deviceProfiles DeviceProfile[]
+
+  tenantId Int? @map("tenant_id")
 
   @@map("device_types")
 }
@@ -83,6 +87,8 @@ model Firmware {
   updatedAt DateTime @updatedAt @map("updated_at")
   device    Device[]
 
+  tenantId Int? @map("tenant_id")
+
   @@unique([name, version])
   @@map("firmwares")
 }
@@ -93,6 +99,8 @@ model Protocol {
   createdAt      DateTime        @default(now()) @map("created_at")
   updatedAt      DateTime        @updatedAt @map("updated_at")
   deviceProfiles DeviceProfile[]
+
+  tenantId Int? @map("tenant_id")
 
   @@map("protocols")
 }
@@ -113,6 +121,8 @@ model DeviceProfile {
   decoder         Decoder?        @relation(fields: [decoderId], references: [id])
   decoderId       Int?
   attributes      Json?
+
+  tenantId Int? @map("tenant_id")
 
   @@map("device_profiles")
 }
