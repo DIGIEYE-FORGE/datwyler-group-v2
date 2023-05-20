@@ -99,6 +99,10 @@ interface Group {
   name?: string;
   type?: string;
   updatedAt?: string;
+  location?: string;
+  lat?: number;
+  lng?: number;
+  ip?: string;
   attributes?: {
     [key: string]: any;
   };
@@ -155,6 +159,10 @@ const Edit = () => {
     name: "",
     updatedAt: "",
     type: "",
+    location: undefined,
+    lat: undefined,
+    lng: undefined,
+    ip: undefined,
     attributes: {},
   });
 
@@ -170,6 +178,10 @@ const Edit = () => {
       updatedAt: rowselected.updatedAt || "",
       type: rowselected.type || "",
       attributes: rowselected.attributes || {},
+      location: rowselected.location || "",
+      lat: rowselected.lat || undefined,
+      lng: rowselected.lng || undefined,
+      ip: rowselected.ip || undefined,
     });
 
     Object.entries(rowselected.attributes || {}).forEach(
@@ -235,7 +247,7 @@ const Edit = () => {
                 <Input
                   className="input"
                   id="name"
-                  value={Groupvalues.name}
+                  value={Groupvalues.name || ""}
                   onChange={(e) => {
                     setGrouprvalues((curr) => ({
                       ...curr,
@@ -263,7 +275,7 @@ const Edit = () => {
                 <Input
                   className="input"
                   id="name"
-                  value={Groupvalues.type}
+                  value={Groupvalues.type || ""}
                   onChange={(e) => {
                     setGrouprvalues((curr) => ({
                       ...curr,
@@ -278,6 +290,117 @@ const Edit = () => {
                 </label>
               </CustomInput>
             </div>
+            <div className="row-input">
+              <span
+                style={{
+                  width: "140px",
+                }}
+              >
+                Location
+              </span>
+              <CustomInput>
+                <Input
+                  className="input"
+                  id="name"
+                  value={Groupvalues?.location || ""}
+                  onChange={(e) => {
+                    setGrouprvalues((curr) => ({
+                      ...curr,
+                      location: e.target.value,
+                    }));
+                  }}
+                />
+                <label htmlFor="name" className="rounded">
+                  <span className="w-2 h-2 flex justify-center align-center ">
+                    <img src={editIcon} alt="edit" />
+                  </span>
+                </label>
+              </CustomInput>
+            </div>
+            <div className="row-input">
+              <span
+                style={{
+                  width: "140px",
+                }}
+              >
+                Lat
+              </span>
+              <CustomInput>
+                <Input
+                  className="input"
+                  id="name"
+                  type="number"
+                  value={Groupvalues?.lat || ""}
+                  onChange={(e) => {
+                    setGrouprvalues((curr) => ({
+                      ...curr,
+                      lat: +e.target.value,
+                    }));
+                  }}
+                />
+                <label htmlFor="name" className="rounded">
+                  <span className="w-2 h-2 flex justify-center align-center ">
+                    <img src={editIcon} alt="edit" />
+                  </span>
+                </label>
+              </CustomInput>
+            </div>
+            <div className="row-input">
+              <span
+                style={{
+                  width: "140px",
+                }}
+              >
+                Lng
+              </span>
+              <CustomInput>
+                <Input
+                  className="input"
+                  id="name"
+                  type="number"
+                  value={Groupvalues?.lng || ""}
+                  onChange={(e) => {
+                    setGrouprvalues((curr) => ({
+                      ...curr,
+                      lng: +e.target.value,
+                    }));
+                  }}
+                />
+                <label htmlFor="name" className="rounded">
+                  <span className="w-2 h-2 flex justify-center align-center ">
+                    <img src={editIcon} alt="edit" />
+                  </span>
+                </label>
+              </CustomInput>
+            </div>
+            <div className="row-input">
+              <span
+                style={{
+                  width: "140px",
+                }}
+              >
+                ip
+              </span>
+              <CustomInput>
+                <Input
+                  className="input"
+                  id="name"
+                  value={Groupvalues.ip || ""}
+                  onChange={(e) => {
+                    setGrouprvalues((curr) => ({
+                      ...curr,
+                      ip: e.target.value,
+                    }));
+                  }}
+                />
+                <label htmlFor="name" className="rounded">
+                  <span className="w-2 h-2 flex justify-center align-center ">
+                    <img src={editIcon} alt="edit" />
+                  </span>
+                </label>
+              </CustomInput>
+            </div>
+            
 
             <div className="row-input">
               <span
