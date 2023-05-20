@@ -80,7 +80,6 @@ const Add = () => {
     }
     return objs;
   }
-  const updatePage = context.updatePage;
   const [deviceProfile, setDeviceProfile] = context.deviceProfiles;
   const [index, setIndex] = React.useState(0);
   const [deviceData, setDeviceData] = React.useState<Device>({
@@ -134,29 +133,31 @@ const Add = () => {
 
   const postDeviceQuery = useMutation({
     mutationFn: (data: any) => createDevice(data),
-    onSuccess: (data) => {
-      createAuthAclQuery.mutateAsync({
-        clientId: data.serial,
-        password:
-          credntialsData.password ||
-          credntialsData.token ||
-          credntialsData.certificate,
-        username:
-          credntialsData.username ||
-          credntialsData.token ||
-          credntialsData.certificate,
-        mountpoint: "",
-        publishAcl: [
-          {
-            pattern: "device/" + data.serial + "/+",
-          },
-        ],
-        subscribeAcl: [
-          {
-            pattern: "device/" + data.serial + "/+",
-          },
-        ],
-      });
+    onSuccess: (data:any) => {
+      setOpen(false);
+      setSave((curr:any) => !curr);
+      // createAuthAclQuery.mutateAsync({
+      //   clientId: data.serial,
+      //   password:
+      //     credntialsData.password ||
+      //     credntialsData.token ||
+      //     credntialsData.certificate,
+      //   username:
+      //     credntialsData.username ||
+      //     credntialsData.token ||
+      //     credntialsData.certificate,
+      //   mountpoint: "",
+      //   publishAcl: [
+      //     {
+      //       pattern: "device/" + data.serial + "/+",
+      //     },
+      //   ],
+      //   subscribeAcl: [
+      //     {
+      //       pattern: "device/" + data.serial + "/+",
+      //     },
+      //   ],
+      // });
     },
     onError: (error) => {
       console.log(error);
@@ -173,21 +174,21 @@ const Add = () => {
     },
   });
   const adddevice = async () => {
-    setCredntialsData((curr) => ({
-      ...curr,
-      type: cridential,
-      password: curr.password || curr.token || "",
-      username: curr.username || curr.token || "",
-      token: curr.token || "",
-    }));
+    // setCredntialsData((curr) => ({
+    //   ...curr,
+    //   type: cridential,
+    //   password: curr.password || curr.token || "",
+    //   username: curr.username || curr.token || "",
+    //   token: curr.token || "",
+    // }));
     setDeviceData((curr) => ({
       ...curr,
       groupId: curr.groupId || undefined,
       tags: curr.tags.filter((e) => e.length > 0),
       description: curr.description || undefined,
-      credential: {
-        ...credntialsData,
-      },
+      // credential: {
+      //   ...credntialsData,
+      // },
       attributes: attributes.reduce((acc: any, v) => {
         if (v[0] && v[1])
           return [
@@ -203,9 +204,9 @@ const Add = () => {
     postDeviceQuery.mutateAsync({
       ...deviceData,
       tenantId: tenantSelected + "" || undefined,
-      credential: {
-        ...isEmty(credntialsData),
-      },
+      // credential: {
+      //   ...isEmty(credntialsData),
+      // },
       attributes: attributes.reduce((acc: any, v) => {
         if (v[0] && v[1])
           return [
@@ -492,7 +493,7 @@ const Add = () => {
             </div>
           </div>
         </Step>
-        <Step label="credential">
+        {/* <Step label="credential">
           <div
             className="body"
             style={{
@@ -573,7 +574,7 @@ const Add = () => {
               )}
             </div>
           </div>
-        </Step>
+        </Step> */}
       </Steps>
 
       <div className="footer">
@@ -586,7 +587,7 @@ const Add = () => {
             cancel
           </span>
         </Button>
-        <Button
+        {/* <Button
           disabled={
             !(
               deviceData.name &&
@@ -600,9 +601,9 @@ const Add = () => {
           }}
         >
           {index == 0 ? "next" : "prev"}
-        </Button>
+        </Button> */}
         <Button
-          style={{ display: index == 1 ? "" : "none" }}
+          // style={{ display: index == 1 ? "" : "none" }}
           color="#006BA9"
           onClick={() => {
             adddevice();
