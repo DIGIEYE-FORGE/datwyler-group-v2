@@ -85,7 +85,7 @@ const paramsReducer = (
 
 function AlertsTab() {
   const [params, setParams] = useReducer(paramsReducer, defaultParams);
-  const { backendApi, tenantId } = useProvider<AppContext>();
+  const { backendApi, tenantId, confirm, user } = useProvider<AppContext>();
   const [total, setTotal] = useState(100);
   const [rows, setRows] = useState<Alert[]>([]);
 
@@ -95,6 +95,31 @@ function AlertsTab() {
       setTotal(res.totalResult);
     });
   }, []);
+
+  const handleAcknowledge = (id: number) => {
+    confirm({
+      title: "Acknolodge alert",
+      description: "Are you sure you want to acknolodge this alert?",
+      onConfirm: () => {
+        backendApi
+          .acklowledgeAlerts({
+            id,
+            user: `${user?.firstName} ${user?.lastName}`,
+          })
+          .then((a) => {
+            setRows(() => {
+              const index = rows.findIndex((r) => r.id === id);
+              const newRows = [...rows];
+              newRows[index] = a;
+              return newRows;
+            });
+          })
+          .catch((e) => {
+            console.log("error acknolodging alert", e);
+          });
+      },
+    });
+  };
 
   const columns: Column[] = [
     {
@@ -214,7 +239,7 @@ function AlertsTab() {
         onChange: () => {},
       },
       valueGetter: (row: Alert) => {
-        if (row.acknoledgedBy)
+        if (row.acknowledgedBy)
           return (
             <div className="flex items-center gap-2">
               {row.attributes?.user}
@@ -222,9 +247,9 @@ function AlertsTab() {
             </div>
           );
         return (
-          <div className=" text-center  outline outline-1 outline-primary text-primary rounded w-fit px-2 py-1 hover:bg-primary/5 active:bg-primary/5 cursor-pointer">
+          <Button variant="outlined" onClick={() => handleAcknowledge(row.id)}>
             Acknolodge
-          </div>
+          </Button>
         );
       },
     },
