@@ -260,7 +260,7 @@ const Add = () => {
             <Input
               id="lat"
               type="number"
-              value={deviceData.lat}
+              value={deviceData.lat }
               placeholder="lattitude"
               onChange={(e) => {
                 setDeviceData((curr) => ({
