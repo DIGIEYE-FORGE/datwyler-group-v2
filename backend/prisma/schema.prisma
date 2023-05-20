@@ -23,28 +23,32 @@ model Group {
   id         Int      @id @default(autoincrement())
   name       String   @db.VarChar(50)
   type       String   @db.VarChar(50)
-  attributes Json?
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
   parentId   Int?     @map("parent_id")
   parent     Group?   @relation("group_tree", fields: [parentId], references: [id])
   subgroups  Group[]  @relation("group_tree")
+  location   String?  @db.VarChar(50)
+  lat        Float?
+  lng        Float?
+  ip         String?  @db.VarChar(50)
+  attributes Json?
   devices    Device[]
   tenantId   Int?     @map("tenant_id")
 
-  @@index([tenantId], name: "groups_tenant_id_index")
   @@unique([name, tenantId, parentId])
+  @@index([tenantId], name: "groups_tenant_id_index")
   @@map("groups")
 }
 
 model Alert {
-  id       Int    @id @default(autoincrement())
+  id       Int     @id @default(autoincrement())
   deviceId Int
-  device   Device @relation(fields: [deviceId], references: [id])
+  device   Device  @relation(fields: [deviceId], references: [id])
   type     String?
   message  String?
   level    String?
-  
+
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
   attributes     Json     @default("{}") @map("attributes") @db.Json
@@ -61,7 +65,7 @@ model Decoder {
   createdAt     DateTime        @default(now()) @map("created_at")
   updatedAt     DateTime        @default(now()) @updatedAt @map("updated_at")
   deviceProfile DeviceProfile[]
-  tenantId Int? @map("tenant_id")
+  tenantId      Int?            @map("tenant_id")
 
   @@unique([name, tenantId])
   @@map("decoders")
@@ -69,12 +73,13 @@ model Decoder {
 
 model DeviceType {
   id             Int             @id @default(autoincrement())
-  name           String           @db.VarChar(50)
+  name           String          @db.VarChar(50)
   createdAt      DateTime        @default(now()) @map("created_at")
   updatedAt      DateTime        @updatedAt @map("updated_at")
   deviceProfiles DeviceProfile[]
 
   tenantId Int? @map("tenant_id")
+
   @@unique([name, tenantId])
   @@map("device_types")
 }
@@ -106,6 +111,7 @@ model Protocol {
   deviceProfiles DeviceProfile[]
 
   tenantId Int? @map("tenant_id")
+
   @@unique([name, tenantId])
   @@map("protocols")
 }
@@ -126,7 +132,7 @@ model DeviceProfile {
   decoder         Decoder?        @relation(fields: [decoderId], references: [id])
   decoderId       Int?
   attributes      Json?           @db.Json
-  tenantId Int? @map("tenant_id")
+  tenantId        Int?            @map("tenant_id")
 
   @@unique([name, tenantId])
   @@map("device_profiles")
