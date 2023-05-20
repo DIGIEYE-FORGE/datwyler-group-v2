@@ -148,7 +148,7 @@ function objectAttributs(obj: obj, nembreAttributs: number[]) {
 }
 
 const defaultGroup: Group = {
-  type: "",
+  type: undefined,
   name: "",
   location: "",
   lat: undefined,
@@ -230,17 +230,17 @@ const Add = () => {
               }}
             />
           </div>
-          <label htmlFor="name">type</label>
+          {/* <label htmlFor="name">type</label>
           <div>
             <Input
               id="type"
-              value={deviceData.type}
+              value={deviceData.type || ""}
               placeholder="type"
               onChange={(e) => {
                 setDeviceData((curr) => ({ ...curr, type: e.target.value }));
               }}
             />
-          </div>
+          </div> */}
           <label htmlFor="location">location</label>
           <div>
             <Input
@@ -299,7 +299,7 @@ const Add = () => {
               }}
             />
           </div>
-          <label
+          {/* <label
             style={{
               alignSelf: "start",
               marginTop: "10px",
@@ -382,7 +382,7 @@ const Add = () => {
                 </div>
               )
             )}
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="footer">
@@ -394,8 +394,15 @@ const Add = () => {
           onClick={() => {
             saveGroup();
           }}
+          disabled={postGroupMutation.isLoading || 
+          deviceData.name === "" ||
+          deviceData.location === "" ||
+          deviceData.lat === "" ||
+          deviceData.lng === "" ||
+          deviceData.ip === ""
+        }
         >
-          upload
+          Save
         </Button>
       </div>
     </div>
