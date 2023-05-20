@@ -1,36 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../../../../components/button";
 import Pagination from "../../../../components/pagination";
 import { Params, User } from "../../../../utils";
 import { RiUserAddLine } from "react-icons/ri";
 import DataGrid, { Column } from "../../../../components/data-grid";
 import Avatar from "../../../../components/avatar";
-import { MdCancel, MdMoreVert, MdOutlineClose, MdWatchLater } from "react-icons/md";
+import {
+  MdCancel,
+  MdMoreVert,
+  MdOutlineClose,
+  MdWatchLater,
+} from "react-icons/md";
 import { IconButton } from "../dashboard";
 import Popover from "../../../../components/popover";
 import { FaUserEdit } from "react-icons/fa";
 import { AiOutlineUserDelete } from "react-icons/ai";
 import { format } from "date-fns";
 import Modal from "../../../../components/modal";
-import { ReactComponent as SysAdmin } from "../../../../assets/user-password.svg"
-import { ReactComponent as Admin } from "../../../../assets/admin.svg"
-import { ReactComponent as Users } from "../../../../assets/user.svg"
-const generateUsers = (count: number): User[] => {
-  const [closePopover, setClosePopover] = useState<() => void>(() => () => {});
-  const users: User[] = [];
-  for (let i = 0; i < count; i++) {
-    users.push({
-      id: i,
-      email: `isel-jao${i}@gmail.com`,
-      firstName: `John${i}`,
-      lastName: `Smith${i}`,
-      avatar: `https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745`,
-      role: ["ADMIN", "USER"][Math.floor(Math.random() * 2)],
-      createdAt: new Date(),
-    });
-  }
-  return users;
-};
+import { ReactComponent as SysAdmin } from "../../../../assets/user-password.svg";
+import { ReactComponent as Admin } from "../../../../assets/admin.svg";
+import { ReactComponent as Users } from "../../../../assets/user.svg";
+import { useProvider } from "../../../../components/provider";
+import { AppContext } from "../../../../App";
 
 function deleteUsers(users: User[], ids: number[]) {
   return users.filter((user) => !ids.includes(user.id));
@@ -44,13 +35,25 @@ const defaultParams: Params = {
 };
 
 function AdminTab() {
-  const [users, setUsers] = useState<User[]>(generateUsers(100));
+  const [users, setUsers] = useState<User[]>([]);
+  const { tenantId, multiTenancyApi } = useProvider<AppContext>();
   const [parms, setParams] = useState<Params>(defaultParams);
-  const [open,setOpen] =useState<boolean>(false);
-  const [activeRole,setActiveRole] = useState<"sysAdmin" | "admin" | "user">("sysAdmin");
-  const [name,setName] = useState<string>("");
-  const [email,setEmail] = useState<string>("");
-  const [password,setPassword] = useState<string>("");
+  const [open, setOpen] = useState<boolean>(false);
+  const [activeRole, setActiveRole] = useState<"sysAdmin" | "admin" | "user">(
+    "sysAdmin"
+  );
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
+  useEffect(() => {
+    multiTenancyApi.getUsers({ tenantId }).then((res) => {
+      console.log("res", res);
+
+      setUsers(res);
+    });
+  }, [tenantId]);
+
   const columns: Column[] = [
     {
       label: "name",
@@ -63,6 +66,15 @@ function AdminTab() {
           </span>
         </div>
       ),
+      filter: {
+        type: "text",
+        onChange: (value) => {},
+      },
+    },
+    {
+      label: "tenant",
+      header: "Tenant",
+      field: "tenantName",
       filter: {
         type: "text",
         onChange: (value) => {},
@@ -96,17 +108,6 @@ function AdminTab() {
         onChange: (value) => {},
       },
     },
-    {
-      label: "creattion date",
-      header: "Creation Date",
-      valueGetter: (user) => (
-        <span>{format(user.createdAt, "dd/MM/yyyy hh:mm")}</span>
-      ),
-      filter: {
-        type: "date",
-        onChange: (value) => {},
-      },
-    },
   ];
   return (
     <div className="flex flex-col gap-6 p-6">
@@ -120,9 +121,12 @@ function AdminTab() {
             setParams({ ...parms, pagination: value });
           }}
         />
-        <Button className="flex items-center gap-1" onClick={()=>{
-          setOpen(true)
-        }}>
+        <Button
+          className="flex items-center gap-1"
+          onClick={() => {
+            setOpen(true);
+          }}
+        >
           <span>Add User</span>
           <RiUserAddLine className="text-lg" />
         </Button>
@@ -173,38 +177,71 @@ function AdminTab() {
             <label className="w-fit" htmlFor="rapport-name">
               Name
             </label>
-            <input id="rapport-name" placeholder="name" className="h-11"  value={name} onChange={(e)=>{
-              setName(e.target.value);
-            }}/>
+            <input
+              id="rapport-name"
+              placeholder="name"
+              className="h-11"
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value);
+              }}
+            />
           </div>
-          <div >
+          <div>
             Role
             <div className="flex gap-6 h-[11rem]">
-              <div className={`flex-1 flex flex-col gap-2 items-center justify-center rounded cursor-pointer
-              ${activeRole === "sysAdmin" ? "bg-[#0091AE] shadow-current scale-x-100 text-white":"bg-[#0091AE]/20 text-primary"}
-              `} onClick={()=>{
-                setActiveRole("sysAdmin");
-              }}>
-                <SysAdmin className={`
-                 ${activeRole === "sysAdmin" ? "fill-white":"fill-primary"}`}/>
+              <div
+                className={`flex-1 flex flex-col gap-2 items-center justify-center rounded cursor-pointer
+              ${
+                activeRole === "sysAdmin"
+                  ? "bg-[#0091AE] shadow-current scale-x-100 text-white"
+                  : "bg-[#0091AE]/20 text-primary"
+              }
+              `}
+                onClick={() => {
+                  setActiveRole("sysAdmin");
+                }}
+              >
+                <SysAdmin
+                  className={`
+                 ${activeRole === "sysAdmin" ? "fill-white" : "fill-primary"}`}
+                />
                 <span className="text-2xl">Sys Admin</span>
               </div>
-              <div className={`flex-1 flex flex-col gap-2 items-center justify-center rounded cursor-pointer
-                ${activeRole === "admin" ?"bg-[#0091AE] shadow-current scale-x-100 text-white":"bg-[#0091AE]/20  text-primary"}
-              `} onClick={()=>{
+              <div
+                className={`flex-1 flex flex-col gap-2 items-center justify-center rounded cursor-pointer
+                ${
+                  activeRole === "admin"
+                    ? "bg-[#0091AE] shadow-current scale-x-100 text-white"
+                    : "bg-[#0091AE]/20  text-primary"
+                }
+              `}
+                onClick={() => {
                   setActiveRole("admin");
-              }}>
-              <Admin className={`
-                 ${activeRole === "admin" ? "fill-white":"fill-primary"}`}/>
-              <span className="text-2xl">Admin</span>
+                }}
+              >
+                <Admin
+                  className={`
+                 ${activeRole === "admin" ? "fill-white" : "fill-primary"}`}
+                />
+                <span className="text-2xl">Admin</span>
               </div>
-              <div className={`flex-1 flex flex-col gap-2 items-center justify-center rounded cursor-pointer
-                ${activeRole === "user" ? "bg-[#0091AE] shadow-current scale-x-100 text-white":"bg-[#0091AE]/20  text-primary"}
-              `} onClick={()=>{
-                   setActiveRole("user");
-              }}>
-                <Users className={`
-                 ${activeRole === "user" ? "fill-white":"fill-primary"}`}/>
+              <div
+                className={`flex-1 flex flex-col gap-2 items-center justify-center rounded cursor-pointer
+                ${
+                  activeRole === "user"
+                    ? "bg-[#0091AE] shadow-current scale-x-100 text-white"
+                    : "bg-[#0091AE]/20  text-primary"
+                }
+              `}
+                onClick={() => {
+                  setActiveRole("user");
+                }}
+              >
+                <Users
+                  className={`
+                 ${activeRole === "user" ? "fill-white" : "fill-primary"}`}
+                />
                 <span className="text-2xl">Regular User</span>
               </div>
             </div>
@@ -213,17 +250,30 @@ function AdminTab() {
             <label className="w-fit" htmlFor="rapport-name">
               Email Address
             </label>
-            <input id="rapport-name" placeholder="gmail@gmail.com" className="h-11"  value={email} onChange={(e)=>{
-              setEmail(e.target.value);
-            }}/>
+            <input
+              id="rapport-name"
+              placeholder="gmail@gmail.com"
+              className="h-11"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+            />
           </div>
           <div>
             <label className="w-fit" htmlFor="rapport-name">
               Password
             </label>
-            <input id="rapport-name" placeholder="........" type="password" className="h-11" value={password} onChange={(e)=>{
-              setPassword(e.target.value);
-            }} />
+            <input
+              id="rapport-name"
+              placeholder="........"
+              type="password"
+              className="h-11"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+            />
           </div>
         </form>
         <div className="flex justify-between items-center h-20 px-6">

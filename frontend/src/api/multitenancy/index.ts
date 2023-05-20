@@ -1,68 +1,30 @@
 import { env } from "../../utils/env";
 import axios from "axios";
-import {
-  Alert,
-  Device,
-  Group,
-  ManyResponse,
-  Params,
-  User,
-  convertParams,
-} from "../../utils";
+import { User } from "../../utils";
 
-export default class BackendApi {
+export default class MultiTenancyApi {
   private api = axios.create({
     // baseURL: env.VITE_AUTH_API,
-    baseURL: "http://localhost:4001",
+    baseURL: "http://localhost:4000",
   });
 
   constructor({
-    tenantId = undefined,
     accessToken = "",
-    refreshToken = "",
   }: {
     tenantId: number | undefined;
     accessToken?: string;
     refreshToken?: string;
   }) {
-    this.api.defaults.headers.common[
-      "Authorization"
-    ] = `Bearer ${refreshToken}`;
-    if (tenantId) this.api.defaults.headers.common["tenant-id"] = tenantId;
+    this.api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
   }
 
-  async getDevices(params: Params): Promise<ManyResponse<Device>> {
-    const res = await this.api.get("/device", {
-      params: convertParams(params),
-    });
-    return res.data;
-  }
-  async getGroups(params: Params): Promise<ManyResponse<Group>> {
-    const res = await this.api.get("/group", {
-      params: convertParams(params),
-    });
-    return res.data;
-  }
-  async getAlerts(params: Params): Promise<ManyResponse<Alert>> {
-    const res = await this.api.get("/alert", {
-      params: convertParams(params),
-    });
-    return res.data;
-  }
-
-  async acklowledgeAlerts({
-    id,
-    user,
+  public async getUsers({
+    tenantId,
   }: {
-    id: number;
-    user: string;
-  }): Promise<Alert> {
-    const res = await this.api.patch(`/alert/${id}`, {
-      attributes: {
-        user,
-      },
-      acknowledgedBy: id,
-    });
-    return res.data;
+    tenantId: number | undefined;
+  }): Promise<User[]> {
+    if (!tenantId) return [];
+    const response = await this.api.get(`/tenant/${tenantId}/users`);
+    return response.data;
   }
 }

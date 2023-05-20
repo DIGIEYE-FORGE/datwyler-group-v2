@@ -16,6 +16,7 @@ import DevPage from "./pages/dev";
 import BackendApi from "./api/backend";
 import Button from "./components/button";
 import Modal from "./components/modal";
+import MultiTenancyApi from "./api/multitenancy";
 
 type ConfirmData = {
   title?: React.ReactNode;
@@ -48,6 +49,7 @@ export type AppContext = {
   tenantId: number | undefined;
   setTenantId: React.Dispatch<React.SetStateAction<number | undefined>>;
   backendApi: BackendApi;
+  multiTenancyApi: MultiTenancyApi;
   confirm: (data?: ConfirmData) => void;
 };
 type Theme = "light" | "dark" | "hybrid";
@@ -88,6 +90,23 @@ function App() {
       }),
     []
   );
+  const backendApi = useMemo(
+    () =>
+      new BackendApi({
+        tenantId,
+        accessToken,
+        refreshToken,
+      }),
+    [tenantId, refreshToken, accessToken]
+  );
+  const multiTenancyApi = useMemo(
+    () =>
+      new MultiTenancyApi({
+        tenantId,
+        accessToken: refreshToken,
+      }),
+    [tenantId, refreshToken]
+  );
   const [openConfirm, setOpenConfirm] = useState(false);
   const handleOpenConfirm = () => {
     if (openConfirm) setConfirmData({});
@@ -100,16 +119,6 @@ function App() {
     if (cdata) setConfirmData(cdata);
     setOpenConfirm(true);
   };
-
-  const backendApi = useMemo(
-    () =>
-      new BackendApi({
-        tenantId,
-        accessToken,
-        refreshToken,
-      }),
-    [tenantId, refreshToken, accessToken]
-  );
 
   function selectTab(index: number) {
     setActiveTab(index);
@@ -191,6 +200,7 @@ function App() {
         setTenantId,
         backendApi,
         confirm,
+        multiTenancyApi,
       }}
     >
       <div className={theme}>
