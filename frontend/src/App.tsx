@@ -14,6 +14,17 @@ import "react-toastify/dist/ReactToastify.css";
 import Login2Page from "./pages/login2";
 import DevPage from "./pages/dev";
 import BackendApi from "./api/backend";
+import Button from "./components/button";
+import Modal from "./components/modal";
+
+type ConfirmData = {
+  title?: React.ReactNode;
+  description?: React.ReactNode;
+  onConfirm?: () => void;
+  onCancel?: () => void;
+  confirmText?: string;
+  cancelText?: string;
+};
 
 export type AppContext = {
   tabs: Tab[];
@@ -37,6 +48,7 @@ export type AppContext = {
   tenantId: number | undefined;
   setTenantId: React.Dispatch<React.SetStateAction<number | undefined>>;
   backendApi: BackendApi;
+  confirm: (data?: ConfirmData) => void;
 };
 type Theme = "light" | "dark" | "hybrid";
 
@@ -76,6 +88,18 @@ function App() {
       }),
     []
   );
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const handleOpenConfirm = () => {
+    if (openConfirm) setConfirmData({});
+    setOpenConfirm((curr) => !curr);
+  };
+
+  const [confirmData, setConfirmData] = useState<ConfirmData>({});
+
+  const confirm = (cdata: ConfirmData | undefined) => {
+    if (cdata) setConfirmData(cdata);
+    setOpenConfirm(true);
+  };
 
   const backendApi = useMemo(
     () =>
@@ -166,6 +190,7 @@ function App() {
         tenantId,
         setTenantId,
         backendApi,
+        confirm,
       }}
     >
       <div className={theme}>
@@ -178,6 +203,39 @@ function App() {
         </Routes>
         <ToastContainer theme="colored" />
       </div>
+      <Modal
+        handleClose={handleOpenConfirm}
+        open={openConfirm}
+        className="flex flex-col p-4 gap-4"
+      >
+        <div>
+          <h1 className="text-2xl font-bold">
+            {confirmData.title || "Confirm"}
+          </h1>
+        </div>
+        <div>
+          {confirmData.description ||
+            "This Action is irreversible. Are you sure you want to proceed?"}
+        </div>
+        <div className="flex justify-between">
+          <Button
+            onClick={() => {
+              confirmData.onCancel?.();
+              handleOpenConfirm();
+            }}
+          >
+            {confirmData.cancelText || "Cancel"}
+          </Button>
+          <Button
+            onClick={() => {
+              confirmData.onConfirm?.();
+              handleOpenConfirm();
+            }}
+          >
+            {confirmData.confirmText || "Confirm"}
+          </Button>
+        </div>
+      </Modal>
     </Provider>
   );
 }

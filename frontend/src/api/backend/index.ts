@@ -54,4 +54,20 @@ export default class BackendApi {
     });
     return res.data;
   }
+
+  async acklowledgeAlerts({
+    id,
+    user,
+  }: {
+    id: number;
+    user: string;
+  }): Promise<Alert> {
+    const res = await this.api.patch(`/alert/${id}`, {
+      attributes: {
+        user,
+      },
+      acknowledgedBy: id,
+    });
+    return res.data;
+  }
 }
