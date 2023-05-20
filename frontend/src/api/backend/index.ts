@@ -1,6 +1,7 @@
 import { env } from "../../utils/env";
 import axios from "axios";
 import {
+  Alert,
   Device,
   Group,
   ManyResponse,
@@ -43,6 +44,12 @@ export default class BackendApi {
   }
   async getGroups(params: Params): Promise<ManyResponse<Group>> {
     const res = await this.api.get("/group", {
+      params: convertParams(params),
+    });
+    return res.data;
+  }
+  async getAlerts(params: Params): Promise<ManyResponse<Alert>> {
+    const res = await this.api.get("/alert", {
       params: convertParams(params),
     });
     return res.data;

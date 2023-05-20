@@ -83,10 +83,13 @@ function GeographicalMapTab() {
   }, [tenantId, params]);
 
   const bounds = useMemo(() => {
-    return groups.map(
-      (group) => [group.lat || 0, group.lng || 0] as [number, number]
-    );
-  }, []);
+    if (groups.length < 1)
+      return [
+        [15, 18],
+        [41, 47],
+      ] as [number, number][];
+    return groups.map((group) => [group.lat, group.lng] as [number, number]);
+  }, [groups]);
 
   return (
     <Provider
@@ -114,9 +117,7 @@ function GeographicalMapTab() {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png"
           />
-          <Show when={groups.length > 2}>
-            <MapControls bounds={bounds} />
-          </Show>
+          <MapControls bounds={bounds} />
           <ZoomControl position="bottomright" />
           <For each={groups}>
             {(group) => (

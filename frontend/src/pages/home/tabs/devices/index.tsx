@@ -39,7 +39,7 @@ function DevicesTab() {
     {
       label: "location",
       header: "Location",
-      valueGetter: (row) => row.group?.name,
+      valueGetter: (row: Device) => row.group?.location,
       filter: {
         type: "select",
         options: [

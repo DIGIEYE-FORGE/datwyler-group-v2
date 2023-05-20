@@ -1,7 +1,7 @@
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import DataGrid, { Column } from "../../../../components/data-grid";
 import Pagination from "../../../../components/pagination";
-import { Params } from "../../../../utils";
+import { Alert, Params } from "../../../../utils";
 import { format } from "date-fns";
 import Button from "../../../../components/button";
 import { AiOutlineCheckCircle, AiOutlinePlusCircle } from "react-icons/ai";
@@ -12,10 +12,20 @@ import {
   FaTemperatureHigh,
   FaTemperatureLow,
 } from "react-icons/fa";
+import { useProvider } from "../../../../components/provider";
+import { AppContext } from "../../../../App";
 const defaultParams: Params = {
   pagination: {
     page: 1,
     perPage: 10,
+  },
+  include: {
+    device: {
+      include: {
+        group: true,
+        deviceProfile: true,
+      },
+    },
   },
 };
 
@@ -25,16 +35,6 @@ type AlertType =
   | "low temperature"
   | "low water level"
   | "water leak";
-
-type Alert = {
-  createdAt: string;
-  deviceID?: string;
-  deviceType?: "ups" | "temperature" | "humidity" | "water cooler";
-  alertType: AlertType;
-  location?: "site1" | "site2";
-  acknoledged?: boolean;
-  acknoledgedBy?: string;
-};
 
 const alertsComponentMap: {
   [key in AlertType]: JSX.Element;
@@ -83,36 +83,24 @@ const paramsReducer = (
   }
 };
 
-const generateDummyData = (total: number): Alert[] => {
-  return Array.from({ length: total }, (_, i) => ({
-    createdAt: new Date(Math.random() * 1000000000000).toISOString(),
-    deviceID: `deviceID${i}`,
-    deviceType: ["ups", "temperature", "humidity", "water cooler"][
-      Math.floor(Math.random() * 4)
-    ] as any,
-    alertType: [
-      "low battery",
-      "high temperature",
-      "low temperature",
-      "low water level",
-      "water leak",
-    ][Math.floor(Math.random() * 5)] as any,
-    location: ["site1", "site2"][Math.floor(Math.random() * 2)] as any,
-    acknoledged: Math.random() > 0.5,
-    acknoledgedBy: `user ${i}`,
-  }));
-};
-
 function AlertsTab() {
   const [params, setParams] = useReducer(paramsReducer, defaultParams);
+  const { backendApi, tenantId } = useProvider<AppContext>();
   const [total, setTotal] = useState(100);
-  const [rows, setRows] = useState(generateDummyData(total));
+  const [rows, setRows] = useState<Alert[]>([]);
+
+  useEffect(() => {
+    backendApi.getAlerts(params).then((res) => {
+      setRows(res.results);
+      setTotal(res.totalResult);
+    });
+  }, []);
 
   const columns: Column[] = [
     {
       label: "location",
       header: "Location",
-      field: "location",
+      valueGetter: (row: Alert) => row.device?.group?.location?.toUpperCase(),
       filter: {
         type: "select",
         options: [
@@ -131,7 +119,8 @@ function AlertsTab() {
     {
       label: "System",
       header: "System",
-      field: "deviceType",
+      valueGetter: (row: Alert) =>
+        row.device?.deviceProfile?.name.toUpperCase(),
       filter: {
         type: "select",
         options: [
@@ -158,7 +147,7 @@ function AlertsTab() {
     {
       label: "deviceID",
       header: "Device ID",
-      field: "deviceID",
+      valueGetter: (row: Alert) => row.device?.serial,
       filter: {
         type: "text",
         onChange: () => {},
@@ -166,10 +155,10 @@ function AlertsTab() {
     },
 
     {
-      label: "alertType",
+      label: "type",
       header: "Alert Type",
       valueGetter(row: Alert) {
-        return alertsComponentMap[row.alertType];
+        return alertsComponentMap[row.type as AlertType];
       },
       filter: {
         type: "select",
@@ -201,7 +190,8 @@ function AlertsTab() {
     {
       label: "date",
       header: "Date",
-      valueGetter: (row) => format(new Date(row.createdAt), "dd/MM/yyyy HH:mm"),
+      valueGetter: (row: Alert) =>
+        format(new Date(row.updatedAt), "dd/MM/yyyy HH:mm"),
       filter: {
         type: "date",
         onChange: () => {},
@@ -225,10 +215,10 @@ function AlertsTab() {
         onChange: () => {},
       },
       valueGetter: (row: Alert) => {
-        if (row.acknoledged)
+        if (row.acknoledgedBy)
           return (
             <div className="flex items-center gap-2">
-              {row.acknoledgedBy}
+              {row.attributes?.user}
               <AiOutlineCheckCircle className="text-green-500" />
             </div>
           );

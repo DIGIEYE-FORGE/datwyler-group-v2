@@ -34,13 +34,13 @@ export type User = {
 export type Alert = {
   id: number;
   deviceId: number;
-  device: Device;
+  device?: Device;
   type?: string;
   message?: string;
   level?: string;
   createdAt: string;
   updatedAt: string;
-  attributes?: JsonObject;
+  attributes?: Record<string, string | number | boolean>;
   acknowledgedBy?: number;
   [key: string]: any;
 };
@@ -58,7 +58,7 @@ export type Group = {
   lat: number;
   lng: number;
   ip?: string;
-  attributes?: Record<string, any>;
+  attributes?: Record<string, string | number | boolean>;
   devices?: Device[];
   tenantId?: number;
   alerts: Alert[];
