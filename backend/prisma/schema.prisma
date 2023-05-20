@@ -22,7 +22,7 @@ model VirtualDevice {
 model Group {
   id         Int      @id @default(autoincrement())
   name       String   @db.VarChar(50)
-  type       String   @db.VarChar(50)
+  type       String?  @db.VarChar(50)
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
   parentId   Int?     @map("parent_id")

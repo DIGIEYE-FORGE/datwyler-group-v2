@@ -30,10 +30,11 @@ export class CreateGroupDto {
   @MinLength(2)
   @MaxLength(255)
   name: string;
-  @ApiProperty({ required: true })
+  @ApiProperty({ required: false })
   @IsString()
   @MinLength(2)
   @MaxLength(255)
+  @IsOptional()
   type: string;
   @ApiProperty({ required: false })
   @IsInt()
