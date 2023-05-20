@@ -1,13 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsInt,
-  IsString,
-  MinLength,
-  MaxLength,
-  IsDateString,
-  IsOptional,
-} from 'class-validator';
+import { IsInt, IsString, MinLength, MaxLength, IsDateString, IsOptional } from 'class-validator'
 import { IsPassword, IsPhoneNumber } from 'src/utils';
 
 export class Alert {
@@ -49,10 +42,6 @@ export class CreateAlertDto {
   @MaxLength(255)
   @IsOptional()
   level: string;
-  @ApiProperty({ required: false })
-  attributes: Record<string, string | number | boolean>;
-  @ApiProperty({ required: false })
-  acknowledgedBy: Record<string, string | number | boolean>;
 }
 
 export class UpdateAlertDto {
@@ -78,8 +67,5 @@ export class UpdateAlertDto {
   @MaxLength(255)
   @IsOptional()
   level: string;
-  @ApiProperty({ required: false })
-  attributes: Record<string, string | number | boolean>;
-  @ApiProperty({ required: false })
-  acknowledgedBy: Record<string, string | number | boolean>;
 }
+

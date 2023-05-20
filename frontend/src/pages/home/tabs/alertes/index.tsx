@@ -102,17 +102,16 @@ function AlertsTab() {
       header: "Location",
       valueGetter: (row: Alert) => row.device?.group?.location?.toUpperCase(),
       filter: {
-        type: "select",
-        options: [
-          {
-            label: "Site1",
-            value: "site1",
-          },
-          {
-            label: "Site2",
-            value: "site2",
-          },
-        ],
+        type: "text",
+        onChange: () => {},
+      },
+    },
+    {
+      label: "site",
+      header: "Site",
+      valueGetter: (row: Alert) => row.device?.group?.name?.toUpperCase(),
+      filter: {
+        type: "text",
         onChange: () => {},
       },
     },

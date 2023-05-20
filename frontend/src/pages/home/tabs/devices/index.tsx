@@ -41,17 +41,16 @@ function DevicesTab() {
       header: "Location",
       valueGetter: (row: Device) => row.group?.location,
       filter: {
-        type: "select",
-        options: [
-          {
-            label: "Site1",
-            value: "site1",
-          },
-          {
-            label: "Site2",
-            value: "site2",
-          },
-        ],
+        type: "text",
+        onChange: () => {},
+      },
+    },
+    {
+      label: "site",
+      header: "Site",
+      valueGetter: (row: Device) => row.group?.name,
+      filter: {
+        type: "text",
         onChange: () => {},
       },
     },
