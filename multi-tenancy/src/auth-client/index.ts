@@ -7,10 +7,7 @@ import { AuthClient } from "../proto/authPackage/Auth";
 import logger from "../commun/logger";
 import { VerifyRequest } from "../proto/authPackage/VerifyRequest";
 import { VerifyResponse__Output } from "../proto/authPackage/VerifyResponse";
-import { AddTenantRequest } from "../proto/authPackage/AddTenantRequest";
-import { AddTenantResponse__Output } from "../proto/authPackage/AddTenantResponse";
-import { RemoveTenantRequest } from "../proto/authPackage/RemoveTenantRequest";
-import { RemoveTenantResponse__Output } from "../proto/authPackage/RemoveTenantResponse";
+import { GetUsersResponse__Output } from "../proto/authPackage/GetUsersResponse";
 
 const PROTO_FILE = path.resolve(__dirname, "..", "..", "auth.proto");
 
@@ -68,29 +65,12 @@ class GrpcClient {
     });
   }
 
-  public addTenantToUser(
-    data: AddTenantRequest
-  ): Promise<AddTenantResponse__Output | undefined> {
-    logger.debug("addTenantToUser", data);
+  public getUsers(data: {
+    ids: number[];
+  }): Promise<GetUsersResponse__Output | undefined> {
     return new Promise((resolve, reject) => {
-      this.client.AddTenant(data, (err, res) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(res);
-      });
-    });
-  }
-
-  public removeTenantFromUser(
-    data: RemoveTenantRequest
-  ): Promise<RemoveTenantResponse__Output | undefined> {
-    logger.debug("removeTenantFromUser", data);
-    return new Promise((resolve, reject) => {
-      this.client.RemoveTenant(data, (err, res) => {
-        if (err) {
-          reject(err);
-        }
+      this.client.GetUsers(data, (err, res) => {
+        if (err) reject(err);
         resolve(res);
       });
     });

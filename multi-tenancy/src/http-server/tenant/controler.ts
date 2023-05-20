@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import { Router } from "express";
 import TenantService from "./service";
 import {
@@ -118,6 +118,20 @@ class TenantController {
         logger.debug("removeUser", result);
 
         res.status(200).send(result);
+      } catch (err) {
+        if (err instanceof z.ZodError) res.status(400).send(err.errors);
+        else {
+          const error: any = err;
+          res.status(400).send([error.message]);
+        }
+      }
+    });
+
+    this.router.get("/:id/users", async (req: Request, res: Response) => {
+      try {
+        const tenantId = z.number().int().parse(+req.params.id);
+        const result = await this.service.getTenantUsers(tenantId);
+        res.send(result);
       } catch (err) {
         if (err instanceof z.ZodError) res.status(400).send(err.errors);
         else {

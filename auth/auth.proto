@@ -4,10 +4,6 @@ package authPackage;
 
 service Auth {
 	rpc Verify(VerifyRequest) returns (VerifyResponse) {};
-
-	rpc AddTenant(AddTenantRequest) returns (AddTenantResponse) {};
-
-	rpc RemoveTenant(RemoveTenantRequest) returns (RemoveTenantResponse) {};
 	rpc GetUsers(GetUsersRequest) returns (GetUsersResponse) {};
 }
 
@@ -21,16 +17,12 @@ message User {
 	string lastName = 3;
 	string email = 4;
 	string password = 5;
+	// string avatar = 6;
 	// optional google.protobuf.Any avatar = 6;
 	// optional google.protobuf.Any phoneNumber = 7;
-	enum Role{
-		ADMIN = 0;
-		USER = 1;
-	}
-	Role role = 6;
 	// google.protobuf.Any createdAt = 9;
 	// google.protobuf.Any updatedAt = 10;
-	repeated int32 tenantIds = 7;
+
 
 }
 
@@ -45,22 +37,4 @@ message VerifyRequest {
 message VerifyResponse {
 	int32 id = 1;
 	 string email = 2;
-}
-
-message AddTenantRequest {
-	int32 id = 1;
-	int32 tenantId = 2;
-}
-
-message AddTenantResponse {
-	repeated int32 tenantIds = 1;
-}
-
-message RemoveTenantRequest {
-	int32 id = 1;
-	int32 tenantId = 2;
-}
-
-message RemoveTenantResponse {
-	repeated int32 tenantIds = 1;
 }
