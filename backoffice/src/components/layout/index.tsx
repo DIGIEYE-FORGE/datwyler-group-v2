@@ -653,7 +653,6 @@ const Layout = (props: Props) => {
                   );
                 })}
             </Select>
-            {JSON.stringify(tenantSelected)}
             <span className="mt-6"></span>
             {props.groups[0].routes.map((route) => {
               return <RouterLink key={route.label} route={route} />;

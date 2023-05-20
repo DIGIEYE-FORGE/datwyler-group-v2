@@ -2,7 +2,7 @@ import Button from "../../components/button";
 import AddIcon from "../../assets/icons/add.svg";
 import { useState, useReducer, useEffect } from "react";
 import SplitableTabs from "../../components/splitable-tabs";
-import Provider from "../../components/provider";
+import Provider, { useProvider } from "../../components/provider";
 import Add from "./add";
 import DataGrid, { Column } from "../../components/data-grid";
 import noDataImg from "../../assets/images/no-data.svg";
@@ -13,6 +13,7 @@ import Edit from "./edit";
 import useAffirm from "../../hooks/use-affirm";
 import { toast } from "react-toastify";
 import { useMutation, useQueries } from "@tanstack/react-query";
+import { Context } from "../devices";
 
 const NoData = () => {
   return (
@@ -152,6 +153,8 @@ const DecoderPage = () => {
   const [params, dispatch] = useReducer(paramsReducer, defaultParams);
   const [deviceTypes, setDeviceTypes] = useState<deviceType[]>([]);
   const [rowSelected, setRowSelected] = useState<Decoder | null>(null);
+  const context = useProvider<Context>();
+  const [tenantSelected,] = context.tenantSelected;
   const [save, setSave] = useState<boolean>(false);
   const [affirm, AffirmModal] = useAffirm({
     defautlMessage: "Are you sure?",
@@ -160,7 +163,7 @@ const DecoderPage = () => {
   const [getDecoderQuery] = useQueries({
     queries: [
       {
-        queryKey: ["decoder", params, save],
+        queryKey: ["decoder", params, save, tenantSelected],
         queryFn: () => getDecoder(params),
       },
     ],

@@ -36,6 +36,7 @@ import { MultitenancyMiddleware } from './common/middleware/multitenancy.middlew
 import { LicenseModule } from './license/license.module';
 import { MultitenancyModule } from './multitenancy/multitenancy.module';
 import { LicenseService } from './license/license.service';
+import { json, urlencoded } from 'express';
 
 @Module({
   imports: [
@@ -44,7 +45,6 @@ import { LicenseService } from './license/license.service';
     VmqAuthAclModule,
     ProtocolModule,
     AlertModule,
-    // UserModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'),
     }),
@@ -70,6 +70,7 @@ import { LicenseService } from './license/license.service';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
+    consumer.apply(json(), urlencoded({ extended: true })).forRoutes('*');
     consumer
       .apply(LoggerMiddleware)
       .forRoutes({ path: '*', method: RequestMethod.ALL });
@@ -80,7 +81,19 @@ export class AppModule implements NestModule {
       { path: '/device', method: RequestMethod.ALL },
       {
         path: '/group',
-        method: RequestMethod.POST,
+        method: RequestMethod.ALL,
+      },
+      {
+        path: '/deviceProfile',
+        method: RequestMethod.ALL,
+      },
+      {
+        path: '/decoder',
+        method: RequestMethod.ALL,
+      },
+      {
+        path: '/firmware',
+        method: RequestMethod.ALL,
       },
     );
   }

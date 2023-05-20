@@ -33,8 +33,10 @@ export class FirmwareService {
   }
 
   async create(data: CreateFirmwareDto) {
+    console.log('|....................|', data, '....................|');
     try {
       delete data['file'];
+      data.tenantId = +data.tenantId || undefined;
       return await this.prisma.firmware.create({ data });
     } catch (e) {
       if (data.url) {

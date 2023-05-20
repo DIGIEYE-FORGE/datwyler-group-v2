@@ -66,6 +66,7 @@ const Add = () => {
     formData.append("version", dataFile.version);
     formData.append("description", dataFile.description);
     formData.append("hash", dataFile.hash);
+    formData.append("tenantId",localStorage.getItem("tenantId") as string);
     if (file) {
       formData.append("file", file);
     }

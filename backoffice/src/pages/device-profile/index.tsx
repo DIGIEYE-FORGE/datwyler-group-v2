@@ -2,7 +2,7 @@ import Button from "../../components/button";
 import AddIcon from "../../assets/icons/add.svg";
 import { useState, useReducer, useEffect } from "react";
 import SplitableTabs from "../../components/splitable-tabs";
-import Provider from "../../components/provider";
+import Provider, { useProvider } from "../../components/provider";
 import Add from "./add";
 import DataGrid, { Column } from "../../components/data-grid";
 import {
@@ -26,6 +26,7 @@ import Textarea from "../../components/textarea";
 import DeleteIcon from "../../assets/icons/delete.svg";
 import useAffirm from "../../hooks/use-affirm";
 import { useMutation, useQueries } from "@tanstack/react-query";
+import { Context } from "../devices";
 
 const NoData = () => {
   return (
@@ -214,7 +215,7 @@ export type DeviceTypes = {
   [key: string]: any;
 };
 
-export interface Context {
+export interface ContextDeviceProfile{
   decoders: [Decoder, React.Dispatch<React.SetStateAction<Decoder>>];
   deviceTypes: [DeviceTypes, React.Dispatch<React.SetStateAction<DeviceTypes>>];
   credentials: [Credentials, React.Dispatch<React.SetStateAction<Credentials>>];
@@ -230,6 +231,8 @@ const DeviceProfilePage = () => {
   const [params, dispatch] = useReducer(paramsReducer, defaultParams);
   const [deviceTypes, setDeviceTypes] = useState<DeviceType[]>([]);
   const [decoder, setDecoder] = useState<Decoder[]>([]);
+  const context = useProvider<Context>();
+  const [tenantSelected, setTenantSelected] = context.tenantSelected;
   const [credentials, setCredentials] = useState<Credentials[]>([]);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [protocol, setProtocol] = useState<Protocol[]>([]);
@@ -287,7 +290,7 @@ const DeviceProfilePage = () => {
         onSuccess: (data: any) => setProtocol(data.results),
       },
       {
-        queryKey: ["deviceProfile", params, save],
+        queryKey: ["deviceProfile", params, save, tenantSelected],
         queryFn: () => getDeviceProfile(params),
       },
     ],

@@ -2,7 +2,7 @@ import Button from "../../components/button";
 import AddIcon from "../../assets/icons/add.svg";
 import { useState, useReducer, useEffect } from "react";
 import SplitableTabs from "../../components/splitable-tabs";
-import Provider from "../../components/provider";
+import Provider, { useProvider } from "../../components/provider";
 import Add from "./add";
 import DataGrid, { Column } from "../../components/data-grid";
 // import { getDevices } from "../../api/device";
@@ -16,6 +16,7 @@ import useAffirm from "../../hooks/use-affirm";
 import { toast } from "react-toastify";
 import Edit from "./edit";
 import { useMutation, useQueries } from "@tanstack/react-query";
+import { Context } from "../devices";
 
 function parseJSON(value: string) {
   try {
@@ -188,6 +189,8 @@ interface DeviceProfile {
 const GroupPage = () => {
   const [open, setOpen] = useState(false);
   const [isEdit, setIsEdit] = useState<Boolean>(false);
+  const context = useProvider<Context>();
+  const [tenantSelected, setTenantSelected] = context.tenantSelected;
   const [params, dispatch] = useReducer(paramsReducer, defaultParams);
   const [deviceProfiles, setDeviceProfiles] = useState<DeviceProfile[]>([]);
   const [save, setSave] = useState(false);
@@ -208,7 +211,7 @@ const GroupPage = () => {
   const [groupQueries] = useQueries({
     queries: [
       {
-        queryKey: ["groups", params, save],
+        queryKey: ["groups", params, save,tenantSelected],
         queryFn: () => getGroups(params),
       },
     ],

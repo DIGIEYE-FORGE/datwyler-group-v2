@@ -47,6 +47,7 @@ export class DeviceProfileController {
     }),
   )
   create(@UploadedFile() file: Express.Multer.File, @Body() data: any) {
+    if (data.tenantId) data.tenantId = +data.tenantId;
     return this.deviceprofileService.create(data, file);
   }
 

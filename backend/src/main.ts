@@ -11,6 +11,8 @@ async function bootstrap() {
     bodyParser: true,
     cors: true,
   });
+
+  
   app.useStaticAssets(join(__dirname, '..', '..', './uploads'));
   app.enableCors();
 

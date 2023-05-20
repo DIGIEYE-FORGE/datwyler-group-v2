@@ -34,12 +34,15 @@ export class DeviceProfileService {
   @HandleRequestErrors()
   async create(data: any, file: Express.Multer.File) {
     try {
+      console.log('|....................|', data, '....................|');
       if (file && file.path) data.logo = file.path.substring(8);
       delete data['file'];
       data.deviceTypeId = +data.deviceTypeId || null;
       data.protocolId = +data.protocolId || null;
       data.decoderId = +data.decoderId || null;
-      console.log('0000000000000000000000000000000\n', data);
+      data.tenantId = +data.tenantId || undefined;
+      // console.log('|....................|', data, '....................|');
+
       return await this.prisma.deviceProfile.create({ data });
     } catch (e) {
       if (file && file.path) {

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
   IsInt,
   IsString,
@@ -7,6 +8,7 @@ import {
   MaxLength,
   IsDateString,
   IsOptional,
+  IsNumber,
 } from 'class-validator';
 import { IsPassword, IsPhoneNumber } from 'src/utils';
 
@@ -77,6 +79,12 @@ export class CreateFirmwareDto {
   @MinLength(2)
   @MaxLength(255)
   hash: string;
+  
+  @ApiProperty({ required: false })
+  @Transform(({ value }) => Number(value))
+  @IsOptional()
+  @IsNumber()
+  tenantId: number;
 }
 
 export class UploadedFilesDto {

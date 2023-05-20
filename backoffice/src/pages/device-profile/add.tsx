@@ -94,6 +94,7 @@ const Add = () => {
     formData.append("decoderId", dataProfile.decoderId.toString());
     formData.append("cridentialsType", dataProfile.cridentialsType);
     formData.append("file", (dataProfile.file as any) || "");
+    formData.append('tenantId',localStorage.getItem('tenantId') || '')
     formData.append(
       "attributes",
       JSON.stringify(Object.fromEntries(attributes))

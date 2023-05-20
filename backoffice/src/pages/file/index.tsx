@@ -2,7 +2,7 @@ import Button from "../../components/button";
 import AddIcon from "../../assets/icons/add.svg";
 import { useState, useReducer, useEffect } from "react";
 import SplitableTabs from "../../components/splitable-tabs";
-import Provider from "../../components/provider";
+import Provider, { useProvider } from "../../components/provider";
 import Add from "./add";
 import { deleteFile, downloadFile, getFiles } from "../../api/files";
 import DataGrid, { Column } from "../../components/data-grid";
@@ -15,6 +15,7 @@ import { getGroups } from "../../api/group";
 import useAffirm from "../../hooks/use-affirm";
 import { toast } from "react-toastify";
 import { useMutation, useQueries } from "@tanstack/react-query";
+import { Context } from "../devices";
 
 const NoData = () => {
   return (
@@ -161,6 +162,8 @@ const FilePage = () => {
   const [params, dispatch] = useReducer(paramsReducer, defaultParams);
   const [deviceProfiles, setDeviceProfiles] = useState<DeviceProfile[]>([]);
   const [groups, setGroups] = useState<any[]>([]);
+  const context = useProvider<Context>();
+  const [tenantSelected,] = context.tenantSelected;
   const [save, setSave] = useState(false);
   const [affirm, AffirmModal] = useAffirm({
     defautlMessage: "Are you sure?",
@@ -169,7 +172,7 @@ const FilePage = () => {
   const [getFileQuery] = useQueries({
     queries: [
       {
-        queryKey: ["files", params, save],
+        queryKey: ["files", params, save,tenantSelected],
         queryFn: () => getFiles(params),
       },
     ],
