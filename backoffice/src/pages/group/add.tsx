@@ -81,6 +81,14 @@ interface Group {
     connect: { id: number }[];
   };
   attributes?: {};
+  // location   String?  @db.VarChar(50)
+  // lat        Float?
+  // lng        Float?
+  // ip         String?  @db.VarChar(50)
+  location?: string;
+  lat?: number;
+  lng?: number;
+  ip?: string;
   [key: string]: any;
 }
 interface Context {
@@ -139,6 +147,17 @@ function objectAttributs(obj: obj, nembreAttributs: number[]) {
   return data;
 }
 
+const defaultGroup: Group = {
+  type: "",
+  name: "",
+  location: "",
+  lat: undefined,
+  lng: undefined,
+  ip: "",
+  parentId: "",
+  groups: [],
+};
+
 const Add = () => {
   const context = useProvider<Context>();
   const [numberAttribute, setNumberAttribute] = React.useState([1]);
@@ -146,12 +165,8 @@ const Add = () => {
   const updatePage = context.updatePage;
   const [save, setSave] = context.save;
   const [dataAttribute, setDataAttribute] = React.useState<Attributes>({});
-  const [deviceData, setDeviceData] = React.useState<Group>({
-    type: "",
-    name: "",
-    parentId: "",
-    groups: [],
-  });
+
+  const [deviceData, setDeviceData] = React.useState<Group>(defaultGroup);
 
   const postGroupMutation = useMutation({
     mutationFn: (data: any) => createGroup(deleteemptyfield(data)),
@@ -166,6 +181,10 @@ const Add = () => {
     let res = {
       name: deviceData.name,
       type: deviceData.type,
+      location: deviceData.location,
+      lat: deviceData.lat,
+      lng: deviceData.lng,
+      ip: deviceData.ip,
       attributes: objectAttributs(dataAttribute, numberAttribute),
       parentId: deviceData.parentId,
       subgroups: {
@@ -175,12 +194,7 @@ const Add = () => {
     postGroupMutation.mutate(res);
   };
   const clearData = () => {
-    setDeviceData({
-      name: "",
-      parentId: "",
-      type: "",
-      groups: [],
-    });
+    setDeviceData(defaultGroup);
     setDataAttribute({});
     setNumberAttribute([1]);
     setOpen(false);
@@ -210,7 +224,7 @@ const Add = () => {
             <Input
               id="name"
               value={deviceData.name}
-              placeholder="example"
+              placeholder="Name"
               onChange={(e) => {
                 setDeviceData((curr) => ({ ...curr, name: e.target.value }));
               }}
@@ -224,6 +238,64 @@ const Add = () => {
               placeholder="type"
               onChange={(e) => {
                 setDeviceData((curr) => ({ ...curr, type: e.target.value }));
+              }}
+            />
+          </div>
+          <label htmlFor="location">location</label>
+          <div>
+            <Input
+              id="location"
+              value={deviceData.location}
+              placeholder="location"
+              onChange={(e) => {
+                setDeviceData((curr) => ({
+                  ...curr,
+                  location: e.target.value,
+                }));
+              }}
+            />
+          </div>
+          <label htmlFor="lat">lat</label>
+          <div>
+            <Input
+              id="lat"
+              type="number"
+              value={deviceData.lat}
+              placeholder="lattitude"
+              onChange={(e) => {
+                setDeviceData((curr) => ({
+                  ...curr,
+                  lat: +e.target.value,
+                }));
+              }}
+            />
+          </div>
+          <label htmlFor="lng">lng</label>
+          <div>
+            <Input
+              id="lng"
+              type="number"
+              value={deviceData.lng}
+              placeholder="longitude"
+              onChange={(e) => {
+                setDeviceData((curr) => ({
+                  ...curr,
+                  lng: +e.target.value,
+                }));
+              }}
+            />
+          </div>
+          <label htmlFor="ip">ip</label>
+          <div>
+            <Input
+              id="ip"
+              value={deviceData.ip}
+              placeholder="ip"
+              onChange={(e) => {
+                setDeviceData((curr) => ({
+                  ...curr,
+                  ip: e.target.value,
+                }));
               }}
             />
           </div>
@@ -314,11 +386,7 @@ const Add = () => {
         </div>
       </div>
       <div className="footer">
-        <Button
-          onClick={() => setOpen((curr) => !curr)}
-          variant="outlined"
-          color="#CDCED6"
-        >
+        <Button onClick={clearData} variant="outlined" color="#CDCED6">
           <span style={{ color: "#4e5064" }}>cancel</span>
         </Button>
         <Button

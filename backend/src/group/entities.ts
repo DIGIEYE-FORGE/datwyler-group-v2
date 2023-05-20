@@ -17,6 +17,10 @@ export class Group {
   @ApiProperty({ required: false })
   parentId: number;
   @ApiProperty({ required: false })
+  location: string;
+  @ApiProperty({ required: false })
+  ip: string;
+  @ApiProperty({ required: false })
   tenantId: number;
 }
 
@@ -35,6 +39,18 @@ export class CreateGroupDto {
   @IsInt()
   @IsOptional()
   parentId: number;
+  @ApiProperty({ required: false })
+  @IsString()
+  @MinLength(2)
+  @MaxLength(255)
+  @IsOptional()
+  location: string;
+  @ApiProperty({ required: false })
+  @IsString()
+  @MinLength(2)
+  @MaxLength(255)
+  @IsOptional()
+  ip: string;
   @ApiProperty({ required: false })
   @IsInt()
   @IsOptional()
@@ -58,6 +74,18 @@ export class UpdateGroupDto {
   @IsInt()
   @IsOptional()
   parentId: number;
+  @ApiProperty({ required: false })
+  @IsString()
+  @MinLength(2)
+  @MaxLength(255)
+  @IsOptional()
+  location: string;
+  @ApiProperty({ required: false })
+  @IsString()
+  @MinLength(2)
+  @MaxLength(255)
+  @IsOptional()
+  ip: string;
   @ApiProperty({ required: false })
   @IsInt()
   @IsOptional()

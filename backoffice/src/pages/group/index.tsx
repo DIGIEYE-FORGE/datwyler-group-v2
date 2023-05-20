@@ -211,7 +211,7 @@ const GroupPage = () => {
   const [groupQueries] = useQueries({
     queries: [
       {
-        queryKey: ["groups", params, save,tenantSelected],
+        queryKey: ["groups", params, save, tenantSelected],
         queryFn: () => getGroups(params),
       },
     ],
@@ -333,6 +333,7 @@ const GroupPage = () => {
             </div>
           </div>
         </div>
+        {/* TODO: Edit */}
         {isEdit ? <Edit /> : <Add />}
       </SplitableTabs>
       <AffirmModal />
