@@ -12,8 +12,11 @@ export interface ProtoGrpcType {
     AddTenantRequest: MessageTypeDefinition
     AddTenantResponse: MessageTypeDefinition
     Auth: SubtypeConstructor<typeof grpc.Client, _authPackage_AuthClient> & { service: _authPackage_AuthDefinition }
+    GetUsersRequest: MessageTypeDefinition
+    GetUsersResponse: MessageTypeDefinition
     RemoveTenantRequest: MessageTypeDefinition
     RemoveTenantResponse: MessageTypeDefinition
+    User: MessageTypeDefinition
     VerifyRequest: MessageTypeDefinition
     VerifyResponse: MessageTypeDefinition
   }

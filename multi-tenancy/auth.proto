@@ -8,8 +8,35 @@ service Auth {
 	rpc AddTenant(AddTenantRequest) returns (AddTenantResponse) {};
 
 	rpc RemoveTenant(RemoveTenantRequest) returns (RemoveTenantResponse) {};
+	rpc GetUsers(GetUsersRequest) returns (GetUsersResponse) {};
 }
 
+message GetUsersRequest {
+	repeated int32 ids = 1;
+}
+message User {
+
+	int32 id = 1;
+	string firstName = 2;
+	string lastName = 3;
+	string email = 4;
+	string password = 5;
+	// optional google.protobuf.Any avatar = 6;
+	// optional google.protobuf.Any phoneNumber = 7;
+	enum Role{
+		ADMIN = 0;
+		USER = 1;
+	}
+	Role role = 6;
+	// google.protobuf.Any createdAt = 9;
+	// google.protobuf.Any updatedAt = 10;
+	repeated int32 tenantIds = 7;
+
+}
+
+message GetUsersResponse {
+	repeated User users = 1;
+}
 
 message VerifyRequest {
 	 string accessToken = 1;

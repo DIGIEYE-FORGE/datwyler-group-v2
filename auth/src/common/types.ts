@@ -48,6 +48,9 @@ export const refreshSchema = z.object({
 export const verifySchema = z.object({
   accessToken: z.string().min(1),
 });
+export const dataIdsSchema = z.object({
+  ids: z.array(z.number()),
+});
 
 
 export const updatePasswordSchema = z.object({

@@ -3,10 +3,32 @@ import logger from "../common/logger";
 import redis from "../common/redis";
 import env from "../common/env";
 import jwt from "jsonwebtoken";
-import { AddTenantSchema, DecodedToken, verifySchema } from "../common/types";
+import { AddTenantSchema, DecodedToken, dataIdsSchema, verifySchema } from "../common/types";
 import * as grpc from "@grpc/grpc-js";
 import prisma from "../common/prisma";
 import { verifyToken } from "../common";
+import { User } from "@prisma/client";
+
+export const GetUsers: AuthHandlers["GetUsers"] = (req, res) => {
+  const { ids } = dataIdsSchema.parse(req.request);
+  prisma.user
+    .findMany({
+      where: {
+        id: {
+          in: ids,
+        },
+      },
+    })
+    .then((users) => {
+      res(null, {users});
+    })
+    .catch((err) => {
+      res({
+        code: grpc.status.INTERNAL,
+        message: "internal server error",
+      });
+    });
+};
 
 export const verify: AuthHandlers["Verify"] = (req, res) => {
   const { accessToken } = verifySchema.parse(req.request);
@@ -39,6 +61,8 @@ export const verify: AuthHandlers["Verify"] = (req, res) => {
       });
     });
 };
+
+export const getUsers:
 
 export const addTenant: AuthHandlers["AddTenant"] = (req, res) => {
   logger.debug("AddTenant", req.request);

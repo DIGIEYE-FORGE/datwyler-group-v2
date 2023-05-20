@@ -85,6 +85,7 @@ app.use(async (req: RequestWithUser, res, next) => {
   });
 });
 
+
 app.post("/register",
   multer({ storage: storage }).single("avatar")
   , async (req, res) => {

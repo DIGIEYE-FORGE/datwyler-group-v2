@@ -4,6 +4,8 @@ import type * as grpc from '@grpc/grpc-js'
 import type { MethodDefinition } from '@grpc/proto-loader'
 import type { AddTenantRequest as _authPackage_AddTenantRequest, AddTenantRequest__Output as _authPackage_AddTenantRequest__Output } from '../authPackage/AddTenantRequest';
 import type { AddTenantResponse as _authPackage_AddTenantResponse, AddTenantResponse__Output as _authPackage_AddTenantResponse__Output } from '../authPackage/AddTenantResponse';
+import type { GetUsersRequest as _authPackage_GetUsersRequest, GetUsersRequest__Output as _authPackage_GetUsersRequest__Output } from '../authPackage/GetUsersRequest';
+import type { GetUsersResponse as _authPackage_GetUsersResponse, GetUsersResponse__Output as _authPackage_GetUsersResponse__Output } from '../authPackage/GetUsersResponse';
 import type { RemoveTenantRequest as _authPackage_RemoveTenantRequest, RemoveTenantRequest__Output as _authPackage_RemoveTenantRequest__Output } from '../authPackage/RemoveTenantRequest';
 import type { RemoveTenantResponse as _authPackage_RemoveTenantResponse, RemoveTenantResponse__Output as _authPackage_RemoveTenantResponse__Output } from '../authPackage/RemoveTenantResponse';
 import type { VerifyRequest as _authPackage_VerifyRequest, VerifyRequest__Output as _authPackage_VerifyRequest__Output } from '../authPackage/VerifyRequest';
@@ -18,6 +20,15 @@ export interface AuthClient extends grpc.Client {
   addTenant(argument: _authPackage_AddTenantRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_authPackage_AddTenantResponse__Output>): grpc.ClientUnaryCall;
   addTenant(argument: _authPackage_AddTenantRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_authPackage_AddTenantResponse__Output>): grpc.ClientUnaryCall;
   addTenant(argument: _authPackage_AddTenantRequest, callback: grpc.requestCallback<_authPackage_AddTenantResponse__Output>): grpc.ClientUnaryCall;
+  
+  GetUsers(argument: _authPackage_GetUsersRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_authPackage_GetUsersResponse__Output>): grpc.ClientUnaryCall;
+  GetUsers(argument: _authPackage_GetUsersRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_authPackage_GetUsersResponse__Output>): grpc.ClientUnaryCall;
+  GetUsers(argument: _authPackage_GetUsersRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_authPackage_GetUsersResponse__Output>): grpc.ClientUnaryCall;
+  GetUsers(argument: _authPackage_GetUsersRequest, callback: grpc.requestCallback<_authPackage_GetUsersResponse__Output>): grpc.ClientUnaryCall;
+  getUsers(argument: _authPackage_GetUsersRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_authPackage_GetUsersResponse__Output>): grpc.ClientUnaryCall;
+  getUsers(argument: _authPackage_GetUsersRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_authPackage_GetUsersResponse__Output>): grpc.ClientUnaryCall;
+  getUsers(argument: _authPackage_GetUsersRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_authPackage_GetUsersResponse__Output>): grpc.ClientUnaryCall;
+  getUsers(argument: _authPackage_GetUsersRequest, callback: grpc.requestCallback<_authPackage_GetUsersResponse__Output>): grpc.ClientUnaryCall;
   
   RemoveTenant(argument: _authPackage_RemoveTenantRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_authPackage_RemoveTenantResponse__Output>): grpc.ClientUnaryCall;
   RemoveTenant(argument: _authPackage_RemoveTenantRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_authPackage_RemoveTenantResponse__Output>): grpc.ClientUnaryCall;
@@ -42,6 +53,8 @@ export interface AuthClient extends grpc.Client {
 export interface AuthHandlers extends grpc.UntypedServiceImplementation {
   AddTenant: grpc.handleUnaryCall<_authPackage_AddTenantRequest__Output, _authPackage_AddTenantResponse>;
   
+  GetUsers: grpc.handleUnaryCall<_authPackage_GetUsersRequest__Output, _authPackage_GetUsersResponse>;
+  
   RemoveTenant: grpc.handleUnaryCall<_authPackage_RemoveTenantRequest__Output, _authPackage_RemoveTenantResponse>;
   
   Verify: grpc.handleUnaryCall<_authPackage_VerifyRequest__Output, _authPackage_VerifyResponse>;
@@ -50,6 +63,7 @@ export interface AuthHandlers extends grpc.UntypedServiceImplementation {
 
 export interface AuthDefinition extends grpc.ServiceDefinition {
   AddTenant: MethodDefinition<_authPackage_AddTenantRequest, _authPackage_AddTenantResponse, _authPackage_AddTenantRequest__Output, _authPackage_AddTenantResponse__Output>
+  GetUsers: MethodDefinition<_authPackage_GetUsersRequest, _authPackage_GetUsersResponse, _authPackage_GetUsersRequest__Output, _authPackage_GetUsersResponse__Output>
   RemoveTenant: MethodDefinition<_authPackage_RemoveTenantRequest, _authPackage_RemoveTenantResponse, _authPackage_RemoveTenantRequest__Output, _authPackage_RemoveTenantResponse__Output>
   Verify: MethodDefinition<_authPackage_VerifyRequest, _authPackage_VerifyResponse, _authPackage_VerifyRequest__Output, _authPackage_VerifyResponse__Output>
 }

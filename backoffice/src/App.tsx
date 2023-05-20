@@ -51,7 +51,7 @@ axios.interceptors.response.use(
         })
         .catch((err) => {
           toast.error("Please login first");
-          window.location.href = "/login";
+          // window.location.href = "/login";
         });
     }
     return Promise.reject(error);
@@ -104,7 +104,7 @@ export const getUserConnecter = async () => {
     return data;
   } catch (err) {
     console.log("error", err);
-    window.location.href = "/login";
+    // window.location.href = "/login";
   }
 };
 function App() {
@@ -157,7 +157,7 @@ function App() {
       if (!user) {
         localStorage.clear();
         toast.error("Please login first");
-        window.location.href = "/login";
+        // window.location.href = "/login";
       }
     }
   }, [location.pathname]);
