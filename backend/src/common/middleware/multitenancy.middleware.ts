@@ -21,7 +21,7 @@ export class MultitenancyMiddleware implements NestMiddleware {
         })
         .toPromise();
       req.query.where = JSON.stringify({
-        ...JSON.parse(req?.params?.where || '{}'),
+        ...JSON.parse((req?.query?.where || '{}') as string),
         tenantId: {
           in: res.tenantIds,
         },

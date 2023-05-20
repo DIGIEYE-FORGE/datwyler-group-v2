@@ -1,6 +1,13 @@
 import { env } from "../../utils/env";
 import axios from "axios";
-import { Device, ManyResponse, Params, User, convertParams } from "../../utils";
+import {
+  Device,
+  Group,
+  ManyResponse,
+  Params,
+  User,
+  convertParams,
+} from "../../utils";
 type LoginResponse = {
   accessToken: string;
   refreshToken: string;
@@ -30,6 +37,12 @@ export default class BackendApi {
 
   async getDevices(params: Params): Promise<ManyResponse<Device>> {
     const res = await this.api.get("/device", {
+      params: convertParams(params),
+    });
+    return res.data;
+  }
+  async getGroups(params: Params): Promise<ManyResponse<Group>> {
+    const res = await this.api.get("/group", {
       params: convertParams(params),
     });
     return res.data;

@@ -14,12 +14,14 @@ import { ReactComponent as PowerAlertIcon } from "../../../../assets/icons/fire-
 import { ReactComponent as FireAlertIcon } from "../../../../assets/icons/power-alert.svg";
 import greenMarkerUrl from "../../../../assets/icons/green-marker.svg";
 import redMarkerUrl from "../../../../assets/icons/red-marker.svg";
-import { Group } from "../../../../utils";
+import { Group, Params } from "../../../../utils";
 import { useEffect, useMemo, useState } from "react";
 import L from "leaflet";
 import { generateGroups } from "./dummyData";
-import Provider from "../../../../components/provider";
+import Provider, { useProvider } from "../../../../components/provider";
 import Details from "./details";
+import Show from "../../../../components/show";
+import { AppContext } from "../../../../App";
 
 export type GeographicalMapTabContext = {
   groups: Group[];
@@ -37,8 +39,36 @@ function MapControls({ bounds }: { bounds?: [number, number][] }) {
   return null;
 }
 
+const defaulParams: Params = {
+  pagination: {
+    page: 1,
+    perPage: 100,
+  },
+  include: {
+    devices: {
+      include: {
+        alerts: {
+          where: {
+            acknowledgedBy: null,
+          },
+        },
+      },
+    },
+  },
+  where: {
+    lat: {
+      not: null,
+    },
+    lng: {
+      not: null,
+    },
+  },
+};
+
 function GeographicalMapTab() {
-  const [groups, setGroups] = useState(generateGroups(10));
+  const [groups, setGroups] = useState<Group[]>([]);
+  const [params, setParams] = useState<Params>(defaulParams);
+  const { backendApi, tenantId } = useProvider<AppContext>();
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
   const [showList, setShowList] = useState<0 | 1 | 2>(0);
   function selectGroup(id: number) {
@@ -46,13 +76,15 @@ function GeographicalMapTab() {
     setShowList(2);
   }
 
+  useEffect(() => {
+    backendApi.getGroups(params).then((res) => {
+      setGroups(res.results);
+    });
+  }, [tenantId, params]);
+
   const bounds = useMemo(() => {
     return groups.map(
-      (group) =>
-        [group.attributes?.lat || 0, group.attributes?.lng || 0] as [
-          number,
-          number
-        ]
+      (group) => [group.lat || 0, group.lng || 0] as [number, number]
     );
   }, []);
 
@@ -68,7 +100,11 @@ function GeographicalMapTab() {
     >
       <div className="relative w-full h-full ">
         <MapContainer
-          center={[25.2048, 55.2708]}
+          center={
+            groups.length === 1
+              ? [groups[0].lat, groups[0].lng]
+              : [25.2048, 55.2708]
+          }
           zoom={6}
           minZoom={3}
           attributionControl={false}
@@ -78,15 +114,14 @@ function GeographicalMapTab() {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png"
           />
-          <MapControls bounds={bounds} />
+          <Show when={groups.length > 2}>
+            <MapControls bounds={bounds} />
+          </Show>
           <ZoomControl position="bottomright" />
           <For each={groups}>
             {(group) => (
               <Marker
-                position={[
-                  group.attributes?.lat || 0,
-                  group.attributes?.lng || 0,
-                ]}
+                position={[group.lat || 0, group.lng || 0]}
                 icon={
                   new L.Icon({
                     iconUrl: group.attributes?.alerts
@@ -129,7 +164,7 @@ function GeographicalMapTab() {
                     </div>
                     <button
                       onClick={() => {
-                        selectGroup(group.id);
+                        group.id && selectGroup(group.id);
                       }}
                       className="outline outline-1 rounded py-2 text-lg text-primary capitalize hover:bg-primary/5 active:bg-primary/10 transition-colors"
                     >

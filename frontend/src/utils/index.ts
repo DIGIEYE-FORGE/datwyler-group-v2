@@ -31,21 +31,38 @@ export type User = {
   [other: string]: any;
 };
 
+export type Alert = {
+  id: number;
+  deviceId: number;
+  device: Device;
+  type?: string;
+  message?: string;
+  level?: string;
+  createdAt: string;
+  updatedAt: string;
+  attributes?: JsonObject;
+  acknowledgedBy?: number;
+  [key: string]: any;
+};
+
 export type Group = {
   id: number;
   name: string;
-  attributes?: {
-    lat: number;
-    lng: number;
-    alerts: number;
-    [other: string]: any;
-  };
-  lastTelemetries?: {
-    [other: string]: any;
-  };
-  [other: string]: any;
+  type: string;
+  createdAt?: string;
+  updatedAt?: string;
+  parentId?: number;
+  parent?: Group;
+  subgroups?: Group[];
+  location?: string;
+  lat: number;
+  lng: number;
+  ip?: string;
+  attributes?: Record<string, any>;
+  devices?: Device[];
+  tenantId?: number;
+  alerts: Alert[];
 };
-
 export type Device = {
   id: string;
   serial: string;
