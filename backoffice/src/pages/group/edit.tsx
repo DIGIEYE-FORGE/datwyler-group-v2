@@ -263,7 +263,7 @@ const Edit = () => {
               </CustomInput>
             </div>
 
-            <div className="row-input">
+            {/* <div className="row-input">
               <span
                 style={{
                   width: "140px",
@@ -289,7 +289,7 @@ const Edit = () => {
                   </span>
                 </label>
               </CustomInput>
-            </div>
+            </div> */}
             <div className="row-input">
               <span
                 style={{
@@ -402,7 +402,7 @@ const Edit = () => {
             </div>
             
 
-            <div className="row-input">
+            {/* <div className="row-input">
               <span
                 style={{
                   width: "140px",
@@ -489,7 +489,7 @@ const Edit = () => {
                   )
                 )}
               </div>
-            </div>
+            </div> */}
             <div className="row-input">
               <span
                 style={{
