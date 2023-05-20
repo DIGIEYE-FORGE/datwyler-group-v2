@@ -39,6 +39,6 @@ export const deleteDevice = async (id: number) => {
 }
 
 export const updateDevice = async (id: number, data: any) => {
-	const response = await axios.put(`/device/${id}`, data);
+	const response = await axios.patch(`/device/${id}`, data);
 	return response.data;
 }

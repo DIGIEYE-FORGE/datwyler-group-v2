@@ -121,6 +121,7 @@ const Edit = () => {
   const [, setOpen] = context.open;
   const [selectedDevice] = context.rowSelected;
   const [deviceProfiles] = context.deviceProfiles;
+  const[,setSave] = context.save;
   const [groups] = context.groups;
   const updatePage = context.updatePage;
 
@@ -170,14 +171,16 @@ const Edit = () => {
         serial: updatedDevice.serial,
         name: updatedDevice.name,
         deviceProfileId: updatedDevice.deviceProfileId,
-        tags: updatedDevice.tags?.split(","),
+        // tags: updatedDevice.tags?.split(","),
         groupId: updatedDevice.groupId,
-        attributes: updatedDevice.attributes,
-        lastTelemetries: updatedDevice.lastTelemetries,
+        // attributes: updatedDevice.attributes,
+        // lastTelemetries: updatedDevice.lastTelemetries,
       };
       await updateDevice(selectedDevice.id, data);
+      setOpen(false);
       toast.success("device updated");
       updatePage();
+      setSave((curr:boolean) => !curr);
     } catch (err) {
       console.log(err);
       toast.error("something went wrong");
@@ -307,7 +310,7 @@ const Edit = () => {
                 <Select
                   className="input"
                   id="profilename"
-                  value={updatedDevice.deviceProfileId}
+                  value={updatedDevice.deviceProfileId || ""}
                   onChange={(e) => {
                     setUpdatedDevice({
                       ...updatedDevice,
@@ -382,7 +385,7 @@ const Edit = () => {
                 <Select
                   className="input"
                   id="groupname"
-                  value={updatedDevice.groupId}
+                  value={updatedDevice.groupId || ""}
                   onChange={(e) => {
                     setUpdatedDevice({
                       ...updatedDevice,

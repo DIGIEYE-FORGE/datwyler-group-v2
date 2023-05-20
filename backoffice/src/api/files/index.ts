@@ -32,9 +32,6 @@ export const getFile = async (id: string) => {
 	return response.data;
 };
 
-
-
-
 export const deleteFile = async (id: string) => {
 	const response = await axios.delete(`/firmware/${id}`);
 	return response.data;
