@@ -24,74 +24,12 @@ export class AlertService {
 
   @HandleRequestErrors()
   async create(data: CreateAlertDto) {
-    const alert = await this.prisma.alert.create({
-      data,
-      include: {
-        device: {
-          select: {
-            groupId: true,
-          },
-        },
-      },
-    });
-
-    if (alert.device.groupId) {
-      const group = await this.prisma.group.findUnique({
-        where: { id: alert.device.groupId },
-      });
-      console.log(group);
-      const attributes: any = group.attributes || {};
-      await this.prisma.group.update({
-        where: { id: group.id },
-        data: {
-          attributes: {
-            ...attributes,
-            alerts: (parseInt(attributes.alerts) || 0) + 1,
-          },
-        },
-      });
-    }
-    return alert;
+    return await this.prisma.alert.create({ data });
   }
 
   @HandleRequestErrors()
   async update(id: number, data: UpdateAlertDto) {
     return await this.prisma.alert.update({ where: { id }, data });
-  }
-
-  @HandleRequestErrors()
-  async close(id: number, userId: number) {
-    //   const alert = await this.prisma.alert.update({
-    //     where: { id },
-    //     data: {
-    //       acknowledgedById: userId,
-    //     },
-    //     include: {
-    //       device: {
-    //         select: {
-    //           groupId: true,
-    //         },
-    //       },
-    //     },
-    //   });
-
-    //   if (alert.device.groupId) {
-    //     const group = await this.prisma.group.findUnique({
-    //       where: { id: alert.device.groupId },
-    //     });
-    //     const attributes: any = group.attributes || {};
-    //     await this.prisma.group.update({
-    //       where: { id: group.id },
-    //       data: {
-    //         attributes: {
-    //           ...attributes,
-    //           alerts: Math.max((parseInt(attributes.alerts) || 0) - 1, 0),
-    //         },
-    //       },
-    //     });
-    // }
-
-    //   return alert;
   }
 
   @HandleRequestErrors()

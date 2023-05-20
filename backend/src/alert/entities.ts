@@ -1,6 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsDateString, IsOptional } from 'class-validator';
+import {
+  IsInt,
+  IsString,
+  MinLength,
+  MaxLength,
+  IsDateString,
+  IsOptional,
+} from 'class-validator';
 import { IsPassword, IsPhoneNumber } from 'src/utils';
 
 export class Alert {
@@ -9,7 +16,11 @@ export class Alert {
   @ApiProperty({ required: false })
   deviceId: number;
   @ApiProperty({ required: false })
-  acknowledgedById: number;
+  type: string;
+  @ApiProperty({ required: false })
+  message: string;
+  @ApiProperty({ required: false })
+  level: string;
   @ApiProperty({ required: false })
   createdAt: Date;
   @ApiProperty({ required: false })
@@ -21,9 +32,27 @@ export class CreateAlertDto {
   @IsInt()
   deviceId: number;
   @ApiProperty({ required: false })
-  @IsInt()
+  @IsString()
+  @MinLength(2)
+  @MaxLength(255)
   @IsOptional()
-  acknowledgedById: number;
+  type: string;
+  @ApiProperty({ required: false })
+  @IsString()
+  @MinLength(2)
+  @MaxLength(255)
+  @IsOptional()
+  message: string;
+  @ApiProperty({ required: false })
+  @IsString()
+  @MinLength(2)
+  @MaxLength(255)
+  @IsOptional()
+  level: string;
+  @ApiProperty({ required: false })
+  attributes: Record<string, string | number | boolean>;
+  @ApiProperty({ required: false })
+  acknowledgedBy: Record<string, string | number | boolean>;
 }
 
 export class UpdateAlertDto {
@@ -32,7 +61,25 @@ export class UpdateAlertDto {
   @IsOptional()
   deviceId: number;
   @ApiProperty({ required: false })
-  @IsInt()
+  @IsString()
+  @MinLength(2)
+  @MaxLength(255)
   @IsOptional()
-  acknowledgedById: number;
+  type: string;
+  @ApiProperty({ required: false })
+  @IsString()
+  @MinLength(2)
+  @MaxLength(255)
+  @IsOptional()
+  message: string;
+  @ApiProperty({ required: false })
+  @IsString()
+  @MinLength(2)
+  @MaxLength(255)
+  @IsOptional()
+  level: string;
+  @ApiProperty({ required: false })
+  attributes: Record<string, string | number | boolean>;
+  @ApiProperty({ required: false })
+  acknowledgedBy: Record<string, string | number | boolean>;
 }

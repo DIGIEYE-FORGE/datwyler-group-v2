@@ -17,7 +17,7 @@ import { FindAllQuery, FindOneQuery } from 'src/utils';
 @ApiTags('alert')
 @Controller('alert')
 export class AlertController {
-  constructor(private readonly alertService: AlertService) {}
+  constructor(private readonly alertService: AlertService) { }
 
   @ApiOkResponse({ type: [Alert] })
   @Get()
@@ -41,12 +41,6 @@ export class AlertController {
   @Patch(':id')
   update(@Param('id', ParseIntPipe) id: number, @Body() data: UpdateAlertDto) {
     return this.alertService.update(id, data);
-  }
-
-  @ApiOkResponse({ type: Alert })
-  @Patch('/close/:id')
-  close(@Param('id', ParseIntPipe) id: number, @Body() userId: number) {
-    return this.alertService.close(id, userId);
   }
 
   @ApiOkResponse({ type: Alert })
