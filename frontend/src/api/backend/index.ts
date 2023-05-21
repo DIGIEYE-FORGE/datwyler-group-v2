@@ -48,6 +48,9 @@ export default class BackendApi {
     });
     return res.data;
   }
+
+  // async generateFile(params: Params): Promise<ManyResponse<Device>> {
+
   async getAlerts(params: Params): Promise<ManyResponse<Alert>> {
     const res = await this.api.get("/alert", {
       params: convertParams(params),

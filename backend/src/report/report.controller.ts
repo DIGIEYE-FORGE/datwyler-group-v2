@@ -13,7 +13,7 @@ import {
   Request,
 } from '@nestjs/common';
 import { ReportService } from './report.service';
-import { Report, CreateReportDto, UpdateReportDto } from './entities';
+import { Report, CreateReportDto, UpdateReportDto, GenerateRapport } from './entities';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { FindAllQuery, FindOneQuery } from 'src/utils';
 
@@ -32,6 +32,11 @@ export class ReportController {
   @Get(':id')
   findOne(@Query() query: FindOneQuery, @Param('id', ParseIntPipe) id: number) {
     return this.reportService.findOne(+id, query);
+  }
+  @ApiCreatedResponse({ type: GenerateRapport })
+  @Post('generate')
+  generate(@Body() data: GenerateRapport) {
+    return this.reportService.generate(data);
   }
 
   @ApiCreatedResponse({ type: Report })

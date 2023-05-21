@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { FindAllOptions, HandleRequestErrors } from 'src/utils';
-import { CreateReportDto, UpdateReportDto } from './entities';
+import { CreateReportDto, GenerateRapport, UpdateReportDto } from './entities';
 import { Workbook } from 'exceljs';
 import path from 'path';
 import { createPdf } from 'pdfmake/build/pdfmake';
@@ -23,6 +23,33 @@ export class ReportService {
   @HandleRequestErrors()
   async findOne(id: number, query?: any) {
     return await this.prisma.report.findUnique({ where: { id }, ...query });
+  }
+
+  @HandleRequestErrors()
+  async generate(data: GenerateRapport) {
+    let res;
+    if (data.type == 'alert') {
+      res = await this.prisma.alert.findMany({
+        where: {
+          deviceId: {
+            in: data.devices,
+          },
+        },
+      });
+    } else if (data.type == 'Mesurement') {
+      res = await this.prisma.history.findMany({
+        where: {
+          deviceId: {
+            in: data.devices,
+          },
+        },
+      });
+    }
+    if (data.format == 'excel') {
+      return this.generateFileExcel(data.name, res);
+    } else if (data.format == 'pdf') {
+      return this.generateFilePdf(data.name, res);
+    }
   }
 
   @HandleRequestErrors()

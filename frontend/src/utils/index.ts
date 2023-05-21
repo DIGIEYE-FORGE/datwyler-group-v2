@@ -64,6 +64,17 @@ export type Group = {
   alerts: Alert[];
 };
 
+
+export type Report = {
+  id: number;
+  name: string;
+  tenantId: number;
+  query?: string;
+  type: string;
+  format: string;
+
+
+}
 export type LastTelemetry = {
   name: string;
   value: string;
