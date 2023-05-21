@@ -6,7 +6,7 @@ import { Workbook } from 'exceljs';
 import { createPdf } from 'pdfmake/build/pdfmake';
 import { pdfMake } from 'pdfmake/build/vfs_fonts';
 import * as path from 'path';
-import { createWriteStream } from 'fs';
+import * as fs from 'fs';
 @Injectable()
 export class ReportService {
   constructor(private prisma: PrismaService) {}
@@ -96,7 +96,14 @@ export class ReportService {
     dataExcel.unshift(Object.keys(data[0]));
     worksheet.addRows(dataExcel);
     const filename = `${name}.xlsx`;
-    const filepath = path.join(__dirname, '..', '..', 'uploads', filename);
+    const filepath = path.join(
+      __dirname,
+      '..',
+      '..',
+      '..',
+      'uploads',
+      filename,
+    );
     await workbook.xlsx.writeFile(filepath);
     return `${filename}`;
   }
@@ -131,7 +138,17 @@ export class ReportService {
     };
     const filename = `${name}.pdf`;
     const filepath = path.join(__dirname, '..', '..', 'uploads', filename);
-    const pdf = createPdf(pdfData, pdfMake.vfs);
-    return `${filename}`;
+    const pdfDoc = pdfMake.createPdf(pdfData);
+    const stream = pdfDoc.getStream();
+    const chunks = [];
+    stream.on('data', (chunk) => {
+      chunks.push(chunk);
+    });
+    stream.on('end', () => {
+      const pdfBytes = Buffer.concat(chunks);
+      fs.writeFileSync(filepath, pdfBytes);
+      console.log('PDF file generated successfully.');
+    });
+    return filename;
   }
 }

@@ -46,6 +46,7 @@
     "install": "^0.13.0",
     "nestjs-proto-gen-ts": "^1.0.21",
     "npm": "^9.6.7",
+    "pdf-lib": "^1.17.1",
     "pdfkit": "^0.13.0",
     "pdfmake": "^0.2.7",
     "reflect-metadata": "^0.1.13",

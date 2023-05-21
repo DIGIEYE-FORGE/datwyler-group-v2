@@ -11,7 +11,7 @@ async function bootstrap() {
     bodyParser: true,
     cors: true,
   });
-  app.useStaticAssets(join(__dirname, '..', '..', './uploads'));
+  app.useStaticAssets(join(__dirname, 'uploads'));
   app.enableCors();
   const prismaService = app.get(PrismaService);
   await prismaService.enableShutdownHooks(app);

@@ -398,13 +398,18 @@ function ReportsTab() {
               Format
             </label>
             <Select
-              onChange={(v:string) =>
+              onChange={(v:{
+                value:string
+              }) =>
               {
                 console.log("hello",v);
-                  if (v === "PDF")
+                  if (v.value == "PDF")
                     setCreateReport({...createReport,format:"pdf"})
-                  if (v === "CSV")
+                  if (v.value == "CSV")
+                  {
+                  console.log("------------------------------");
                   setCreateReport({...createReport,format:"csv"})
+                  }
               }}
               classNames={{
                 option: (state) =>
