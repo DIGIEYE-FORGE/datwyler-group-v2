@@ -2,7 +2,7 @@ import React from "react";
 import { GeographicalMapTabContext } from ".";
 import For from "../../../../components/for";
 import { useProvider } from "../../../../components/provider";
-import { classNames } from "../../../../utils";
+import { classNames, strTake } from "../../../../utils";
 
 function GroupsList() {
   const { groups, selectedGroup, showList, setShowList, selectGroup } =
@@ -32,7 +32,7 @@ function GroupsList() {
           >
             <div className="flex-1">
               <div>{group.name}</div>
-              <div>{group.attributes?.location}</div>
+              <div>{strTake(group.location, 30)}</div>
             </div>
             <div
               className={classNames(

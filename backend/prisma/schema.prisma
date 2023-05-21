@@ -226,7 +226,7 @@ model Attribute {
 model LastTelemetry {
   id        Int      @id @default(autoincrement())
   name      String   @db.VarChar(100)
-  value     String   @db.VarChar(255)
+  value     Json     @db.Json
   alias     String?  @db.VarChar(100)
   icon      String?  @db.VarChar(40)
   color     String?  @db.VarChar(30)
@@ -258,11 +258,7 @@ model Report {
 model History {
   id        Int      @id @default(autoincrement())
   name      String   @db.VarChar(100)
-  value     String   @db.VarChar(255)
-  alias     String?  @db.VarChar(100)
-  icon      String?  @db.VarChar(40)
-  color     String?  @db.VarChar(30)
-  show      Boolean  @default(true)
+  value     Json     @db.Json
   device    Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

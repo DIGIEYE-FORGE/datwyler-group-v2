@@ -18,7 +18,6 @@ function DevicesTab() {
     include: {
       group: true,
       _count: true,
-      deviceProfile: true,
     },
   });
 
@@ -57,7 +56,7 @@ function DevicesTab() {
     {
       label: "system",
       header: "System",
-      valueGetter: (row) => row.deviceProfile.name,
+      valueGetter: (row) => row.name,
       filter: {
         type: "select",
         options: [
