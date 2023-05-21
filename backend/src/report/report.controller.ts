@@ -13,7 +13,12 @@ import {
   Request,
 } from '@nestjs/common';
 import { ReportService } from './report.service';
-import { Report, CreateReportDto, UpdateReportDto, GenerateRapport } from './entities';
+import {
+  Report,
+  CreateReportDto,
+  UpdateReportDto,
+  GenerateRapport,
+} from './entities';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { FindAllQuery, FindOneQuery } from 'src/utils';
 
@@ -63,8 +68,6 @@ export class ReportController {
     const file = await this.reportService.generateFileExcel('Report', data);
     return res.download(file);
   }
-
-  
   // @Get('download')
   // async DownloadExcelAndPdf(@Request() req: any, @Res() res: any) {
   // }

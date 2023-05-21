@@ -6,9 +6,12 @@ import {
   Group,
   ManyResponse,
   Params,
+  Report,
+  ReportDevice,
   User,
   convertParams,
 } from "../../utils";
+import { de } from "date-fns/locale";
 type LoginResponse = {
   accessToken: string;
   refreshToken: string;
@@ -49,7 +52,13 @@ export default class BackendApi {
     return res.data;
   }
 
-  // async generateFile(params: Params): Promise<ManyResponse<Device>> {
+  async generateFile(props:ReportDevice): Promise<ManyResponse<any>> {
+    if (props.groups) delete props.groups;
+    const res = await this.api.post("/report/generate", props);
+    console.log(res);
+    
+    return res.data;
+  }
 
   async getAlerts(params: Params): Promise<ManyResponse<Alert>> {
     const res = await this.api.get("/alert", {

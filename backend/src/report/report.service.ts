@@ -3,9 +3,10 @@ import { PrismaService } from 'src/prisma.service';
 import { FindAllOptions, HandleRequestErrors } from 'src/utils';
 import { CreateReportDto, GenerateRapport, UpdateReportDto } from './entities';
 import { Workbook } from 'exceljs';
-import path from 'path';
 import { createPdf } from 'pdfmake/build/pdfmake';
 import { pdfMake } from 'pdfmake/build/vfs_fonts';
+import * as path from 'path';
+import { createWriteStream } from 'fs';
 @Injectable()
 export class ReportService {
   constructor(private prisma: PrismaService) {}
@@ -27,7 +28,9 @@ export class ReportService {
 
   @HandleRequestErrors()
   async generate(data: GenerateRapport) {
+    console.log('------data-----------', data);
     let res;
+    let file;
     if (data.type == 'alert') {
       res = await this.prisma.alert.findMany({
         where: {
@@ -45,11 +48,29 @@ export class ReportService {
         },
       });
     }
-    if (data.format == 'excel') {
-      return this.generateFileExcel(data.name, res);
-    } else if (data.format == 'pdf') {
-      return this.generateFilePdf(data.name, res);
+    console.log('res', res);
+
+    if (res.length == 0) {
+      throw new Error('No data found');
+    } else {
+      console.log('hello', data.format);
+
+      if (data.format == 'csv') {
+        file = await this.generateFileExcel(data.name, res);
+      } else if (data.format == 'pdf') {
+        file = await this.generateFilePdf(data.name, res);
+      }
     }
+    //   console.log(file);
+    return 'test';
+    // await this.prisma.report.create({
+    //   data: {
+    //     name: data.name,
+    //     url: file,
+    //     type: data.type,
+    //     format: data.format,
+    //   },
+    // });
   }
 
   @HandleRequestErrors()
@@ -77,7 +98,7 @@ export class ReportService {
     const filename = `${name}.xlsx`;
     const filepath = path.join(__dirname, '..', '..', 'uploads', filename);
     await workbook.xlsx.writeFile(filepath);
-    return `uploads/${filename}`;
+    return `${filename}`;
   }
 
   async generateFilePdf(name: string, data: Record<string, any>[]) {
@@ -111,7 +132,6 @@ export class ReportService {
     const filename = `${name}.pdf`;
     const filepath = path.join(__dirname, '..', '..', 'uploads', filename);
     const pdf = createPdf(pdfData, pdfMake.vfs);
-    pdf.write(filepath);
-    return `uploads/${filename}`;
+    return `${filename}`;
   }
 }

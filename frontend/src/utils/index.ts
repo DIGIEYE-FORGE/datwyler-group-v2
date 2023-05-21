@@ -72,8 +72,14 @@ export type Report = {
   query?: string;
   type: string;
   format: string;
-
-
+}
+export type ReportDevice = {
+    name: string;
+    date: Date;
+    groups?: number[];
+    devices: number[];
+    type: "alert" | "mesurement";
+    format: "pdf" | "csv";
 }
 export type LastTelemetry = {
   name: string;
@@ -85,7 +91,6 @@ export type Device = {
   id: string;
   name: string;
   serial: string;
-  name: string;
   deviceProfile: {
     name: string;
     [key: string]: any;

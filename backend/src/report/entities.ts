@@ -8,6 +8,7 @@ import {
   IsDateString,
   IsOptional,
   IsArray,
+  isDate,
 } from 'class-validator';
 import { IsPassword, IsPhoneNumber } from 'src/utils';
 import { isInt16Array } from 'util/types';
@@ -53,6 +54,10 @@ export class GenerateRapport {
   @MinLength(2)
   @MaxLength(255)
   format: string;
+  @ApiProperty({ required: true })
+  @IsOptional()
+  @IsDateString()
+  date: Date;
   @ApiProperty({ required: true })
   devices: number[];
 }

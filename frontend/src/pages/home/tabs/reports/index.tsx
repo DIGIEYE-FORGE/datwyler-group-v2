@@ -57,8 +57,8 @@ const defaultParams: Params = {
 
 type Report = {
   name: string;
-  createdAt: Date;
-  groups: number[];
+  date: Date;
+  groups?: number[];
   devices: number[];
   type: "alert" | "mesurement";
   format: "pdf" | "csv";
@@ -135,7 +135,7 @@ function ReportsTab() {
   };
   const [createReport, setCreateReport] = useState<Report>({
     name: "",
-    createdAt: new Date(),
+    date: new Date(),
     format: "pdf",
     type: "alert",
     groups: [],
@@ -200,7 +200,7 @@ function ReportsTab() {
   }, []);
 
   useEffect(() => {
-    if (createReport.groups.length > 0) {
+    if (createReport.groups && createReport.groups.length > 0) {
       const getDevices = async () => {
         const res = await backendApi.getDevices({
           pagination: {
@@ -347,17 +347,17 @@ function ReportsTab() {
               onChange={(v:string) =>
               {
                 if (v === "last hour")
-                  setCreateReport({...createReport,createdAt:new Date(addHours(new Date(), -1))})
+                  setCreateReport({...createReport,date:new Date(addHours(new Date(), -1))})
                 if (v === "last 4 hours")
-                  setCreateReport({...createReport,createdAt:new Date(addHours(new Date(), -4))})
+                  setCreateReport({...createReport,date:new Date(addHours(new Date(), -4))})
                 if (v === "last 12 hours")
-                  setCreateReport({...createReport,createdAt:new Date(addHours(new Date(), -12))})
+                  setCreateReport({...createReport,date:new Date(addHours(new Date(), -12))})
                 if (v === "last day")
-                  setCreateReport({...createReport,createdAt:new Date(addDays(new Date(), -1))})
+                  setCreateReport({...createReport,date:new Date(addDays(new Date(), -1))})
                 if (v === "last 2 days")
-                  setCreateReport({...createReport,createdAt:new Date(addDays(new Date(), -2))})
+                  setCreateReport({...createReport,date:new Date(addDays(new Date(), -2))})
                 if (v === "last week")
-                  setCreateReport({...createReport,createdAt:new Date(addDays(new Date(), -7))})
+                  setCreateReport({...createReport,date:new Date(addDays(new Date(), -7))})
               }}
               classNames={{
                 option: (state) =>
@@ -400,6 +400,7 @@ function ReportsTab() {
             <Select
               onChange={(v:string) =>
               {
+                console.log("hello",v);
                   if (v === "PDF")
                     setCreateReport({...createReport,format:"pdf"})
                   if (v === "CSV")
@@ -477,7 +478,8 @@ function ReportsTab() {
           <Button
             className="flex items-center gap-2 py-3 px-4"
             onClick={() =>{
-              console.log(createReport)
+              console.log(createReport);
+              backendApi.generateFile(createReport)
               setOpen(false)}}
           >
             <span>Genarate</span>
