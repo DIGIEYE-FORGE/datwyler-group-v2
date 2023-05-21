@@ -352,6 +352,18 @@ app.get("/me", async (req: RequestWithUser, res) => {
   }
 });
 
+app.delete("/users/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const user = await prisma.user.delete({
+      where: { id },
+    });
+    res.send(user);
+  } catch (err) {
+    res.status(400).json(err);
+  }
+});
+
 app.use((req, res) => {
   res.status(404).json({ error: "not found" });
 });

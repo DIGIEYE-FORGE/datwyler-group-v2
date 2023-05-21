@@ -104,7 +104,7 @@ export default class AuthApi {
     return res.data;
   }
   async register(user: RegisterUser) {
-    const data = registerSchema.parse(user);
+    const { role, ...data } = registerSchema.parse(user);
     const res = await this.api.post("/register", data);
     return res.data;
   }
