@@ -65,6 +65,7 @@ export type Group = {
 };
 export type Device = {
   id: string;
+  name: string;
   serial: string;
   deviceProfile: {
     name: string;

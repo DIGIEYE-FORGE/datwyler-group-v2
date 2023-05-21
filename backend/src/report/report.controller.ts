@@ -8,6 +8,9 @@ import {
   Delete,
   ParseIntPipe,
   Query,
+  Header,
+  Res,
+  Request,
 } from '@nestjs/common';
 import { ReportService } from './report.service';
 import { Report, CreateReportDto, UpdateReportDto } from './entities';
@@ -17,7 +20,7 @@ import { FindAllQuery, FindOneQuery } from 'src/utils';
 @ApiTags('report')
 @Controller('report')
 export class ReportController {
-  constructor(private readonly reportService: ReportService) { }
+  constructor(private readonly reportService: ReportService) {}
 
   @ApiOkResponse({ type: [Report] })
   @Get()
@@ -48,4 +51,16 @@ export class ReportController {
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.reportService.remove(id);
   }
+
+  @Get('download/excel')
+  @Header('Content-type', 'application/xlsx')
+  async downloadExcel(@Body() data: Record<string, any>[], @Res() res: any) {
+    const file = await this.reportService.generateFileExcel('Report', data);
+    return res.download(file);
+  }
+
+  
+  // @Get('download')
+  // async DownloadExcelAndPdf(@Request() req: any, @Res() res: any) {
+  // }
 }

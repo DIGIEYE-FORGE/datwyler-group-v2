@@ -32,11 +32,13 @@ export class CreateReportDto {
   name: string;
   @ApiProperty({ required: true })
   @IsInt()
+  @IsOptional()
   tenantId: number;
   @ApiProperty({ required: true })
   @IsString()
   @MinLength(2)
   @MaxLength(255)
+  @IsOptional()
   query: string;
   @ApiProperty({ required: true })
   @IsString()
@@ -52,6 +54,7 @@ export class CreateReportDto {
   @IsString()
   @MinLength(2)
   @MaxLength(255)
+  @IsOptional()
   url: string;
 }
 
