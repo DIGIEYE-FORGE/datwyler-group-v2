@@ -3,11 +3,44 @@ import axios from "axios";
 import { User } from "../../utils";
 import { useProvider } from "../../components/provider";
 import { AppContext } from "../../App";
+import { z } from "zod";
 type LoginResponse = {
   accessToken: string;
   refreshToken: string;
   user: User;
 };
+
+export const registerSchema = z.object({
+  email: z.string().email({
+    message: "Invalid email address",
+  }),
+  password: z.string().min(8, {
+    message: "Password must be at least 8 characters",
+  }),
+  firstName: z
+    .string()
+    .regex(/^\w[\w ]*\w$/, {
+      message: "First name can only contain letters",
+    })
+    .min(2, {
+      message: "First name must be at least 2 characters",
+    }),
+  lastName: z
+    .string()
+    .regex(/^\w[\w ]*\w$/, {
+      message: "Last name can only contain letters",
+    })
+    .min(2, {
+      message: "Last name must be at least 2 characters",
+    }),
+  phoneNumber: z
+    .string()
+    .regex(/^\d{10}$/)
+    .optional(),
+  role: z.enum(["USER", "ADMIN"]),
+});
+
+export type RegisterUser = z.infer<typeof registerSchema>;
 
 export default class AuthApi {
   private accessToken: string;
@@ -68,6 +101,11 @@ export default class AuthApi {
     const res = await this.api.post("/refresh", {
       refreshToken: this.refreshToken,
     });
+    return res.data;
+  }
+  async register(user: RegisterUser) {
+    const data = registerSchema.parse(user);
+    const res = await this.api.post("/register", data);
     return res.data;
   }
 }

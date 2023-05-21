@@ -3,9 +3,9 @@ import redis from "../common/redis";
 import express, { Request } from "express";
 import cors from "cors";
 import jwt from "jsonwebtoken";
-import { genSalt, hash, compareSync } from "bcrypt";
+import { compareSync } from "bcrypt";
 import env from "../common/env";
-import { string, z } from "zod";
+import { z } from "zod";
 import fs from "fs";
 import {
   paramsSchema,
@@ -14,8 +14,8 @@ import {
   refreshSchema,
   loginSchema,
   logoutSchema,
-  Role,
   updatePasswordSchema,
+  updateUserSchema,
 } from "../common/types";
 import multiTenancyClient from "../multiy-tenancy-client";
 interface RequestWithUser extends Request {
@@ -23,7 +23,6 @@ interface RequestWithUser extends Request {
 }
 import { generateRefreshToken, hashPassword, verifyToken } from "../common";
 import multer from "multer";
-
 
 const app = express();
 app.use(express.static("uploads"));
@@ -76,19 +75,18 @@ app.use(async (req: RequestWithUser, res, next) => {
       return res.status(401).json({ error: err });
     }
     const user = docoded as DecodedToken;
-    const { role } = user;
     req.user = user;
-    if (path === "/register" && role !== "ADMIN") {
+    if (path === "/register") {
       return res.status(401).json({ error: "unauthorized" });
     }
     next();
   });
 });
 
-
-app.post("/register",
-  multer({ storage: storage }).single("avatar")
-  , async (req, res) => {
+app.post(
+  "/register",
+  multer({ storage: storage }).single("avatar"),
+  async (req, res) => {
     try {
       if (req.file) {
         console.log("true conidtion req.file");
@@ -119,7 +117,52 @@ app.post("/register",
       }
       res.status(400).json({ error: err });
     }
-  });
+  }
+);
+app.patch(
+  "/update/:id",
+  multer({ storage: storage }).single("avatar"),
+  async (req, res) => {
+    const id = parseInt(req.params.id);
+    try {
+      if (req.file) {
+        console.log("true conidtion req.file");
+        req.body.avatar = req.file.filename || "";
+      }
+      const { password, ...rest } = updateUserSchema.parse(req.body);
+      const hashedPassword = password
+        ? await hashPassword(password)
+        : undefined;
+      const user = await prisma.user.update({
+        where: { id },
+        data: {
+          ...rest,
+          password: hashedPassword,
+        },
+        select: {
+          id: true,
+          role: true,
+          email: true,
+        },
+      });
+      if (!user)
+        return res.status(404).json({ error: "user with id not found" });
+      res.send(user);
+    } catch (err) {
+      if (err instanceof z.ZodError)
+        res.status(400).json({ error: err.issues });
+      if (req.file && req.file.path) {
+        fs.unlink(req.file.path, (err) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+        });
+      }
+      res.status(400).json({ error: err });
+    }
+  }
+);
 
 app.post("/login", async (req, res) => {
   try {
@@ -137,7 +180,6 @@ app.post("/login", async (req, res) => {
     const accessToken = generateAccessToken({
       email,
       id: user.id,
-      role: user.role,
     });
 
     const refreshToken = generateRefreshToken({
@@ -155,7 +197,6 @@ app.post("/login", async (req, res) => {
     res.status(400).json({ error: err });
   }
 });
-
 
 app.patch("/update-password/:id", async (req, res) => {
   try {
@@ -182,12 +223,10 @@ app.patch("/update-password/:id", async (req, res) => {
         },
       });
       res.json({ message: "password updated" });
-    }
-    else {
+    } else {
       res.status(400).json({ error: "id is required" });
     }
-  }
-  catch (err) {
+  } catch (err) {
     res.status(400).json({ error: err });
   }
 });
@@ -222,8 +261,8 @@ app.post("/refresh", async (req, res) => {
         console.log(err);
         return res.status(401).json({ error: err });
       }
-      const { id, email, role } = user as DecodedToken;
-      res.send({ accessToken: generateAccessToken({ id, email, role }) });
+      const { id, email } = user as DecodedToken;
+      res.send({ accessToken: generateAccessToken({ id, email }) });
     });
   } catch (err) {
     console.log(err);
@@ -243,7 +282,6 @@ app.get("/users", async (req, res) => {
       skip,
       take,
       orderBy,
-      // where: params.where ? JSON.parse(params.where) : undefined,
       where: { ...where },
       select: params.select ? JSON.parse(params.select) : undefined,
     });
@@ -303,10 +341,11 @@ app.get("/me", async (req: RequestWithUser, res) => {
       userId: user.id,
     });
 
-    const tenants = result?.tenants?.map((el) => ({
-      ...el,
-      role: ['ADMIN', 'USER'][el.role as number]
-    })) || [];
+    const tenants =
+      result?.tenants?.map((el) => ({
+        ...el,
+        role: ["ADMIN", "USER"][el.role as number],
+      })) || [];
     res.send({ ...user, password: undefined, tenants });
   } catch (err) {
     res.status(401).json(err);
@@ -317,16 +356,8 @@ app.use((req, res) => {
   res.status(404).json({ error: "not found" });
 });
 
-function generateAccessToken({
-  id,
-  email,
-  role,
-}: {
-  email: string;
-  id: number;
-  role: Role;
-}) {
-  return jwt.sign({ id, email, role }, env.JWT_SECRET, {
+function generateAccessToken({ id, email }: { email: string; id: number }) {
+  return jwt.sign({ id, email }, env.JWT_SECRET, {
     expiresIn: env.ACCESS_TOKEN_EXPIRES_IN,
   });
 }

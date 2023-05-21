@@ -87,9 +87,8 @@ export async function authMiddleware(
       return res.status(401).json({ error: err });
     }
     const user = docoded as DecodedToken;
-    const { role } = user;
     req.user = user;
-    if (path === "/register" && role !== "ADMIN") {
+    if (path === "/register") {
       return res.status(401).json({ error: "unauthorized" });
     }
     next();

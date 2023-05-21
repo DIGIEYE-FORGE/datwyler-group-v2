@@ -1,27 +1,22 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Button from "../../../../components/button";
 import Pagination from "../../../../components/pagination";
 import { Params, User } from "../../../../utils";
 import { RiUserAddLine } from "react-icons/ri";
 import DataGrid, { Column } from "../../../../components/data-grid";
 import Avatar from "../../../../components/avatar";
-import {
-  MdCancel,
-  MdMoreVert,
-  MdOutlineClose,
-  MdWatchLater,
-} from "react-icons/md";
+import { MdMoreVert, MdOutlineClose } from "react-icons/md";
 import { IconButton } from "../dashboard";
 import Popover from "../../../../components/popover";
 import { FaUserEdit } from "react-icons/fa";
 import { AiOutlineUserDelete } from "react-icons/ai";
-import { format } from "date-fns";
 import Modal from "../../../../components/modal";
-import { ReactComponent as SysAdmin } from "../../../../assets/user-password.svg";
 import { ReactComponent as Admin } from "../../../../assets/admin.svg";
 import { ReactComponent as Users } from "../../../../assets/user.svg";
 import { useProvider } from "../../../../components/provider";
 import { AppContext } from "../../../../App";
+import { z } from "zod";
+import { RegisterUser, registerSchema } from "../../../../api/auth";
 
 function deleteUsers(users: User[], ids: number[]) {
   return users.filter((user) => !ids.includes(user.id));
@@ -34,17 +29,36 @@ const defaultParams: Params = {
   },
 };
 
+const defaultUser: RegisterUser = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  role: "USER",
+  phoneNumber: "",
+};
+
 function AdminTab() {
   const [users, setUsers] = useState<User[]>([]);
-  const { tenantId, multiTenancyApi } = useProvider<AppContext>();
+  const { tenantId, multiTenancyApi, authApi } = useProvider<AppContext>();
   const [parms, setParams] = useState<Params>(defaultParams);
   const [open, setOpen] = useState<boolean>(false);
-  const [activeRole, setActiveRole] = useState<"sysAdmin" | "admin" | "user">(
-    "sysAdmin"
-  );
-  const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [userData, setUserData] = useState<RegisterUser>(defaultUser);
+  const addUserToTenant = () => {
+    authApi
+      .register(userData)
+      .then((res) => {
+        console.log("res", res);
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setUserData(defaultUser);
+  };
 
   useEffect(() => {
     multiTenancyApi.getUsers({ tenantId }).then((res) => {
@@ -160,13 +174,13 @@ function AdminTab() {
       />
       <Modal
         open={open}
-        handleClose={() => setOpen(false)}
+        handleClose={handleClose}
         className="bg-white w-11/12 max-w-[40rem] rounded [&>*]:border-b [&>*]:border-black/20 max-h-full overflow-auto"
       >
         <div className="flex items-center py-4  justify-between px-4">
           <span className="font-semibold">Create user</span>
           <button
-            onClick={() => setOpen(false)}
+            onClick={handleClose}
             className="rounded-full hover:bg-dark/10 active:shadow-inner w-8 h-8 flex-center"
           >
             <MdOutlineClose className="text-2xl text-gray-500" />
@@ -174,104 +188,137 @@ function AdminTab() {
         </div>
         <form className="flex flex-col gap-6 py-4 [&>div]:flex [&>div]:flex-col [&>div]:gap-2 [&>div]:px-6">
           <div>
-            <label className="w-fit" htmlFor="rapport-name">
-              Name
+            <label className="w-fit capitalize" htmlFor="first-name">
+              first name
             </label>
             <input
-              id="rapport-name"
-              placeholder="name"
+              id="first-name"
+              placeholder="first name"
               className="h-11"
-              value={name}
+              value={userData.firstName}
               onChange={(e) => {
-                setName(e.target.value);
+                setUserData({ ...userData, firstName: e.target.value });
               }}
             />
           </div>
           <div>
-            Role
-            <div className="flex gap-6 h-[11rem]">
+            <label className="w-fit capitalize" htmlFor="last-name">
+              last name
+            </label>
+            <input
+              id="last-name"
+              placeholder="last name"
+              className="h-11"
+              value={userData.firstName}
+              onChange={(e) => {
+                setUserData({ ...userData, lastName: e.target.value });
+              }}
+            />
+          </div>
+          <div>
+            <div className="flex gap-6 items-center justify-between h-[6rem]">
+              <span>Role</span>
               <div
-                className={`flex-1 flex flex-col gap-2 items-center justify-center rounded cursor-pointer
-              ${
-                activeRole === "sysAdmin"
-                  ? "bg-[#0091AE] shadow-current scale-x-100 text-white"
-                  : "bg-[#0091AE]/20 text-primary"
-              }
+                className={`flex-1 flex  gap-2 items-center justify-center rounded cursor-pointer
               `}
                 onClick={() => {
-                  setActiveRole("sysAdmin");
+                  setUserData({ ...userData, role: "ADMIN" });
                 }}
               >
-                <SysAdmin
-                  className={`
-                 ${activeRole === "sysAdmin" ? "fill-white" : "fill-primary"}`}
-                />
-                <span className="text-2xl">Sys Admin</span>
+                <span
+                  className={`h-[5rem] aspect-square flex-center rounded-full ${
+                    userData.role === "ADMIN"
+                      ? "bg-[#0091AE] shadow-current  text-white"
+                      : "bg-[#0091AE]/20  text-primary"
+                  }`}
+                >
+                  <Admin
+                    className={`
+                  ${userData.role === "ADMIN" ? "fill-white" : "fill-primary"}`}
+                  />
+                </span>
+                <span
+                  className={`text-2xl ${
+                    userData.role === "ADMIN"
+                      ? "text-primary"
+                      : "text-primary/50"
+                  }`}
+                >
+                  Admin
+                </span>
               </div>
               <div
-                className={`flex-1 flex flex-col gap-2 items-center justify-center rounded cursor-pointer
-                ${
-                  activeRole === "admin"
-                    ? "bg-[#0091AE] shadow-current scale-x-100 text-white"
-                    : "bg-[#0091AE]/20  text-primary"
-                }
+                className={`flex-1 flex  gap-2 items-center justify-center rounded cursor-pointer
               `}
                 onClick={() => {
-                  setActiveRole("admin");
+                  setUserData({ ...userData, role: "USER" });
                 }}
               >
-                <Admin
-                  className={`
-                 ${activeRole === "admin" ? "fill-white" : "fill-primary"}`}
-                />
-                <span className="text-2xl">Admin</span>
-              </div>
-              <div
-                className={`flex-1 flex flex-col gap-2 items-center justify-center rounded cursor-pointer
-                ${
-                  activeRole === "user"
-                    ? "bg-[#0091AE] shadow-current scale-x-100 text-white"
-                    : "bg-[#0091AE]/20  text-primary"
-                }
-              `}
-                onClick={() => {
-                  setActiveRole("user");
-                }}
-              >
-                <Users
-                  className={`
-                 ${activeRole === "user" ? "fill-white" : "fill-primary"}`}
-                />
-                <span className="text-2xl">Regular User</span>
+                <span
+                  className={`h-[5rem] aspect-square flex-center rounded-full ${
+                    userData.role === "USER"
+                      ? "bg-[#0091AE] shadow-current  text-white"
+                      : "bg-[#0091AE]/20  text-primary"
+                  }`}
+                >
+                  <Users
+                    className={`  flex-center
+                  ${userData.role === "USER" ? "fill-white" : "fill-primary"}`}
+                  />
+                </span>
+                <span
+                  className={`text-2xl ${
+                    userData.role === "USER"
+                      ? "text-primary"
+                      : "text-primary/50"
+                  }`}
+                >
+                  Regular User
+                </span>
               </div>
             </div>
           </div>
           <div>
-            <label className="w-fit" htmlFor="rapport-name">
-              Email Address
+            <label className="w-fit capitalize" htmlFor="email">
+              email address
             </label>
             <input
-              id="rapport-name"
-              placeholder="gmail@gmail.com"
+              id="email"
+              placeholder="email address"
               className="h-11"
-              value={email}
+              value={userData.email}
               onChange={(e) => {
-                setEmail(e.target.value);
+                setUserData({ ...userData, email: e.target.value });
               }}
             />
           </div>
           <div>
-            <label className="w-fit" htmlFor="rapport-name">
-              Password
+            <label className="w-fit capitalize" htmlFor="password">
+              password
             </label>
             <input
-              id="rapport-name"
+              id="password"
               placeholder="........"
               type="password"
               className="h-11"
-              value={password}
+              value={userData.password}
               onChange={(e) => {
-                setPassword(e.target.value);
+                setUserData({ ...userData, password: e.target.value });
+              }}
+            />
+          </div>
+          <div>
+            <label className="w-fit capitalize" htmlFor="phonenumber">
+              phone number
+            </label>
+            <input
+              id="phonenumber"
+              placeholder="phone number"
+              type="text"
+              className="h-11"
+              value={userData.password}
+              onChange={(e) => {
+                setUserData({ ...userData, phoneNumber: e.target.value });
               }}
             />
           </div>
@@ -280,13 +327,13 @@ function AdminTab() {
           <Button
             className="flex items-center gap-2 py-3 px-4"
             variant="outlined"
-            onClick={() => setOpen(false)}
+            onClick={handleClose}
           >
             <span>Cancel</span>
           </Button>
           <Button
             className="flex items-center gap-2 py-3 px-4"
-            onClick={() => setOpen(false)}
+            onClick={addUserToTenant}
           >
             <span>Add User</span>
           </Button>

@@ -24,11 +24,44 @@ export const registerSchema = z.object({
       message: "Last name must be at least 2 characters",
     }),
   avatar: z.string().optional(),
-  role: z.enum(["ADMIN", "USER"]).optional(),
   phoneNumber: z
     .string()
     .regex(/^\d{10}$/)
     .optional(),
+  attributes: z.record(z.any()).optional(),
+});
+
+export const updateUserSchema = z.object({
+  email: z
+    .string()
+    .email({
+      message: "Invalid email address",
+    })
+    .optional(),
+  password: z
+    .string()
+    .min(8, {
+      message: "Password must be at least 8 characters",
+    })
+    .optional(),
+  firstName: z
+    .string()
+    .regex(/^\w[\w ]*\w$/, {
+      message: "First name can only contain letters",
+    })
+    .optional(),
+  lastName: z
+    .string()
+    .regex(/^\w[\w ]*\w$/, {
+      message: "Last name can only contain letters",
+    })
+    .optional(),
+  avatar: z.string().optional(),
+  phoneNumber: z
+    .string()
+    .regex(/^\d{10}$/)
+    .optional(),
+  attributes: z.record(z.any()).optional(),
 });
 
 export const loginSchema = z.object({
@@ -51,7 +84,6 @@ export const verifySchema = z.object({
 export const dataIdsSchema = z.object({
   ids: z.array(z.number()),
 });
-
 
 export const updatePasswordSchema = z.object({
   oldPassword: z.string().min(8),
@@ -86,6 +118,7 @@ export const AddTenantSchema = z.object({
 
 export type Login = z.infer<typeof loginSchema>;
 export type Register = z.infer<typeof registerSchema>;
+export type UpdateUser = z.infer<typeof updateUserSchema>;
 export type Logout = z.infer<typeof logoutSchema>;
 export type Refresh = z.infer<typeof refreshSchema>;
 export type Verify = z.infer<typeof verifySchema>;
@@ -95,18 +128,6 @@ export type AddTenant = z.infer<typeof AddTenantSchema>;
 export type DecodedToken = {
   id: number;
   email: string;
-  role: Role;
   exp?: number;
   iat?: number;
 };
-
-export type Role = "ADMIN" | "USER";
-
-
-
-// "email": "oussamajamil01@gmail.com",
-//   "password": "123456",
-//     "firstName": "oussama",
-//       "lastName": "jamil",
-//         "role": "ADMIN",
-//           "phoneNumber": "0682712855"
