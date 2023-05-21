@@ -10,6 +10,7 @@ const multiTenancyApi = axios.create({
 
 
 
+
 api.interceptors.response.use(
 	(response) => {
 		return response;
@@ -43,6 +44,17 @@ interface Params {
 	where?: any;
 
 }
+
+export const getUser = async (id: number) => {
+	if (!id) return [];
+	const response = await multiTenancyApi.get(`/tenant/${id}/users`,{
+		headers: {
+			Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+		}
+	});
+	return response.data;
+}
+
 export const getTags = async (params: Params) => {
 	const { take, skip, include, where } = params;
 	const response = await api.get("user", {
@@ -154,12 +166,22 @@ export const signUp = async (data: any, tenantId: number, role: "USER" | "ADMIN"
 		}
 	});
 	if (tenantId) {
-
 		await addUserToTenant({
 			tenantId,
 			userId: response.data.id,
 			role
-		})
+		}).then((res) => {
+			console.log(res);
+		}
+		).catch(async(error) => {
+			await api.delete(`user/${response.data.id}`, {
+				headers: {
+				 	Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+				}
+			});
+			throw error;
+		});
+		
 	}
 	return response.data;
 }

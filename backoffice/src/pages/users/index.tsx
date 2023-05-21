@@ -14,7 +14,7 @@ import Edit from "../devices/edit";
 import { getGroups } from "../../api/group";
 import useAffirm from "../../hooks/use-affirm";
 import { toast } from "react-toastify";
-import { getUsers, removeUserFromTenant } from "../../api/user";
+import { getUser, getUsers, removeUserFromTenant } from "../../api/user";
 import { UserContext } from "../../App";
 import { useQueries, useMutation } from "@tanstack/react-query";
 
@@ -191,12 +191,11 @@ const DevicesPage = () => {
   const [userQuery] = useQueries({
     queries: [
       {
-        queryKey: ["users", params, save, tenantSelected],
-        queryFn: () =>
-          getUsers({
-            ...params,
-            where: { ...params.where, tenants: { has: tenantSelected } },
-          }),
+        queryKey: ["userTenant", params, save, tenantSelected],
+        queryFn: async() =>
+        {
+          return await getUser(tenantSelected);
+        }
       },
     ],
   });
@@ -247,19 +246,19 @@ const DevicesPage = () => {
       },
       label: "email",
     },
-    {
-      header: "last updated",
-      valueGetter: (row) => format(new Date(row.updatedAt), "dd/MM/yyyy HH:mm"),
-      filter: {
-        type: "select",
-        options: Object.keys(dateMap).map((key) => ({
-          value: key,
-          label: key,
-        })),
-        reducerType: "updatedAt",
-      },
-      label: "last updated",
-    },
+    // {
+    //   header: "last updated",
+    //   valueGetter: (row) => format(new Date(row.updatedAt), "dd/MM/yyyy HH:mm"),
+    //   filter: {
+    //     type: "select",
+    //     options: Object.keys(dateMap).map((key) => ({
+    //       value: key,
+    //       label: key,
+    //     })),
+    //     reducerType: "updatedAt",
+    //   },
+    //   label: "last updated",
+    // },
   ];
   return (
     <Provider
@@ -318,7 +317,7 @@ const DevicesPage = () => {
                 rowStyle={{
                   fontSize: "14px",
                 }}
-                rows={userQuery?.data?.results || []}
+                rows={userQuery?.data || []}
                 state={
                   userQuery.isError
                     ? "error"

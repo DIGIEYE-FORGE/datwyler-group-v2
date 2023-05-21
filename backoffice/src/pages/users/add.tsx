@@ -31,7 +31,7 @@ const Add = () => {
 
   const postUserQuery = useMutation({
     mutationFn: (data: any) => signUp(data, tenantSelected),
-    onSuccess: (data) => {
+    onSuccess: (data:any) => {
       setOpen(false);
       setSave(true);
       toast.success("User added successfully");
