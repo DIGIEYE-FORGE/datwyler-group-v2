@@ -27,4 +27,18 @@ export default class MultiTenancyApi {
     const response = await this.api.get(`/tenant/${tenantId}/users`);
     return response.data;
   }
+
+  public async addUserToTenant({
+    user,
+    tenantId,
+  }: {
+    user: {
+      id: number;
+      role: "ADMIN" | "USER";
+    };
+    tenantId: number | undefined;
+  }) {
+    const res = await this.api.patch(`/tenant/${tenantId}/add-user`, user);
+    return res.data;
+  }
 }
