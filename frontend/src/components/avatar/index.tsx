@@ -12,7 +12,7 @@ function Avatar({ user, className }: AppProps) {
     return (
       <img
         src={user?.avatar}
-        className={` aspect-square rounded-full ${className} `}
+        className={`aspect-square rounded-full ${className} `}
         onError={(e) => {
           setError(true);
         }}
@@ -21,7 +21,7 @@ function Avatar({ user, className }: AppProps) {
   else
     return (
       <div
-        className={`flex-center aspect-square bg-primary brightness-110 rounded-full  ${className}`}
+        className={`flex-center aspect-square bg-primary text-light brightness-110 rounded-full  ${className}`}
       >
         <span>{FirstLetter}</span>
         <span>{SecondLetter}</span>

@@ -40,23 +40,41 @@ const defaultUser: RegisterUser = {
 
 function AdminTab() {
   const [users, setUsers] = useState<User[]>([]);
-  const { tenantId, multiTenancyApi, authApi } = useProvider<AppContext>();
+  const { tenantId, multiTenancyApi, authApi, user } =
+    useProvider<AppContext>();
   const [parms, setParams] = useState<Params>(defaultParams);
   const [open, setOpen] = useState<boolean>(false);
   const [userData, setUserData] = useState<RegisterUser>(defaultUser);
-  const addUserToTenant = () => {
-    authApi
-      .register(userData)
-      .then((res) => {
-        console.log("res", res);
-      })
-      .catch((err) => {
-        if (err instanceof z.ZodError) {
-          toast.error(err.issues[0].message);
-        } else {
-          toast.error(err.message);
-        }
+  const createUser = async () => {
+    try {
+      const user = await authApi.register(userData);
+      const res = await multiTenancyApi.addUserToTenant({
+        tenantId,
+        user: {
+          id: user.id,
+          role: userData.role,
+        },
       });
+      setUsers([
+        ...users,
+        {
+          ...userData,
+          id: user.id,
+          tenantName: user.tenants?.find((t) => t.id === tenantId)?.name || "",
+        },
+      ]);
+      toast.success("User created successfully");
+      setOpen(false);
+      console.log("res", res);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        toast.error(err.issues[0].message);
+      } else {
+        const e: any = err;
+        if (!e.message) toast.error("Something went wrong");
+        else toast.error(e.message);
+      }
+    }
   };
 
   const handleClose = () => {
@@ -292,6 +310,8 @@ function AdminTab() {
               className="h-11"
               value={userData.phoneNumber}
               onChange={(e) => {
+                if (e.target.value === "")
+                  setUserData({ ...userData, phoneNumber: undefined });
                 setUserData({ ...userData, phoneNumber: e.target.value });
               }}
             />
@@ -307,7 +327,7 @@ function AdminTab() {
           </Button>
           <Button
             className="flex items-center gap-2 py-3 px-4"
-            onClick={addUserToTenant}
+            onClick={createUser}
           >
             <span>Add User</span>
           </Button>

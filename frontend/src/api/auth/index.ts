@@ -35,7 +35,9 @@ export const registerSchema = z.object({
     }),
   phoneNumber: z
     .string()
-    .regex(/^\d{10}$/)
+    .regex(/^\d{10}$/, {
+      message: "Phone number must be 10 digits",
+    })
     .optional(),
   role: z.enum(["USER", "ADMIN"]),
 });
@@ -103,7 +105,7 @@ export default class AuthApi {
     });
     return res.data;
   }
-  async register(user: RegisterUser) {
+  async register(user: RegisterUser): Promise<User> {
     const { role, ...data } = registerSchema.parse(user);
     const res = await this.api.post("/register", data);
     return res.data;
