@@ -14,13 +14,11 @@ import { ReactComponent as PowerAlertIcon } from "../../../../assets/icons/fire-
 import { ReactComponent as FireAlertIcon } from "../../../../assets/icons/power-alert.svg";
 import greenMarkerUrl from "../../../../assets/icons/green-marker.svg";
 import redMarkerUrl from "../../../../assets/icons/red-marker.svg";
-import { Group, Params } from "../../../../utils";
+import { Alert, Group, Params } from "../../../../utils";
 import { useEffect, useMemo, useState } from "react";
 import L from "leaflet";
-import { generateGroups } from "./dummyData";
 import Provider, { useProvider } from "../../../../components/provider";
 import Details from "./details";
-import Show from "../../../../components/show";
 import { AppContext } from "../../../../App";
 
 export type GeographicalMapTabContext = {
@@ -47,7 +45,16 @@ const defaulParams: Params = {
   include: {
     devices: {
       include: {
+        lastTelemetries: true,
         alerts: {
+          include: {
+            device: {
+              select: {
+                serial: true,
+                name: true,
+              },
+            },
+          },
           where: {
             acknowledgedBy: null,
           },
@@ -71,6 +78,16 @@ function GeographicalMapTab() {
   const { backendApi, tenantId } = useProvider<AppContext>();
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
   const [showList, setShowList] = useState<0 | 1 | 2>(0);
+  const filterdGroups = useMemo(() => {
+    return groups.map((g) => ({
+      ...g,
+      alerts:
+        g.devices?.reduce(
+          (acc: Alert[], device) => [...acc, ...(device.alerts || [])],
+          []
+        ) || [],
+    }));
+  }, [groups]);
   function selectGroup(id: number) {
     setSelectedGroup(id);
     setShowList(2);
@@ -94,7 +111,7 @@ function GeographicalMapTab() {
   return (
     <Provider
       value={{
-        groups,
+        groups: filterdGroups,
         selectedGroup,
         selectGroup,
         showList,
@@ -119,13 +136,13 @@ function GeographicalMapTab() {
           />
           <MapControls bounds={bounds} />
           <ZoomControl position="bottomright" />
-          <For each={groups}>
+          <For each={filterdGroups}>
             {(group) => (
               <Marker
                 position={[group.lat || 0, group.lng || 0]}
                 icon={
                   new L.Icon({
-                    iconUrl: group.attributes?.alerts
+                    iconUrl: group.alerts?.length
                       ? redMarkerUrl
                       : greenMarkerUrl,
                     iconSize: [30, 30],
@@ -136,7 +153,7 @@ function GeographicalMapTab() {
                 <Popup closeButton={false} autoClose>
                   <div className="flex flex-col min-w-[18rem] ">
                     <div className="py-2 text-lg font-bold">
-                      {group.name} {`(${group.attributes?.alerts || 0})`}
+                      {group.name} {`(${group.alerts?.length || 0})`}
                     </div>
                     <div className="flex justify-evenly h-[3.5rem] items-center bg-primary/5 rounded">
                       <DoorAlertIcon />
@@ -145,8 +162,15 @@ function GeographicalMapTab() {
                       <FireAlertIcon />
                       <PowerAlertIcon />
                     </div>
-                    <div className="grid grid-cols-2 = gap-4 py-4">
-                      <For
+                    <div className="grid grid-cols-2 py-2 gap-y-2">
+                      <div className="text-[#82848E]">lat, lng:</div>
+                      <div className="font-bold">
+                        {group.lat}, {group.lng}
+                      </div>
+                      <div className="text-[#82848E]">location: </div>
+                      <div className="font-bold">{group.location}</div>
+                    </div>
+                    {/* <For
                         each={Object.entries(group.attributes || {}).filter(
                           ([key]) =>
                             key !== "lat" &&
@@ -161,8 +185,7 @@ function GeographicalMapTab() {
                             <div className="font-bold">{value}</div>
                           </div>
                         )}
-                      </For>
-                    </div>
+                      </For> */}
                     <button
                       onClick={() => {
                         group.id && selectGroup(group.id);
