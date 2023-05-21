@@ -37,6 +37,7 @@ import { LicenseModule } from './license/license.module';
 import { MultitenancyModule } from './multitenancy/multitenancy.module';
 import { LicenseService } from './license/license.service';
 import { json, urlencoded } from 'express';
+import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
@@ -64,6 +65,7 @@ import { json, urlencoded } from 'express';
     MulterModule.register({
       dest: './uploads',
     }),
+    FileModule,
   ],
   controllers: [AppController],
   providers: [PrismaService, AuthService, MultitenancyService, LicenseService],

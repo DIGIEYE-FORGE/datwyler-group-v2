@@ -17,7 +17,7 @@ async function bootstrap() {
   await prismaService.enableShutdownHooks(app);
 
   app.useGlobalPipes(new ValidationPipe());
-
+  app.useStaticAssets('uploads', { prefix: '/file' });
   const config = new DocumentBuilder()
     .setTitle('npp API')
     .setDescription('NestJs Prisma Postgresql Template')
