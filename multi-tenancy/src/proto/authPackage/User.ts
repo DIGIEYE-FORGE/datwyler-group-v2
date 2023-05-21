@@ -1,20 +1,6 @@
 // Original file: auth.proto
 
-
-// Original file: auth.proto
-
-export const _authPackage_User_Role = {
-  ADMIN: 0,
-  USER: 1,
-} as const;
-
-export type _authPackage_User_Role =
-  | 'ADMIN'
-  | 0
-  | 'USER'
-  | 1
-
-export type _authPackage_User_Role__Output = typeof _authPackage_User_Role[keyof typeof _authPackage_User_Role]
+import type { Any as _google_protobuf_Any, Any__Output as _google_protobuf_Any__Output } from '../google/protobuf/Any';
 
 export interface User {
   'id'?: (number);
@@ -22,8 +8,7 @@ export interface User {
   'lastName'?: (string);
   'email'?: (string);
   'password'?: (string);
-  'role'?: (_authPackage_User_Role);
-  'tenantIds'?: (number)[];
+  'avatar'?: (_google_protobuf_Any | null);
 }
 
 export interface User__Output {
@@ -32,6 +17,5 @@ export interface User__Output {
   'lastName'?: (string);
   'email'?: (string);
   'password'?: (string);
-  'role'?: (_authPackage_User_Role__Output);
-  'tenantIds'?: (number)[];
+  'avatar'?: (_google_protobuf_Any__Output);
 }

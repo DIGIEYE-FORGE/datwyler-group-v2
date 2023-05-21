@@ -9,7 +9,7 @@ export const GetUsers: AuthHandlers["GetUsers"] = (req, res) => {
   const { ids } = dataIdsSchema.parse(req.request);
   prisma.user
     .findMany({ where: { id: { in: ids } } })
-    .then((users) => {
+    .then((users:any) => {
       res(null, { users });
     })
     .catch((err) => {

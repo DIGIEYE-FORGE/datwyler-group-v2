@@ -1,5 +1,5 @@
 syntax = "proto3";
-
+import "google/protobuf/any.proto";
 package authPackage;
 
 service Auth {
@@ -7,17 +7,22 @@ service Auth {
 	rpc GetUsers(GetUsersRequest) returns (GetUsersResponse) {};
 }
 
+
+// message StringOrNull {
+// 	string value = 1;
+//   }
+
 message GetUsersRequest {
 	repeated int32 ids = 1;
 }
-message User {
 
+message User {
 	int32 id = 1;
 	string firstName = 2;
 	string lastName = 3;
 	string email = 4;
 	string password = 5;
-	// string avatar = 6;
+	google.protobuf.Any avatar = 6;
 	// optional google.protobuf.Any avatar = 6;
 	// optional google.protobuf.Any phoneNumber = 7;
 	// google.protobuf.Any createdAt = 9;

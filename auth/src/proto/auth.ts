@@ -16,5 +16,10 @@ export interface ProtoGrpcType {
     VerifyRequest: MessageTypeDefinition
     VerifyResponse: MessageTypeDefinition
   }
+  google: {
+    protobuf: {
+      Any: MessageTypeDefinition
+    }
+  }
 }
 
