@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 import env from "./env";
 import { genSalt, hash, compareSync } from "bcrypt";
-import { Role } from "@prisma/client";
 import { DecodedToken } from "./types";
 import { Request, Response, NextFunction } from "express";
 export class ServiceError extends Error {
@@ -19,24 +18,16 @@ interface RequestWithUser extends Request {
 
 import redis from "./redis";
 
-export function generateAccessToken(user: {
-  email: string;
-  id: number;
-  role: Role;
-}) {
-  const { id, email, role } = user;
-  return jwt.sign({ id, email, role }, env.JWT_SECRET, {
+export function generateAccessToken(user: { email: string; id: number }) {
+  const { id, email } = user;
+  return jwt.sign({ id, email }, env.JWT_SECRET, {
     expiresIn: env.ACCESS_TOKEN_EXPIRES_IN,
   });
 }
 
-export function generateRefreshToken(user: {
-  email: string;
-  id: number;
-  role: Role;
-}) {
-  const { id, email, role } = user;
-  return jwt.sign({ id, email, role }, env.JWT_SECRET, {
+export function generateRefreshToken(user: { email: string; id: number }) {
+  const { id, email } = user;
+  return jwt.sign({ id, email }, env.JWT_SECRET, {
     expiresIn: env.REFRESH_TOKEN_EXPIRES_IN,
   });
 }

@@ -9,7 +9,6 @@ type CreateUser = {
   password: string;
   firstName: string;
   lastName: string;
-  role: "ADMIN" | "USER";
   phoneNumber?: string;
 };
 
@@ -20,7 +19,6 @@ const users: CreateUser[] = [
     password: "12345678",
     firstName: "oussama",
     lastName: "jamil",
-    role: "ADMIN",
     phoneNumber: "0682712855",
   },
   {
@@ -29,7 +27,6 @@ const users: CreateUser[] = [
     password: "12345678",
     firstName: "issam",
     lastName: "el jaouhary",
-    role: "ADMIN",
     phoneNumber: "0682712855",
   },
   {
@@ -38,7 +35,6 @@ const users: CreateUser[] = [
     password: "12345678",
     firstName: "yassin",
     lastName: "ouraq",
-    role: "ADMIN",
     phoneNumber: "0682712855",
   },
   {
@@ -47,7 +43,6 @@ const users: CreateUser[] = [
     password: "12345678",
     firstName: "ismail",
     lastName: "salam",
-    role: "ADMIN",
     phoneNumber: "0682712855",
   },
 ];
@@ -57,10 +52,10 @@ async function seedUsers() {
     users.map(async (user) => {
       const hashedPassword = await hashPassword(user.password);
       const newUser = await prisma.user.upsert({
-        where:{
-          id:user.id
+        where: {
+          id: user.id,
         },
-        update:{},
+        update: {},
         create: {
           ...user,
           password: hashedPassword,

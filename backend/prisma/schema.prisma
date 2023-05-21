@@ -204,6 +204,7 @@ model Device {
   group           Group?          @relation(fields: [groupId], references: [id])
   groupId         Int?
   tenantId        Int?            @map("tenant_id")
+  history         History[]
 
   @@index([tenantId], name: "tenant_id")
   @@map("devices")
@@ -237,6 +238,37 @@ model LastTelemetry {
 
   @@unique([deviceId, name])
   @@map("last_telemetry")
+}
+
+model Report {
+  id        Int      @id @default(autoincrement())
+  name      String
+  tenantId  Int      @map("tenant_id")
+  query     String
+  type      String
+  format    String
+  url       String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([tenantId, name])
+  @@map("reports")
+}
+
+model History {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(100)
+  value     String   @db.VarChar(255)
+  alias     String?  @db.VarChar(100)
+  icon      String?  @db.VarChar(40)
+  color     String?  @db.VarChar(30)
+  show      Boolean  @default(true)
+  device    Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  deviceId  Int
+
+  @@map("history")
 }
 
 enum TypeCredential {

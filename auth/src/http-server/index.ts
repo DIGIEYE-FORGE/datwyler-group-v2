@@ -101,7 +101,6 @@ app.post(
         },
         select: {
           id: true,
-          role: true,
           email: true,
         },
       });
@@ -141,7 +140,6 @@ app.patch(
         },
         select: {
           id: true,
-          role: true,
           email: true,
         },
       });
@@ -185,7 +183,6 @@ app.post("/login", async (req, res) => {
     const refreshToken = generateRefreshToken({
       email,
       id: user.id,
-      role: user.role,
     });
     res.send({
       accessToken,
