@@ -7,7 +7,13 @@ import { useProvider } from "../../../../components/provider";
 import Show from "../../../../components/show";
 import SwipeableTabs from "../../../../components/swipeable-tabs";
 import Tabs from "../../../../components/tabs";
-import { Alert, classNames, strTake, toFixed } from "../../../../utils";
+import {
+  Alert,
+  classNames,
+  strTake,
+  stringify,
+  toFixed,
+} from "../../../../utils";
 import GroupsList from "./groups-list";
 import DataGrid, { Column } from "../../../../components/data-grid";
 import { format } from "date-fns";
@@ -188,7 +194,9 @@ function Group({ groupId }: { groupId?: number | null }) {
                       {(telemetry) => (
                         <>
                           <div className="col-span-2">{telemetry.name}</div>
-                          <div className="col-span-4">{telemetry.value}</div>
+                          <div className="col-span-4">
+                            {stringify(telemetry.value)}
+                          </div>
                         </>
                       )}
                     </For>
