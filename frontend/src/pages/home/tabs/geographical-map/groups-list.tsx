@@ -35,10 +35,12 @@ function GroupsList() {
               <div>{group.attributes?.location}</div>
             </div>
             <div
-              className={classNames("w-2 aspect-square rounded-full ", {
-                "bg-primary": !group.attributes?.alerts,
-                "bg-accent": !!group.attributes?.alerts,
-              })}
+              className={classNames(
+                "w-2 aspect-square rounded-full bg-primary",
+                {
+                  "!bg-accent": !!group.alerts.length,
+                }
+              )}
             ></div>
           </div>
         )}

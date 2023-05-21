@@ -63,10 +63,18 @@ export type Group = {
   tenantId?: number;
   alerts: Alert[];
 };
+
+export type LastTelemetry = {
+  name: string;
+  value: string;
+  [key: string]: any;
+};
+
 export type Device = {
   id: string;
   name: string;
   serial: string;
+  name: string;
   deviceProfile: {
     name: string;
     [key: string]: any;
@@ -75,6 +83,8 @@ export type Device = {
   _count?: {
     alerts: number;
   };
+  lastTelemetries?: LastTelemetry[];
+  alerts?: Alert[];
 };
 
 export type LoginState = "idle" | "loading" | "error";
