@@ -11,12 +11,13 @@ import Popover from "../../../../components/popover";
 import { FaUserEdit } from "react-icons/fa";
 import { AiOutlineUserDelete } from "react-icons/ai";
 import Modal from "../../../../components/modal";
-import { ReactComponent as Admin } from "../../../../assets/admin.svg";
 import { ReactComponent as Users } from "../../../../assets/user.svg";
 import { useProvider } from "../../../../components/provider";
 import { AppContext } from "../../../../App";
 import { z } from "zod";
 import { RegisterUser, registerSchema } from "../../../../api/auth";
+import { toast } from "react-toastify";
+import { RiAdminFill, RiUserFill } from "react-icons/ri";
 
 function deleteUsers(users: User[], ids: number[]) {
   return users.filter((user) => !ids.includes(user.id));
@@ -35,7 +36,6 @@ const defaultUser: RegisterUser = {
   email: "",
   password: "",
   role: "USER",
-  phoneNumber: "",
 };
 
 function AdminTab() {
@@ -51,7 +51,11 @@ function AdminTab() {
         console.log("res", res);
       })
       .catch((err) => {
-        console.log("err", err);
+        if (err instanceof z.ZodError) {
+          toast.error(err.issues[0].message);
+        } else {
+          toast.error(err.message);
+        }
       });
   };
 
@@ -209,7 +213,7 @@ function AdminTab() {
               id="last-name"
               placeholder="last name"
               className="h-11"
-              value={userData.firstName}
+              value={userData.lastName}
               onChange={(e) => {
                 setUserData({ ...userData, lastName: e.target.value });
               }}
@@ -232,8 +236,8 @@ function AdminTab() {
                       : "bg-[#0091AE]/20  text-primary"
                   }`}
                 >
-                  <Admin
-                    className={`
+                  <RiAdminFill
+                    className={` text-5xl
                   ${userData.role === "ADMIN" ? "fill-white" : "fill-primary"}`}
                   />
                 </span>
@@ -261,8 +265,8 @@ function AdminTab() {
                       : "bg-[#0091AE]/20  text-primary"
                   }`}
                 >
-                  <Users
-                    className={`  flex-center
+                  <RiUserFill
+                    className={`text-5xl  flex-center
                   ${userData.role === "USER" ? "fill-white" : "fill-primary"}`}
                   />
                 </span>
@@ -284,6 +288,7 @@ function AdminTab() {
             </label>
             <input
               id="email"
+              type="email"
               placeholder="email address"
               className="h-11"
               value={userData.email}
@@ -298,7 +303,8 @@ function AdminTab() {
             </label>
             <input
               id="password"
-              placeholder="........"
+              autoComplete="new-password"
+              placeholder="password"
               type="password"
               className="h-11"
               value={userData.password}
@@ -316,7 +322,7 @@ function AdminTab() {
               placeholder="phone number"
               type="text"
               className="h-11"
-              value={userData.password}
+              value={userData.phoneNumber}
               onChange={(e) => {
                 setUserData({ ...userData, phoneNumber: e.target.value });
               }}

@@ -27,11 +27,11 @@ export const registerSchema = z.object({
     }),
   lastName: z
     .string()
-    .regex(/^\w[\w ]*\w$/, {
-      message: "Last name can only contain letters",
-    })
     .min(2, {
       message: "Last name must be at least 2 characters",
+    })
+    .regex(/^\w[\w ]*\w$/, {
+      message: "Last name can only contain letters and spaces",
     }),
   phoneNumber: z
     .string()
