@@ -1,3 +1,4 @@
+import { ReportModule } from './report/report.module';
 import { GroupModule } from './group/group.module';
 import { VmqAuthAclModule } from './vmqauthacl/vmqauthacl.module';
 
@@ -40,7 +41,7 @@ import { json, urlencoded } from 'express';
 import { FileModule } from './file/file.module';
 
 @Module({
-  imports: [
+  imports: [ReportModule, 
     GroupModule,
     ConfigModule.forRoot(),
     VmqAuthAclModule,
