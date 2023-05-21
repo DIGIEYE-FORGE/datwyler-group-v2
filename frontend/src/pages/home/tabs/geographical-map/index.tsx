@@ -170,22 +170,6 @@ function GeographicalMapTab() {
                       <div className="text-[#82848E]">location: </div>
                       <div className="font-bold">{group.location}</div>
                     </div>
-                    {/* <For
-                        each={Object.entries(group.attributes || {}).filter(
-                          ([key]) =>
-                            key !== "lat" &&
-                            key !== "lng" &&
-                            key !== "alerts" &&
-                            key !== "location"
-                        )}
-                      >
-                        {([key, value]) => (
-                          <div className="grid grid-cols-2">
-                            <div className="text-[#82848E]">{key}</div>
-                            <div className="font-bold">{value}</div>
-                          </div>
-                        )}
-                      </For> */}
                     <button
                       onClick={() => {
                         group.id && selectGroup(group.id);

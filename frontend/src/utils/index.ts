@@ -156,3 +156,23 @@ export function convertParams(params: Params) {
 export function random(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
+
+export function strTake(
+  str: string | undefined,
+  length = 50,
+  more = "...",
+  placeholder = "---"
+) {
+  if (!str) return placeholder;
+  if (str.length <= length) return str;
+  return str.slice(0, length - 3) + more;
+}
+
+export function toFixed<T>(
+  number: number | undefined,
+  precision = 2,
+  defaulValue = 0 as T
+): number | T {
+  if (!number) return defaulValue;
+  return Number(number.toFixed(precision));
+}

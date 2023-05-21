@@ -7,7 +7,13 @@ import { useProvider } from "../../../../components/provider";
 import Show from "../../../../components/show";
 import SwipeableTabs from "../../../../components/swipeable-tabs";
 import Tabs from "../../../../components/tabs";
-import { Alert, classNames } from "../../../../utils";
+import {
+  Alert,
+  classNames,
+  strTake,
+  stringify,
+  toFixed,
+} from "../../../../utils";
 import GroupsList from "./groups-list";
 import DataGrid, { Column } from "../../../../components/data-grid";
 import { format } from "date-fns";
@@ -20,6 +26,7 @@ import {
   FaTintSlash,
 } from "react-icons/fa";
 import Accordion from "../../../../components/acordion";
+import For from "../../../../components/for";
 
 type AlertType =
   | "low battery"
@@ -66,7 +73,7 @@ function Group({ groupId }: { groupId?: number | null }) {
     {
       label: "System",
       header: "System",
-      valueGetter: (row: Alert) => row.device?.name.toUpperCase(),
+      valueGetter: (row: Alert) => row.device?.name,
     },
     {
       label: "deviceID",
@@ -124,93 +131,78 @@ function Group({ groupId }: { groupId?: number | null }) {
               <div className="col-span-2 text-slate-600 dark:text-slate-300 capitalize">
                 location:
               </div>
-              <div className="col-span-3">{group.location}</div>
+              <div className="col-span-3">{strTake(group.location, 50)}</div>
             </div>
             <div className="grid grid-cols-5 my-1">
               <div className="col-span-2 text-slate-600 dark:text-slate-300 capitalize">
                 ip:
               </div>
-              <div className="col-span-3">{group.ip}</div>
+              <div className="col-span-3">{strTake(group.ip, 50)}</div>
             </div>
             <div className="grid grid-cols-5 my-1">
               <div className="col-span-2 text-slate-600 dark:text-slate-300 capitalize">
                 lat:
               </div>
-              <div className="col-span-3">{group.lat}</div>
+              <div className="col-span-3">{toFixed(group.lat)}</div>
             </div>
             <div className="grid grid-cols-5 my-1">
               <div className="col-span-2 text-slate-600 dark:text-slate-300 capitalize">
                 lng:
               </div>
-              <div className="col-span-3">{group.lng}</div>
+              <div className="col-span-3">{toFixed(group.lat)}</div>
             </div>
             <div className="grid grid-cols-5 my-1">
               <div className="col-span-2 text-slate-600 dark:text-slate-300 capitalize">
                 number of devices:
               </div>
-              <div className="col-span-3">{group.devices?.length || 0}</div>
+              <div className="col-span-3">{toFixed(group.devices?.length)}</div>
             </div>
-            {/* <For each={Object.entries(group.attributes || {})}>
-              {([key, value]) => (
-                <div className="grid grid-cols-5 my-1">
-                  <div className="col-span-2 text-slate-600 dark:text-slate-300 capitalize">
-                    {key}:
-                  </div>
-                  <div className="col-span-3">{value}</div>
-                </div>
-              )}
-            </For> */}
+            <div className="grid grid-cols-5 my-1">
+              <div className="col-span-2 text-slate-600 dark:text-slate-300 capitalize">
+                unaknowledged alerts:
+              </div>
+              <div className="col-span-3">{toFixed(group.alerts?.length)}</div>
+            </div>
             <div className="grid grid-cols-5 my-4">
               <div className="col-span-2 text-slate-600 dark:text-slate-300 capitalize">
                 date:
               </div>
               <div className="col-span-3">{new Date().toISOString()}</div>
             </div>
-            <Button className="mt-auto py-2">Access Remote Controller</Button>
+            <a
+              href={`http://${group.ip}`}
+              target="_blank"
+              className="block w-full mt-auto"
+            >
+              <Button className="mt-auto py-2 w-full">
+                Access Remote Controller
+              </Button>
+            </a>
           </div>
           <div className="h-full overflow-y-auto p-4 flex flex-col">
             <Accordion
-              items={[
-                {
-                  title: "UPS",
-                  content: (
-                    <div className="flex flex-col gap-2">
-                      <div className="flex items-center gap-2 text-gray-400">
-                        low battery <GiBattery25 />
+              items={(group?.devices || []).map((device) => ({
+                title: strTake(device.name, 50),
+                content: (
+                  <div className="grid grid-cols-6">
+                    <Show when={device.lastTelemetries?.length == 0}>
+                      <div className="col-span-6  ">
+                        no telemetries received yet
                       </div>
-                      <div className="flex items-center gap-2 text-gray-400">
-                        high temperature <FaTemperatureHigh />
-                      </div>
-                    </div>
-                  ),
-                },
-                {
-                  title: "Temperature",
-                  content: (
-                    <div className="flex flex-col gap-2">
-                      <div className="flex items-center gap-2 text-blue-400">
-                        high temperature <FaTemperatureHigh />
-                      </div>
-                      <div className="flex items-center gap-2 text-blue-400">
-                        low temperature <FaTemperatureLow />
-                      </div>
-                    </div>
-                  ),
-                },
-                {
-                  title: "Humidity",
-                  content: (
-                    <div className="flex flex-col gap-2">
-                      <div className="flex items-center gap-2 text-green-400">
-                        high humidity <FaTint />
-                      </div>
-                      <div className="flex items-center gap-2 text-green-400">
-                        low humidity <FaTintSlash />
-                      </div>
-                    </div>
-                  ),
-                },
-              ]}
+                    </Show>
+                    <For each={device.lastTelemetries || []}>
+                      {(telemetry) => (
+                        <>
+                          <div className="col-span-2">{telemetry.name}</div>
+                          <div className="col-span-4">
+                            {stringify(telemetry.value)}
+                          </div>
+                        </>
+                      )}
+                    </For>
+                  </div>
+                ),
+              }))}
             />
           </div>
           <div className="h-full overflow-auto">

@@ -21,9 +21,10 @@ const defaultParams: Params = {
   },
   include: {
     device: {
-      include: {
+      select: {
         group: true,
-        deviceProfile: true,
+        name: true,
+        serial: true,
       },
     },
   },
@@ -143,8 +144,7 @@ function AlertsTab() {
     {
       label: "System",
       header: "System",
-      valueGetter: (row: Alert) =>
-        row.device?.deviceProfile?.name.toUpperCase(),
+      valueGetter: (row: Alert) => row.device?.name,
       filter: {
         type: "select",
         options: [
@@ -276,10 +276,7 @@ function AlertsTab() {
         headClassName="h-[5.5rem] bg-dark/5 dark:bg-light/5 text-[#697681] [&>*]:px-2 "
         rowClassName="h-[4rem] [&>*]:px-2 even:bg-dark/5 dark:even:bg-light/5 hover:bg-dark/10 dark:hover:bg-light/10"
         columns={columns}
-        rows={rows.slice(
-          (params.pagination.page - 1) * params.pagination.perPage,
-          params.pagination.page * params.pagination.perPage
-        )}
+        rows={rows}
       ></DataGrid>
     </div>
   );
