@@ -1,4 +1,4 @@
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import DataGrid, { Column } from "../../../../components/data-grid";
 import Pagination from "../../../../components/pagination";
 import { Device, Group, Params } from "../../../../utils";
@@ -13,7 +13,8 @@ import { MdOutlineClose, MdWatchLater, MdCancel } from "react-icons/md";
 import Select from "react-select";
 import { useProvider } from "../../../../components/provider";
 import { AppContext } from "../../../../App";
-
+import {addHours,addDays} from 'date-fns'
+import BackendApi from "../../../../api/backend";
 const sites: Group[] = [
   {
     id: 1,
@@ -56,7 +57,9 @@ const defaultParams: Params = {
 
 type Report = {
   name: string;
-  createdAt: string;
+  createdAt: Date;
+  groups: number[];
+  devices: number[];
   type: "alert" | "mesurement";
   format: "pdf" | "csv";
 };
@@ -119,7 +122,26 @@ function ReportsTab() {
   const [params, setParams] = useReducer(paramsReducer, defaultParams);
   const [total, setTotal] = useState(100);
   const [rows, setRows] = useState(generateDummyData(305));
-  const { theme } = useProvider<AppContext>();
+  const { theme,backendApi } = useProvider<AppContext>();
+
+  const getGroups = async () => {
+    const res = await backendApi.getGroups({
+      pagination: {
+        page: 1,
+        perPage: 100,
+      },
+    });
+    return res;
+  };
+  const [createReport, setCreateReport] = useState<Report>({
+    name: "",
+    createdAt: new Date(),
+    format: "pdf",
+    type: "alert",
+    groups: [],
+    devices: [],
+  });
+
 
   const columns: Column[] = [
     {
@@ -168,12 +190,49 @@ function ReportsTab() {
   ];
 
   const [open, setOpen] = useState(false);
+  const [GroupsData, setGroupsData] = useState<Group[]>([]);
+  const [DevicesData, setDevicesData] = useState<Device[]>([]);
+
+  useEffect(() => {
+    getGroups().then((res) => {
+      setGroupsData(res.results);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (createReport.groups.length > 0) {
+      const getDevices = async () => {
+        const res = await backendApi.getDevices({
+          pagination: {
+            page: 1,
+            perPage: 100,
+          },
+          where: {
+            groupId: {
+              in: createReport.groups,
+            },
+          },
+        });
+        return res;
+      };
+      getDevices().then((res) => {
+        console.log(res);
+        setDevicesData(res.results);
+      }).catch((err) => {
+        console.log(err);
+      }
+      );
+    }
+  }, [createReport.groups]);
   return (
     <div className="flex flex-col  gap-6 p-6">
-      <div className="flex gap-4 items-center flex-wrap justify-end">
+      <div className="flex gap-4 items-center flex-wrap justify-end ">
         <select className="min-w-[10rem] mr-auto">
-          <option value="">site1</option>
-          <option value="">site2</option>
+          {
+            GroupsData.map((group:Group,index:number) => (
+              <option key={index} value={group.id}>{group.name}</option>
+            ))
+          }
         </select>
         <Pagination
           value={params.pagination}
@@ -222,7 +281,9 @@ function ReportsTab() {
             >
               Rapport name
             </label>
-            <input id="rapport-name" className="h-11" />
+            <input id="rapport-name" className="h-11"  onChange={(e)=>{
+              setCreateReport({...createReport,name:e.target.value})
+            }}/>
           </div>
           <div>
             <label className="w-fit" htmlFor="rapport-name">
@@ -230,6 +291,11 @@ function ReportsTab() {
             </label>
             <span className="text-dark">
               <Select
+              onChange={(v:any) =>
+               {
+                  setCreateReport({...createReport,groups:v.map((item:Group)=>item.id)})
+               }
+              }
                 classNames={{
                   option: (state) =>
                     state.isFocused ? "!bg-primary/10" : "bg-light/5",
@@ -238,9 +304,9 @@ function ReportsTab() {
                       ? "!border-2 !border-primary !shadow-none "
                       : "border border-black/20",
                 }}
-                getOptionLabel={(site: Group) => site.name}
-                getOptionValue={(site: Group) => site.name}
-                options={sites}
+                getOptionLabel={(GroupsData: Group) => GroupsData.name}
+                getOptionValue={(GroupsData: Group) => GroupsData.name}
+                options={GroupsData}
                 isClearable
                 isMulti
                 backspaceRemovesValue
@@ -252,6 +318,9 @@ function ReportsTab() {
               Select devices
             </label>
             <Select
+              onChange={(v:any) =>
+                setCreateReport({...createReport,devices:v.map((item:Device)=>item.id)})
+              }
               classNames={{
                 option: (state) =>
                   state.isFocused ? "!bg-primary/10" : "white",
@@ -263,8 +332,8 @@ function ReportsTab() {
               getOptionLabel={(device: Device) =>
                 `${device.name} (${device.serial})`
               }
-              getOptionValue={(device: Device) => device.name}
-              options={devices}
+              getOptionValue={(DevicesData: Device) => DevicesData.name}
+              options={DevicesData}
               isClearable
               isMulti
               backspaceRemovesValue
@@ -275,6 +344,21 @@ function ReportsTab() {
               Date range
             </label>
             <Select
+              onChange={(v:string) =>
+              {
+                if (v === "last hour")
+                  setCreateReport({...createReport,createdAt:new Date(addHours(new Date(), -1))})
+                if (v === "last 4 hours")
+                  setCreateReport({...createReport,createdAt:new Date(addHours(new Date(), -4))})
+                if (v === "last 12 hours")
+                  setCreateReport({...createReport,createdAt:new Date(addHours(new Date(), -12))})
+                if (v === "last day")
+                  setCreateReport({...createReport,createdAt:new Date(addDays(new Date(), -1))})
+                if (v === "last 2 days")
+                  setCreateReport({...createReport,createdAt:new Date(addDays(new Date(), -2))})
+                if (v === "last week")
+                  setCreateReport({...createReport,createdAt:new Date(addDays(new Date(), -7))})
+              }}
               classNames={{
                 option: (state) =>
                   state.isFocused ? "!bg-primary/10" : "white",
@@ -314,6 +398,13 @@ function ReportsTab() {
               Format
             </label>
             <Select
+              onChange={(v:string) =>
+              {
+                  if (v === "PDF")
+                    setCreateReport({...createReport,format:"pdf"})
+                  if (v === "CSV")
+                  setCreateReport({...createReport,format:"csv"})
+              }}
               classNames={{
                 option: (state) =>
                   state.isFocused ? "!bg-primary/10" : "white",
@@ -336,6 +427,43 @@ function ReportsTab() {
               backspaceRemovesValue
             />
           </div>
+          <div>
+            <label className="w-fit" htmlFor="type">
+              Type
+            </label>
+            <Select
+              onChange={(v:string) =>
+              {
+                  if (v === "Alert")
+
+                    setCreateReport({...createReport,type:"alert"})
+                  if (v === "Mesurement")
+
+                    setCreateReport({...createReport,type:"mesurement"})
+              }}
+
+              classNames={{
+                option: (state) =>
+                  state.isFocused ? "!bg-primary/10" : "white",
+                control: (state) =>
+                  state.isFocused
+                    ? "!border-2 !border-primary !shadow-none"
+                    : "border border-black/20",
+              }}
+              getOptionLabel={(site: { value: string }) => site.value}
+              // getOptionValue={(site: { value: string }) => site.value + "waza"}
+              options={[
+                {
+                  value: "Alert",
+                },
+                {
+                  value: "Mesurement",
+                },
+              ]}
+              isClearable
+              backspaceRemovesValue
+            />
+          </div>
         </form>
         <div className="flex justify-between items-center h-20 px-6">
           <Button
@@ -348,7 +476,9 @@ function ReportsTab() {
           </Button>
           <Button
             className="flex items-center gap-2 py-3 px-4"
-            onClick={() => setOpen(false)}
+            onClick={() =>{
+              console.log(createReport)
+              setOpen(false)}}
           >
             <span>Genarate</span>
             <MdWatchLater className="text-2xl" />
