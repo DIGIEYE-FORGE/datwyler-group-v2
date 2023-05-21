@@ -179,7 +179,7 @@ function AdminTab() {
       <Modal
         open={open}
         handleClose={handleClose}
-        className="bg-white w-11/12 max-w-[40rem] rounded [&>*]:border-b [&>*]:border-black/20 max-h-full overflow-auto"
+        className=" bg-white  w-11/12 max-w-[40rem] rounded [&>*]:border-b [&>*]:border-black/20 max-h-full overflow-auto "
       >
         <div className="flex items-center py-4  justify-between px-4">
           <span className="font-semibold">Create user</span>
@@ -190,7 +190,7 @@ function AdminTab() {
             <MdOutlineClose className="text-2xl text-gray-500" />
           </button>
         </div>
-        <form className="flex flex-col gap-6 py-4 [&>div]:flex [&>div]:flex-col [&>div]:gap-2 [&>div]:px-6">
+        <form className="flex flex-col gap-6 py-4 [&>div]:flex [&>div]:items-center [&>div]:w-full [&>div>label]:w-[8rem] [&>div>input]:flex-1 [&>div]:gap-2 [&>div]:px-6">
           <div>
             <label className="w-fit capitalize" htmlFor="first-name">
               first name
@@ -219,67 +219,35 @@ function AdminTab() {
               }}
             />
           </div>
-          <div>
-            <div className="flex gap-6 items-center justify-between h-[6rem]">
-              <span>Role</span>
-              <div
-                className={`flex-1 flex  gap-2 items-center justify-center rounded cursor-pointer
+          <div className="flex gap-6 items-center justify-between">
+            <span className="w-[6rem]">Role</span>
+            <div
+              className={` flex flex-col py-2 w-[12rem] px-3  gap-2 items-center justify-center rounded cursor-pointer ${
+                userData.role === "ADMIN"
+                  ? "bg-primary   text-white"
+                  : "bg-primary/20 text-primary"
+              }
               `}
-                onClick={() => {
-                  setUserData({ ...userData, role: "ADMIN" });
-                }}
-              >
-                <span
-                  className={`h-[5rem] aspect-square flex-center rounded-full ${
-                    userData.role === "ADMIN"
-                      ? "bg-[#0091AE] shadow-current  text-white"
-                      : "bg-[#0091AE]/20  text-primary"
-                  }`}
-                >
-                  <RiAdminFill
-                    className={` text-5xl
-                  ${userData.role === "ADMIN" ? "fill-white" : "fill-primary"}`}
-                  />
-                </span>
-                <span
-                  className={`text-2xl ${
-                    userData.role === "ADMIN"
-                      ? "text-primary"
-                      : "text-primary/50"
-                  }`}
-                >
-                  Admin
-                </span>
-              </div>
-              <div
-                className={`flex-1 flex  gap-2 items-center justify-center rounded cursor-pointer
+              onClick={() => {
+                setUserData({ ...userData, role: "ADMIN" });
+              }}
+            >
+              <RiAdminFill className="text-5xl" />
+              <span className={`text-2xl`}>Admin</span>
+            </div>
+            <div
+              className={` flex flex-col py-2 w-[12rem]  gap-2 items-center justify-center rounded cursor-pointer ${
+                userData.role === "USER"
+                  ? "bg-primary   text-white"
+                  : "bg-primary/20 text-primary"
+              }
               `}
-                onClick={() => {
-                  setUserData({ ...userData, role: "USER" });
-                }}
-              >
-                <span
-                  className={`h-[5rem] aspect-square flex-center rounded-full ${
-                    userData.role === "USER"
-                      ? "bg-[#0091AE] shadow-current  text-white"
-                      : "bg-[#0091AE]/20  text-primary"
-                  }`}
-                >
-                  <RiUserFill
-                    className={`text-5xl  flex-center
-                  ${userData.role === "USER" ? "fill-white" : "fill-primary"}`}
-                  />
-                </span>
-                <span
-                  className={`text-2xl ${
-                    userData.role === "USER"
-                      ? "text-primary"
-                      : "text-primary/50"
-                  }`}
-                >
-                  Regular User
-                </span>
-              </div>
+              onClick={() => {
+                setUserData({ ...userData, role: "USER" });
+              }}
+            >
+              <RiUserFill className="text-5xl" />
+              <span className={`text-2xl`}>Regular User</span>
             </div>
           </div>
           <div>
