@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-	baseURL: import.meta.env.VITE_AUTH_AUTH,
+	// baseURL: import.meta.env.VITE_AUTH_AUTH,
+	baseURL: `http://${window.location.hostname}:5000`,
 });
 
 const multiTenancyApi = axios.create({
@@ -47,7 +48,7 @@ interface Params {
 
 export const getUser = async (id: number) => {
 	if (!id) return [];
-	const response = await multiTenancyApi.get(`/tenant/${id}/users`,{
+	const response = await multiTenancyApi.get(`/tenant/${id}/users`, {
 		headers: {
 			Authorization: `Bearer ${localStorage.getItem("accessToken")}`
 		}
@@ -173,15 +174,15 @@ export const signUp = async (data: any, tenantId: number, role: "USER" | "ADMIN"
 		}).then((res) => {
 			console.log(res);
 		}
-		).catch(async(error) => {
+		).catch(async (error) => {
 			await api.delete(`user/${response.data.id}`, {
 				headers: {
-				 	Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+					Authorization: `Bearer ${localStorage.getItem("accessToken")}`
 				}
 			});
 			throw error;
 		});
-		
+
 	}
 	return response.data;
 }
