@@ -1,0 +1,5 @@
+{
+	"watch": ["src", "package.json"],
+	"ext": "ts, json",
+	"exec": "clear && npx ts-node src/main.ts"
+}
