@@ -3,10 +3,11 @@ import { PrismaService } from 'src/prisma.service';
 import { FindAllOptions, HandleRequestErrors } from 'src/utils';
 import { CreateReportDto, GenerateRapport, UpdateReportDto } from './entities';
 import { Workbook } from 'exceljs';
-import { createPdf } from 'pdfmake/build/pdfmake';
-import { pdfMake } from 'pdfmake/build/vfs_fonts';
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import * as path from 'path';
 import * as fs from 'fs';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 @Injectable()
 export class ReportService {
   constructor(private prisma: PrismaService) {}
@@ -37,6 +38,9 @@ export class ReportService {
           deviceId: {
             in: data.devices,
           },
+          // createdAt: {
+          //   gte: new Date(data.date),
+          // },
         },
       });
     } else if (data.type == 'Mesurement') {
@@ -48,29 +52,33 @@ export class ReportService {
         },
       });
     }
-    console.log('res', res);
 
     if (res.length == 0) {
       throw new Error('No data found');
     } else {
-      console.log('hello', data.format);
-
       if (data.format == 'csv') {
-        file = await this.generateFileExcel(data.name, res);
+        file = await this.generateFileExcel(
+          data.name + 'tanantId-' + data.tenantId,
+          res,
+        );
       } else if (data.format == 'pdf') {
-        file = await this.generateFilePdf(data.name, res);
+        file = await this.generateFilePdf(
+          data.name + 'tanantId-' + data.tenantId,
+          res,
+        );
       }
     }
-    //   console.log(file);
-    return 'test';
-    // await this.prisma.report.create({
-    //   data: {
-    //     name: data.name,
-    //     url: file,
-    //     type: data.type,
-    //     format: data.format,
-    //   },
-    // });
+    await this.prisma.report.create({
+      data: {
+        name: data.name,
+        url: file,
+        query: '---',
+        type: data.type,
+        format: data.format,
+        tenantId: data.tenantId,
+      },
+    });
+    return file;
   }
 
   @HandleRequestErrors()
@@ -105,7 +113,7 @@ export class ReportService {
       filename,
     );
     await workbook.xlsx.writeFile(filepath);
-    return `${filename}`;
+    return `uploads/${filename}`;
   }
 
   async generateFilePdf(name: string, data: Record<string, any>[]) {
@@ -137,18 +145,23 @@ export class ReportService {
       },
     };
     const filename = `${name}.pdf`;
-    const filepath = path.join(__dirname, '..', '..', 'uploads', filename);
+    const filepath = path.join(
+      __dirname,
+      '..',
+      '..',
+      '..',
+      'uploads',
+      filename,
+    );
     const pdfDoc = pdfMake.createPdf(pdfData);
-    const stream = pdfDoc.getStream();
-    const chunks = [];
-    stream.on('data', (chunk) => {
-      chunks.push(chunk);
+    pdfDoc.getBuffer(async (buffer) => {
+      try {
+        await fs.promises.writeFile(filepath, buffer);
+        console.log('PDF created');
+      } catch (err) {
+        console.log(err);
+      }
     });
-    stream.on('end', () => {
-      const pdfBytes = Buffer.concat(chunks);
-      fs.writeFileSync(filepath, pdfBytes);
-      console.log('PDF file generated successfully.');
-    });
-    return filename;
+    return `uploads/${filename}`;
   }
 }

@@ -21,6 +21,10 @@ import {
 } from './entities';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { FindAllQuery, FindOneQuery } from 'src/utils';
+import { log } from 'console';
+import * as fs from 'fs';
+import path from 'path';
+import { Response } from 'express';
 
 @ApiTags('report')
 @Controller('report')
@@ -62,13 +66,28 @@ export class ReportController {
     return this.reportService.remove(id);
   }
 
-  @Get('download/excel')
-  @Header('Content-type', 'application/xlsx')
-  async downloadExcel(@Body() data: Record<string, any>[], @Res() res: any) {
-    const file = await this.reportService.generateFileExcel('Report', data);
-    return res.download(file);
-  }
-  // @Get('download')
-  // async DownloadExcelAndPdf(@Request() req: any, @Res() res: any) {
+  // @Get('download/excel')
+  // @Header('Content-type', 'application/xlsx')
+  // async downloadExcel(@Body() data: Record<string, any>[], @Res() res: any) {
+  //   const file = await this.reportService.generateFileExcel('Report', data);
+  //   return res.download(file);
   // }
+
+  @ApiOkResponse({ type: Report })
+  @Get('download/file')
+  async download(
+    @Query() query: { name: string; type: string },
+    @Res() res: Response,
+  ): Promise<any> {
+    console.log('query', query.name);
+    //check file exist
+    // const filePath = path.join(__dirname, '', query.name);
+    // // if (fs.existsSync(filePath)) {
+    //   res.json({ message: 'file exist' });
+    // } else {
+    //   res.json({ message: 'file not exist' });
+    // }
+    // }
+    res.json({ message: 'file not exist' });
+  }
 }

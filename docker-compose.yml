@@ -41,6 +41,7 @@ services:
     volumes:
       - ./backend/src:/usr/src/app/src
       - ./backend/prisma:/usr/src/app/prisma
+      - ./backend/uploads:/usr/src/app/uploads
     depends_on:
       - postgres
       - redis

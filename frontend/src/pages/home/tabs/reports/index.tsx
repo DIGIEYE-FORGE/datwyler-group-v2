@@ -1,7 +1,7 @@
 import { useEffect, useReducer, useState } from "react";
 import DataGrid, { Column } from "../../../../components/data-grid";
 import Pagination from "../../../../components/pagination";
-import { Device, Group, Params } from "../../../../utils";
+import { Device, Group, Params, Report, ReportDevice } from "../../../../utils";
 import { ReactComponent as CsvIcon } from "../../../../assets/icons/csv.svg";
 import { ReactComponent as PdfIcon } from "../../../../assets/icons/pdf.svg";
 import Tooltip from "../../../../components/tooltip";
@@ -15,38 +15,8 @@ import { useProvider } from "../../../../components/provider";
 import { AppContext } from "../../../../App";
 import {addHours,addDays} from 'date-fns'
 import BackendApi from "../../../../api/backend";
-const sites: Group[] = [
-  {
-    id: 1,
-    name: "Site 1",
-  },
-  {
-    id: 2,
-    name: "Site 2",
-  },
-  {
-    id: 3,
-    name: "Site 3",
-  },
-];
+import { toast } from "react-toastify";
 
-const devices: Device[] = [
-  {
-    id: 1,
-    name: "UPS 1",
-    serial: "123456789",
-  },
-  {
-    id: 2,
-    name: "UPS 2",
-    serial: "123456789",
-  },
-  {
-    id: 3,
-    name: "UPS 3",
-    serial: "123456789",
-  },
-];
 
 const defaultParams: Params = {
   pagination: {
@@ -55,14 +25,6 @@ const defaultParams: Params = {
   },
 };
 
-type Report = {
-  name: string;
-  date: Date;
-  groups?: number[];
-  devices: number[];
-  type: "alert" | "mesurement";
-  format: "pdf" | "csv";
-};
 
 const paramsReducer = (
   state: Params,
@@ -81,49 +43,69 @@ const paramsReducer = (
   }
 };
 
-const generateDummyData = (total: number): Report[] => {
-  return Array.from({ length: total }, (_, i) => ({
-    name: `report${(i + 1).toString().padStart(2, "0")}`,
-    createdAt: new Date(Math.random() * 1000000000000).toISOString(),
-    format: Math.random() > 0.5 ? "pdf" : "csv",
-    type: Math.random() > 0.5 ? "alert" : "mesurement",
-  }));
-};
 
-const action = (row: any) => {
-  if (row.format === "pdf")
+
+
+interface Props {
+  onClick: () => void;
+}
+
+function ReportsTab() {
+interface Props {
+  onClick: () => void;
+}
+
+  const [params, setParams] = useReducer(paramsReducer, defaultParams);
+  const [total, setTotal] = useState(100);
+  const [rows, setRows] = useState<Report[]>([]);
+  const { theme,backendApi,tenantId } = useProvider<AppContext>();
+  const action = (row: any) => {
+    if (row.format === "pdf")
+      return (
+        <div className="w-full h-full flex-center z-10">
+          <Tooltip>
+            <button className="w-[2.5rem] aspect-square rounded-full flex-center  hover:bg-dark/5 active:bg-dark/10 transition-colors"
+            onClick={()=>{
+              backendApi.downloadFile({
+                name: row.url,
+                type: row.type,
+              }).then((res)=>{
+              }).catch((err)=>{
+                toast.error(err.message)
+              }
+              )
+            }}
+            >
+              <PdfIcon />
+            </button>
+            <div className="bg-dark/50  text-light rounded-full px-2 py-1 whitespace-nowrap mr-[4rem]">
+              export as pdf
+            </div>
+          </Tooltip>
+        </div>
+      );
     return (
-      <div className="w-full h-full flex-center z-10">
+      <div className="w-full h-full flex-center">
         <Tooltip>
-          <button className="w-[2.5rem] aspect-square rounded-full flex-center  hover:bg-dark/5 active:bg-dark/10 transition-colors ">
-            <PdfIcon />
+          <button  onClick={()=>{
+              backendApi.downloadFile({
+                name: row.url,
+                type: row.type,
+              }).then((res)=>{
+              }).catch((err)=>{
+                toast.error(err.message)
+              }
+              )
+            }}className="w-[2.5rem] aspect-square rounded-full flex-center  hover:bg-dark/5 active:bg-dark/10 transition-colors">
+            <CsvIcon />
           </button>
-          <div className="bg-dark/50  text-light rounded-full px-2 py-1 whitespace-nowrap mr-[4rem]">
-            export as pdf
+          <div className="bg-dark/50 text-light rounded-full px-2 py-1 whitespace-nowrap mr-[4rem]">
+            export as csv
           </div>
         </Tooltip>
       </div>
     );
-  return (
-    <div className="w-full h-full flex-center">
-      <Tooltip>
-        <button className="w-[2.5rem] aspect-square rounded-full flex-center  hover:bg-dark/5 active:bg-dark/10 transition-colors">
-          <CsvIcon />
-        </button>
-        <div className="bg-dark/50 text-light rounded-full px-2 py-1 whitespace-nowrap mr-[4rem]">
-          export as csv
-        </div>
-      </Tooltip>
-    </div>
-  );
-};
-
-function ReportsTab() {
-  const [params, setParams] = useReducer(paramsReducer, defaultParams);
-  const [total, setTotal] = useState(100);
-  const [rows, setRows] = useState(generateDummyData(305));
-  const { theme,backendApi } = useProvider<AppContext>();
-
+  };
   const getGroups = async () => {
     const res = await backendApi.getGroups({
       pagination: {
@@ -133,7 +115,13 @@ function ReportsTab() {
     });
     return res;
   };
-  const [createReport, setCreateReport] = useState<Report>({
+
+  const getReports = async (params:Params) => {
+    const res = await backendApi.getReports(params);
+    return res;
+  };
+
+  const [createReport, setCreateReport] = useState<ReportDevice>({
     name: "",
     date: new Date(),
     format: "pdf",
@@ -141,7 +129,6 @@ function ReportsTab() {
     groups: [],
     devices: [],
   });
-
 
   const columns: Column[] = [
     {
@@ -199,6 +186,20 @@ function ReportsTab() {
     });
   }, []);
 
+
+  useEffect(() => {
+    getReports({pagination: {page: 1,perPage: 10},where:{
+      tenantId: {
+        eq: tenantId,
+      },
+    }}
+    ).then((res) => {
+      console.log(res);
+      setRows(res?.results || []);
+      setTotal(res?.totalResult || 0);
+    });
+  }, [params,tenantId]);
+
   useEffect(() => {
     if (createReport.groups && createReport.groups.length > 0) {
       const getDevices = async () => {
@@ -227,13 +228,6 @@ function ReportsTab() {
   return (
     <div className="flex flex-col  gap-6 p-6">
       <div className="flex gap-4 items-center flex-wrap justify-end ">
-        <select className="min-w-[10rem] mr-auto">
-          {
-            GroupsData.map((group:Group,index:number) => (
-              <option key={index} value={group.id}>{group.name}</option>
-            ))
-          }
-        </select>
         <Pagination
           value={params.pagination}
           onChange={(v) => setParams({ type: "pagination", payload: v })}
@@ -483,8 +477,12 @@ function ReportsTab() {
           <Button
             className="flex items-center gap-2 py-3 px-4"
             onClick={() =>{
-              console.log(createReport);
-              backendApi.generateFile(createReport)
+            console.log(createReport);
+              backendApi.generateFile(createReport).then((res)=>{
+                toast.success("Report generated successfully")
+              }).catch((err)=>{
+                toast.error(err)
+              })
               setOpen(false)}}
           >
             <span>Genarate</span>
