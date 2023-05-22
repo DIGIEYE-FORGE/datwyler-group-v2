@@ -1,6 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsString, MinLength, MaxLength, IsDateString, IsOptional } from 'class-validator'
+import {
+  IsInt,
+  IsString,
+  MinLength,
+  MaxLength,
+  IsDateString,
+  IsOptional,
+} from 'class-validator';
 import { IsPassword, IsPhoneNumber } from 'src/utils';
 
 export class Alert {
@@ -68,4 +75,3 @@ export class UpdateAlertDto {
   @IsOptional()
   level: string;
 }
-
