@@ -9,7 +9,6 @@ import { ReactComponent as AdminIcon } from "../../../assets/icons/admin.svg";
 import { ReactComponent as SettingsIcon } from "../../../assets/icons/setting.svg";
 import { ReactComponent as SupportIcon } from "../../../assets/icons/support.svg";
 import DashboardTab from "./dashboard";
-import DevTab from "./dev";
 import SupportTab from "./support";
 import ReportsTab from "./reports";
 import AlertsTab from "./alertes";

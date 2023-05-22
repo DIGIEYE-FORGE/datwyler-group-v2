@@ -46,15 +46,15 @@ export default class BackendApi {
     });
     return res.data;
   }
-  async downloadFile(query:{
+  async downloadFile(query: {
     name: string;
     type: string;
   }): Promise<ManyResponse<any>> {
     const res = await this.api.get(`/report/download/file`, {
       params: query,
-      });
+    });
     return res.data;
-    
+
   }
   async getGroups(params: Params): Promise<ManyResponse<Group>> {
     const res = await this.api.get("/group", {
@@ -70,7 +70,11 @@ export default class BackendApi {
     return res.data;
   }
 
+<<<<<<< HEAD
   async generateFile(props:ReportDevice): Promise<ManyResponse<any>> {
+=======
+  async generateFile(props: ReportDevice): Promise<ManyResponse<any>> {
+>>>>>>> FETCH_HEAD
     if (props.groups) delete props.groups;
     const res = await this.api.post("/report/generate", props);
     return res.data;
