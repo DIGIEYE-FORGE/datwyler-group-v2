@@ -14,7 +14,7 @@ import { ReactComponent as PowerAlertIcon } from "../../../../assets/icons/fire-
 import { ReactComponent as FireAlertIcon } from "../../../../assets/icons/power-alert.svg";
 import greenMarkerUrl from "../../../../assets/icons/green-marker.svg";
 import redMarkerUrl from "../../../../assets/icons/red-marker.svg";
-import { Alert, Group, Params } from "../../../../utils";
+import { Alert, Group, Params, toFixed } from "../../../../utils";
 import { useEffect, useMemo, useState } from "react";
 import L from "leaflet";
 import Provider, { useProvider } from "../../../../components/provider";
@@ -165,7 +165,7 @@ function GeographicalMapTab() {
                     <div className="grid grid-cols-2 py-2 gap-y-2">
                       <div className="text-[#82848E]">lat, lng:</div>
                       <div className="font-bold">
-                        {group.lat}, {group.lng}
+                        {toFixed(group.lat, 2)}, {toFixed(group.lng, 2)}
                       </div>
                       <div className="text-[#82848E]">location: </div>
                       <div className="font-bold">{group.location}</div>
