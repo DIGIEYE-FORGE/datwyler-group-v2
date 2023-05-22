@@ -178,8 +178,8 @@ function GeographicalMap() {
               {(group) => (
                 <Marker
                   position={[
-                    group.attributes?.lat || 0,
-                    group.attributes?.lng || 0,
+                    group?.attributes?.lat || 0,
+                    group?.attributes?.lng || 0,
                   ]}
                   icon={
                     new L.Icon({

@@ -46,9 +46,6 @@ const paramsReducer = (
 
 
 
-interface Props {
-  onClick: () => void;
-}
 
 function ReportsTab() {
 interface Props {
