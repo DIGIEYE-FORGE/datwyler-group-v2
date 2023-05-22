@@ -1,8 +1,6 @@
 import { env } from "../../utils/env";
 import axios from "axios";
 import { User } from "../../utils";
-import { useProvider } from "../../components/provider";
-import { AppContext } from "../../App";
 import { z } from "zod";
 type LoginResponse = {
   accessToken: string;
@@ -48,7 +46,8 @@ export default class AuthApi {
   private accessToken: string;
   private refreshToken: string;
   private api = axios.create({
-    baseURL: env.VITE_AUTH_API,
+    // baseURL: env.VITE_AUTH_API,
+    baseURL: `http://${window.location.hostname}:5000`,
   });
 
   constructor({
