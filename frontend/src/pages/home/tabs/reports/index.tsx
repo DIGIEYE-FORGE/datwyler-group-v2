@@ -1,7 +1,7 @@
 import { useEffect, useReducer, useState } from "react";
 import DataGrid, { Column } from "../../../../components/data-grid";
 import Pagination from "../../../../components/pagination";
-import { Device, Group, Params } from "../../../../utils";
+import { Device, Group, Params, Report, ReportDevice } from "../../../../utils";
 import { ReactComponent as CsvIcon } from "../../../../assets/icons/csv.svg";
 import { ReactComponent as PdfIcon } from "../../../../assets/icons/pdf.svg";
 import Tooltip from "../../../../components/tooltip";
@@ -13,55 +13,15 @@ import { MdOutlineClose, MdWatchLater, MdCancel } from "react-icons/md";
 import Select from "react-select";
 import { useProvider } from "../../../../components/provider";
 import { AppContext } from "../../../../App";
-import {addHours,addDays} from 'date-fns'
+import { addHours, addDays } from "date-fns";
 import BackendApi from "../../../../api/backend";
-const sites: Group[] = [
-  {
-    id: 1,
-    name: "Site 1",
-  },
-  {
-    id: 2,
-    name: "Site 2",
-  },
-  {
-    id: 3,
-    name: "Site 3",
-  },
-];
-
-const devices: Device[] = [
-  {
-    id: 1,
-    name: "UPS 1",
-    serial: "123456789",
-  },
-  {
-    id: 2,
-    name: "UPS 2",
-    serial: "123456789",
-  },
-  {
-    id: 3,
-    name: "UPS 3",
-    serial: "123456789",
-  },
-];
+import { toast } from "react-toastify";
 
 const defaultParams: Params = {
   pagination: {
     page: 1,
     perPage: 10,
   },
-};
-
-type Report = {
-  name: string;
-  date: Date;
-  groups?: number[];
-  devices: number[];
-  type: "alert" | "mesurement";
-  format: "pdf" | "csv";
 };
 
 const paramsReducer = (
@@ -81,49 +41,72 @@ const paramsReducer = (
   }
 };
 
-const generateDummyData = (total: number): Report[] => {
-  return Array.from({ length: total }, (_, i) => ({
-    name: `report${(i + 1).toString().padStart(2, "0")}`,
-    createdAt: new Date(Math.random() * 1000000000000).toISOString(),
-    format: Math.random() > 0.5 ? "pdf" : "csv",
-    type: Math.random() > 0.5 ? "alert" : "mesurement",
-  }));
-};
+interface Props {
+  onClick: () => void;
+}
 
-const action = (row: any) => {
-  if (row.format === "pdf")
+function ReportsTab() {
+  interface Props {
+    onClick: () => void;
+  }
+
+  const [params, setParams] = useReducer(paramsReducer, defaultParams);
+  const [total, setTotal] = useState(100);
+  const [rows, setRows] = useState<Report[]>([]);
+  const { theme, backendApi, tenantId } = useProvider<AppContext>();
+  const action = (row: any) => {
+    if (row.format === "pdf")
+      return (
+        <div className="w-full h-full flex-center z-10">
+          <Tooltip>
+            <button
+              className="w-[2.5rem] aspect-square rounded-full flex-center  hover:bg-dark/5 active:bg-dark/10 transition-colors"
+              onClick={() => {
+                backendApi
+                  .downloadFile({
+                    name: row.url,
+                    type: row.type,
+                  })
+                  .then((res) => {})
+                  .catch((err) => {
+                    toast.error(err.message);
+                  });
+              }}
+            >
+              <PdfIcon />
+            </button>
+            <div className="bg-dark/50  text-light rounded-full px-2 py-1 whitespace-nowrap mr-[4rem]">
+              export as pdf
+            </div>
+          </Tooltip>
+        </div>
+      );
     return (
-      <div className="w-full h-full flex-center z-10">
+      <div className="w-full h-full flex-center">
         <Tooltip>
-          <button className="w-[2.5rem] aspect-square rounded-full flex-center  hover:bg-dark/5 active:bg-dark/10 transition-colors ">
-            <PdfIcon />
+          <button
+            onClick={() => {
+              backendApi
+                .downloadFile({
+                  name: row.url,
+                  type: row.type,
+                })
+                .then((res) => {})
+                .catch((err) => {
+                  toast.error(err.message);
+                });
+            }}
+            className="w-[2.5rem] aspect-square rounded-full flex-center  hover:bg-dark/5 active:bg-dark/10 transition-colors"
+          >
+            <CsvIcon />
           </button>
-          <div className="bg-dark/50  text-light rounded-full px-2 py-1 whitespace-nowrap mr-[4rem]">
-            export as pdf
+          <div className="bg-dark/50 text-light rounded-full px-2 py-1 whitespace-nowrap mr-[4rem]">
+            export as csv
           </div>
         </Tooltip>
       </div>
     );
-  return (
-    <div className="w-full h-full flex-center">
-      <Tooltip>
-        <button className="w-[2.5rem] aspect-square rounded-full flex-center  hover:bg-dark/5 active:bg-dark/10 transition-colors">
-          <CsvIcon />
-        </button>
-        <div className="bg-dark/50 text-light rounded-full px-2 py-1 whitespace-nowrap mr-[4rem]">
-          export as csv
-        </div>
-      </Tooltip>
-    </div>
-  );
-};
-
-function ReportsTab() {
-  const [params, setParams] = useReducer(paramsReducer, defaultParams);
-  const [total, setTotal] = useState(100);
-  const [rows, setRows] = useState(generateDummyData(305));
-  const { theme,backendApi } = useProvider<AppContext>();
-
+  };
   const getGroups = async () => {
     const res = await backendApi.getGroups({
       pagination: {
@@ -133,7 +116,13 @@ function ReportsTab() {
     });
     return res;
   };
-  const [createReport, setCreateReport] = useState<Report>({
+
+  const getReports = async (params: Params) => {
+    const res = await backendApi.getReports(params);
+    return res;
+  };
+
+  const [createReport, setCreateReport] = useState<ReportDevice>({
     name: "",
     date: new Date(),
     format: "pdf",
@@ -141,7 +130,6 @@ function ReportsTab() {
     groups: [],
     devices: [],
   });
-
 
   const columns: Column[] = [
     {
@@ -200,6 +188,21 @@ function ReportsTab() {
   }, []);
 
   useEffect(() => {
+    getReports({
+      pagination: { page: 1, perPage: 10 },
+      where: {
+        tenantId: {
+          eq: tenantId,
+        },
+      },
+    }).then((res) => {
+      console.log(res);
+      setRows(res?.results || []);
+      setTotal(res?.totalResult || 0);
+    });
+  }, [params, tenantId]);
+
+  useEffect(() => {
     if (createReport.groups && createReport.groups.length > 0) {
       const getDevices = async () => {
         const res = await backendApi.getDevices({
@@ -215,25 +218,19 @@ function ReportsTab() {
         });
         return res;
       };
-      getDevices().then((res) => {
-        console.log(res);
-        setDevicesData(res.results);
-      }).catch((err) => {
-        console.log(err);
-      }
-      );
+      getDevices()
+        .then((res) => {
+          console.log(res);
+          setDevicesData(res.results);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   }, [createReport.groups]);
   return (
     <div className="flex flex-col  gap-6 p-6">
       <div className="flex gap-4 items-center flex-wrap justify-end ">
-        <select className="min-w-[10rem] mr-auto">
-          {
-            GroupsData.map((group:Group,index:number) => (
-              <option key={index} value={group.id}>{group.name}</option>
-            ))
-          }
-        </select>
         <Pagination
           value={params.pagination}
           onChange={(v) => setParams({ type: "pagination", payload: v })}
@@ -281,9 +278,13 @@ function ReportsTab() {
             >
               Rapport name
             </label>
-            <input id="rapport-name" className="h-11"  onChange={(e)=>{
-              setCreateReport({...createReport,name:e.target.value})
-            }}/>
+            <input
+              id="rapport-name"
+              className="h-11"
+              onChange={(e) => {
+                setCreateReport({ ...createReport, name: e.target.value });
+              }}
+            />
           </div>
           <div>
             <label className="w-fit" htmlFor="rapport-name">
@@ -291,11 +292,12 @@ function ReportsTab() {
             </label>
             <span className="text-dark">
               <Select
-              onChange={(v:any) =>
-               {
-                  setCreateReport({...createReport,groups:v.map((item:Group)=>item.id)})
-               }
-              }
+                onChange={(v: any) => {
+                  setCreateReport({
+                    ...createReport,
+                    groups: v.map((item: Group) => item.id),
+                  });
+                }}
                 classNames={{
                   option: (state) =>
                     state.isFocused ? "!bg-primary/10" : "bg-light/5",
@@ -318,8 +320,11 @@ function ReportsTab() {
               Select devices
             </label>
             <Select
-              onChange={(v:any) =>
-                setCreateReport({...createReport,devices:v.map((item:Device)=>item.id)})
+              onChange={(v: any) =>
+                setCreateReport({
+                  ...createReport,
+                  devices: v.map((item: Device) => item.id),
+                })
               }
               classNames={{
                 option: (state) =>
@@ -344,20 +349,37 @@ function ReportsTab() {
               Date range
             </label>
             <Select
-              onChange={(v:string) =>
-              {
+              onChange={(v: any) => {
                 if (v === "last hour")
-                  setCreateReport({...createReport,date:new Date(addHours(new Date(), -1))})
+                  setCreateReport({
+                    ...createReport,
+                    date: new Date(addHours(new Date(), -1)),
+                  });
                 if (v === "last 4 hours")
-                  setCreateReport({...createReport,date:new Date(addHours(new Date(), -4))})
+                  setCreateReport({
+                    ...createReport,
+                    date: new Date(addHours(new Date(), -4)),
+                  });
                 if (v === "last 12 hours")
-                  setCreateReport({...createReport,date:new Date(addHours(new Date(), -12))})
+                  setCreateReport({
+                    ...createReport,
+                    date: new Date(addHours(new Date(), -12)),
+                  });
                 if (v === "last day")
-                  setCreateReport({...createReport,date:new Date(addDays(new Date(), -1))})
+                  setCreateReport({
+                    ...createReport,
+                    date: new Date(addDays(new Date(), -1)),
+                  });
                 if (v === "last 2 days")
-                  setCreateReport({...createReport,date:new Date(addDays(new Date(), -2))})
+                  setCreateReport({
+                    ...createReport,
+                    date: new Date(addDays(new Date(), -2)),
+                  });
                 if (v === "last week")
-                  setCreateReport({...createReport,date:new Date(addDays(new Date(), -7))})
+                  setCreateReport({
+                    ...createReport,
+                    date: new Date(addDays(new Date(), -7)),
+                  });
               }}
               classNames={{
                 option: (state) =>
@@ -398,18 +420,14 @@ function ReportsTab() {
               Format
             </label>
             <Select
-              onChange={(v:{
-                value:string
-              }) =>
-              {
-                console.log("hello",v);
-                  if (v.value == "PDF")
-                    setCreateReport({...createReport,format:"pdf"})
-                  if (v.value == "CSV")
-                  {
+              onChange={(v: any) => {
+                console.log("hello", v);
+                if (v.value == "PDF")
+                  setCreateReport({ ...createReport, format: "pdf" });
+                if (v.value == "CSV") {
                   console.log("------------------------------");
-                  setCreateReport({...createReport,format:"csv"})
-                  }
+                  setCreateReport({ ...createReport, format: "csv" });
+                }
               }}
               classNames={{
                 option: (state) =>
@@ -438,16 +456,12 @@ function ReportsTab() {
               Type
             </label>
             <Select
-              onChange={(v:string) =>
-              {
-                  if (v === "Alert")
-
-                    setCreateReport({...createReport,type:"alert"})
-                  if (v === "Mesurement")
-
-                    setCreateReport({...createReport,type:"mesurement"})
+              onChange={(v: any) => {
+                if (v === "Alert")
+                  setCreateReport({ ...createReport, type: "alert" });
+                if (v === "Mesurement")
+                  setCreateReport({ ...createReport, type: "mesurement" });
               }}
-
               classNames={{
                 option: (state) =>
                   state.isFocused ? "!bg-primary/10" : "white",
@@ -482,10 +496,18 @@ function ReportsTab() {
           </Button>
           <Button
             className="flex items-center gap-2 py-3 px-4"
-            onClick={() =>{
+            onClick={() => {
               console.log(createReport);
-              backendApi.generateFile(createReport)
-              setOpen(false)}}
+              backendApi
+                .generateFile(createReport)
+                .then((res) => {
+                  toast.success("Report generated successfully");
+                })
+                .catch((err) => {
+                  toast.error(err);
+                });
+              setOpen(false);
+            }}
           >
             <span>Genarate</span>
             <MdWatchLater className="text-2xl" />

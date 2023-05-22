@@ -41,7 +41,8 @@ import { json, urlencoded } from 'express';
 import { FileModule } from './file/file.module';
 
 @Module({
-  imports: [ReportModule, 
+  imports: [
+    ReportModule,
     GroupModule,
     ConfigModule.forRoot(),
     VmqAuthAclModule,
@@ -96,6 +97,14 @@ export class AppModule implements NestModule {
       },
       {
         path: '/firmware',
+        method: RequestMethod.ALL,
+      },
+      {
+        path: '/report/generate',
+        method: RequestMethod.ALL,
+      },
+      {
+        path: '/report',
         method: RequestMethod.ALL,
       },
     );
