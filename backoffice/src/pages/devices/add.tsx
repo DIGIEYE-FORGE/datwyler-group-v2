@@ -173,6 +173,13 @@ const Add = () => {
         return acc;
       }, []),
     });
+    setDeviceData({
+      serial: "",
+      name: "",
+      description: "",
+      tags: [""],
+      groupId: "",
+    });
   };
   return (
     <div className="add-edit ">
