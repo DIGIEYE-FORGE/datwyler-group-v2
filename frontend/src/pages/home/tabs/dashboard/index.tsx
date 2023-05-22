@@ -11,13 +11,13 @@ import For from "../../../../components/for";
 import { MapContainer, Marker, TileLayer, ZoomControl } from "react-leaflet";
 import greenMarkerUrl from "../../../../assets/icons/green-marker.svg";
 import redMarkerUrl from "../../../../assets/icons/red-marker.svg";
-import { generateGroups } from "../geographical-map/dummyData";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
 import Card from "../../../../components/card";
 import { GiSmokeBomb } from "react-icons/gi";
 import { useProvider } from "../../../../components/provider";
 import { AppContext } from "../../../../App";
+import { Group } from "../../../../utils";
 
 interface IconButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   tooltip?: string;
@@ -153,7 +153,7 @@ function Chart({
 }
 
 function GeographicalMap() {
-  const [groups, setGroups] = useState(generateGroups(10));
+  const [groups, setGroups] = useState<Group[]>([]);
 
   return (
     <Chart
@@ -177,10 +177,7 @@ function GeographicalMap() {
             <For each={groups}>
               {(group) => (
                 <Marker
-                  position={[
-                    group.attributes?.lat || 0,
-                    group.attributes?.lng || 0,
-                  ]}
+                  position={[group.lat || 0, group.lng || 0]}
                   icon={
                     new L.Icon({
                       iconUrl: group.attributes?.alerts

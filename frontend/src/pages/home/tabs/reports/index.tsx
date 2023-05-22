@@ -13,10 +13,9 @@ import { MdOutlineClose, MdWatchLater, MdCancel } from "react-icons/md";
 import Select from "react-select";
 import { useProvider } from "../../../../components/provider";
 import { AppContext } from "../../../../App";
-import {addHours,addDays} from 'date-fns'
+import { addHours, addDays } from "date-fns";
 import BackendApi from "../../../../api/backend";
 import { toast } from "react-toastify";
-
 
 const defaultParams: Params = {
   pagination: {
@@ -24,7 +23,6 @@ const defaultParams: Params = {
     perPage: 10,
   },
 };
-
 
 const paramsReducer = (
   state: Params,
@@ -43,38 +41,37 @@ const paramsReducer = (
   }
 };
 
-
-
-
 interface Props {
   onClick: () => void;
 }
 
 function ReportsTab() {
-interface Props {
-  onClick: () => void;
-}
+  interface Props {
+    onClick: () => void;
+  }
 
   const [params, setParams] = useReducer(paramsReducer, defaultParams);
   const [total, setTotal] = useState(100);
   const [rows, setRows] = useState<Report[]>([]);
-  const { theme,backendApi,tenantId } = useProvider<AppContext>();
+  const { theme, backendApi, tenantId } = useProvider<AppContext>();
   const action = (row: any) => {
     if (row.format === "pdf")
       return (
         <div className="w-full h-full flex-center z-10">
           <Tooltip>
-            <button className="w-[2.5rem] aspect-square rounded-full flex-center  hover:bg-dark/5 active:bg-dark/10 transition-colors"
-            onClick={()=>{
-              backendApi.downloadFile({
-                name: row.url,
-                type: row.type,
-              }).then((res)=>{
-              }).catch((err)=>{
-                toast.error(err.message)
-              }
-              )
-            }}
+            <button
+              className="w-[2.5rem] aspect-square rounded-full flex-center  hover:bg-dark/5 active:bg-dark/10 transition-colors"
+              onClick={() => {
+                backendApi
+                  .downloadFile({
+                    name: row.url,
+                    type: row.type,
+                  })
+                  .then((res) => {})
+                  .catch((err) => {
+                    toast.error(err.message);
+                  });
+              }}
             >
               <PdfIcon />
             </button>
@@ -87,16 +84,20 @@ interface Props {
     return (
       <div className="w-full h-full flex-center">
         <Tooltip>
-          <button  onClick={()=>{
-              backendApi.downloadFile({
-                name: row.url,
-                type: row.type,
-              }).then((res)=>{
-              }).catch((err)=>{
-                toast.error(err.message)
-              }
-              )
-            }}className="w-[2.5rem] aspect-square rounded-full flex-center  hover:bg-dark/5 active:bg-dark/10 transition-colors">
+          <button
+            onClick={() => {
+              backendApi
+                .downloadFile({
+                  name: row.url,
+                  type: row.type,
+                })
+                .then((res) => {})
+                .catch((err) => {
+                  toast.error(err.message);
+                });
+            }}
+            className="w-[2.5rem] aspect-square rounded-full flex-center  hover:bg-dark/5 active:bg-dark/10 transition-colors"
+          >
             <CsvIcon />
           </button>
           <div className="bg-dark/50 text-light rounded-full px-2 py-1 whitespace-nowrap mr-[4rem]">
@@ -116,7 +117,7 @@ interface Props {
     return res;
   };
 
-  const getReports = async (params:Params) => {
+  const getReports = async (params: Params) => {
     const res = await backendApi.getReports(params);
     return res;
   };
@@ -186,19 +187,20 @@ interface Props {
     });
   }, []);
 
-
   useEffect(() => {
-    getReports({pagination: {page: 1,perPage: 10},where:{
-      tenantId: {
-        eq: tenantId,
+    getReports({
+      pagination: { page: 1, perPage: 10 },
+      where: {
+        tenantId: {
+          eq: tenantId,
+        },
       },
-    }}
-    ).then((res) => {
+    }).then((res) => {
       console.log(res);
       setRows(res?.results || []);
       setTotal(res?.totalResult || 0);
     });
-  }, [params,tenantId]);
+  }, [params, tenantId]);
 
   useEffect(() => {
     if (createReport.groups && createReport.groups.length > 0) {
@@ -216,13 +218,14 @@ interface Props {
         });
         return res;
       };
-      getDevices().then((res) => {
-        console.log(res);
-        setDevicesData(res.results);
-      }).catch((err) => {
-        console.log(err);
-      }
-      );
+      getDevices()
+        .then((res) => {
+          console.log(res);
+          setDevicesData(res.results);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   }, [createReport.groups]);
   return (
@@ -275,9 +278,13 @@ interface Props {
             >
               Rapport name
             </label>
-            <input id="rapport-name" className="h-11"  onChange={(e)=>{
-              setCreateReport({...createReport,name:e.target.value})
-            }}/>
+            <input
+              id="rapport-name"
+              className="h-11"
+              onChange={(e) => {
+                setCreateReport({ ...createReport, name: e.target.value });
+              }}
+            />
           </div>
           <div>
             <label className="w-fit" htmlFor="rapport-name">
@@ -285,11 +292,12 @@ interface Props {
             </label>
             <span className="text-dark">
               <Select
-              onChange={(v:any) =>
-               {
-                  setCreateReport({...createReport,groups:v.map((item:Group)=>item.id)})
-               }
-              }
+                onChange={(v: any) => {
+                  setCreateReport({
+                    ...createReport,
+                    groups: v.map((item: Group) => item.id),
+                  });
+                }}
                 classNames={{
                   option: (state) =>
                     state.isFocused ? "!bg-primary/10" : "bg-light/5",
@@ -312,8 +320,11 @@ interface Props {
               Select devices
             </label>
             <Select
-              onChange={(v:any) =>
-                setCreateReport({...createReport,devices:v.map((item:Device)=>item.id)})
+              onChange={(v: any) =>
+                setCreateReport({
+                  ...createReport,
+                  devices: v.map((item: Device) => item.id),
+                })
               }
               classNames={{
                 option: (state) =>
@@ -338,20 +349,37 @@ interface Props {
               Date range
             </label>
             <Select
-              onChange={(v:string) =>
-              {
+              onChange={(v: any) => {
                 if (v === "last hour")
-                  setCreateReport({...createReport,date:new Date(addHours(new Date(), -1))})
+                  setCreateReport({
+                    ...createReport,
+                    date: new Date(addHours(new Date(), -1)),
+                  });
                 if (v === "last 4 hours")
-                  setCreateReport({...createReport,date:new Date(addHours(new Date(), -4))})
+                  setCreateReport({
+                    ...createReport,
+                    date: new Date(addHours(new Date(), -4)),
+                  });
                 if (v === "last 12 hours")
-                  setCreateReport({...createReport,date:new Date(addHours(new Date(), -12))})
+                  setCreateReport({
+                    ...createReport,
+                    date: new Date(addHours(new Date(), -12)),
+                  });
                 if (v === "last day")
-                  setCreateReport({...createReport,date:new Date(addDays(new Date(), -1))})
+                  setCreateReport({
+                    ...createReport,
+                    date: new Date(addDays(new Date(), -1)),
+                  });
                 if (v === "last 2 days")
-                  setCreateReport({...createReport,date:new Date(addDays(new Date(), -2))})
+                  setCreateReport({
+                    ...createReport,
+                    date: new Date(addDays(new Date(), -2)),
+                  });
                 if (v === "last week")
-                  setCreateReport({...createReport,date:new Date(addDays(new Date(), -7))})
+                  setCreateReport({
+                    ...createReport,
+                    date: new Date(addDays(new Date(), -7)),
+                  });
               }}
               classNames={{
                 option: (state) =>
@@ -392,18 +420,14 @@ interface Props {
               Format
             </label>
             <Select
-              onChange={(v:{
-                value:string
-              }) =>
-              {
-                console.log("hello",v);
-                  if (v.value == "PDF")
-                    setCreateReport({...createReport,format:"pdf"})
-                  if (v.value == "CSV")
-                  {
+              onChange={(v: any) => {
+                console.log("hello", v);
+                if (v.value == "PDF")
+                  setCreateReport({ ...createReport, format: "pdf" });
+                if (v.value == "CSV") {
                   console.log("------------------------------");
-                  setCreateReport({...createReport,format:"csv"})
-                  }
+                  setCreateReport({ ...createReport, format: "csv" });
+                }
               }}
               classNames={{
                 option: (state) =>
@@ -432,16 +456,12 @@ interface Props {
               Type
             </label>
             <Select
-              onChange={(v:string) =>
-              {
-                  if (v === "Alert")
-
-                    setCreateReport({...createReport,type:"alert"})
-                  if (v === "Mesurement")
-
-                    setCreateReport({...createReport,type:"mesurement"})
+              onChange={(v: any) => {
+                if (v === "Alert")
+                  setCreateReport({ ...createReport, type: "alert" });
+                if (v === "Mesurement")
+                  setCreateReport({ ...createReport, type: "mesurement" });
               }}
-
               classNames={{
                 option: (state) =>
                   state.isFocused ? "!bg-primary/10" : "white",
@@ -476,14 +496,18 @@ interface Props {
           </Button>
           <Button
             className="flex items-center gap-2 py-3 px-4"
-            onClick={() =>{
-            console.log(createReport);
-              backendApi.generateFile(createReport).then((res)=>{
-                toast.success("Report generated successfully")
-              }).catch((err)=>{
-                toast.error(err)
-              })
-              setOpen(false)}}
+            onClick={() => {
+              console.log(createReport);
+              backendApi
+                .generateFile(createReport)
+                .then((res) => {
+                  toast.success("Report generated successfully");
+                })
+                .catch((err) => {
+                  toast.error(err);
+                });
+              setOpen(false);
+            }}
           >
             <span>Genarate</span>
             <MdWatchLater className="text-2xl" />
