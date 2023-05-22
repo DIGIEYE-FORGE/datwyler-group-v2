@@ -5,7 +5,8 @@ import { User } from "../../utils";
 export default class MultiTenancyApi {
   private api = axios.create({
     // baseURL: env.VITE_AUTH_API,
-    baseURL: "http://localhost:4000",
+    // baseURL: "http://localhost:4000",
+    baseURL: `http://${window.location.hostname}:4000`,
   });
 
   constructor({

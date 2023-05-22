@@ -21,12 +21,12 @@ import {
   useQueries,
 } from "@tanstack/react-query";
 import { is } from "date-fns/locale";
-axios.defaults.baseURL = import.meta.env.VITE_BACK_API;
+// axios.defaults.baseURL = import.meta.env.VITE_BACK_API;
+axios.defaults.baseURL = `http://${window.location.hostname}:3001`;
 
 axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem(
   "accessToken"
 )}`;
-
 
 export type UserContext = {
   user: [any, React.Dispatch<React.SetStateAction<any>>];
@@ -109,7 +109,8 @@ export const getUserConnecter = async () => {
 };
 function App() {
   const [tenantSelected, setTenantSelected] = useState<number>(0);
-  axios.defaults.headers.common["Tenant-Id"] = tenantSelected > 0 ? tenantSelected : localStorage.getItem("tenantId") ;
+  axios.defaults.headers.common["Tenant-Id"] =
+    tenantSelected > 0 ? tenantSelected : localStorage.getItem("tenantId");
   const [lang, setLang] = useLocalStorage("lang", "en");
   const [user, setUser] = useState<any>({});
   const [islogin, setIslogin] = useState<boolean>(false);
@@ -188,9 +189,9 @@ function App() {
                     />
                   </div>
                 ) : ( */}
-                  <Layout groups={groups}>
-                    <RouterView />
-                  </Layout>
+                <Layout groups={groups}>
+                  <RouterView />
+                </Layout>
                 {/* )} */}
               </>
             ) : (

@@ -21,7 +21,8 @@ type LoginResponse = {
 export default class BackendApi {
   private api = axios.create({
     // baseURL: env.VITE_AUTH_API,
-    baseURL: "http://localhost:3001",
+    // baseURL: "http://localhost:3001",
+    baseURL: `http://${window.location.hostname}:3001`,
   });
 
   constructor({
@@ -62,16 +63,11 @@ export default class BackendApi {
     return res.data;
   }
 
-  async getReports(params: Params): Promise<ManyResponse<Report>> {
-    const res = await this.api.get("/report", {
-      params: convertParams(params),
-    });
-    return res.data;
-  }
-
-  async generateFile(props:ReportDevice): Promise<ManyResponse<any>> {
+  async generateFile(props: ReportDevice): Promise<ManyResponse<any>> {
     if (props.groups) delete props.groups;
     const res = await this.api.post("/report/generate", props);
+    console.log(res);
+
     return res.data;
   }
 
