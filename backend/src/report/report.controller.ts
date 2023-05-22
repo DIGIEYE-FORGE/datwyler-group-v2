@@ -79,15 +79,14 @@ export class ReportController {
     @Query() query: { name: string; type: string },
     @Res() res: Response,
   ): Promise<any> {
-    console.log('query', query.name);
-    //check file exist
-    // const filePath = path.join(__dirname, '', query.name);
-    // // if (fs.existsSync(filePath)) {
-    //   res.json({ message: 'file exist' });
-    // } else {
-    //   res.json({ message: 'file not exist' });
-    // }
-    // }
-    res.json({ message: 'file not exist' });
+    res.setHeader('Content-Type', 'application/octet-stream');
+    res.setHeader('Content-Disposition', 'attachment; filename=' + query.name);
+
+    fs.readFile(query.name, (err, data) => {
+      if (err) {
+        return res.send(err);
+      }
+      res.send(data);
+    });
   }
 }

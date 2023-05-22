@@ -51,8 +51,15 @@ export default class BackendApi {
     type: string;
   }): Promise<ManyResponse<any>> {
     const res = await this.api.get(`/report/download/file`, {
+      responseType: "blob",
       params: query,
     });
+    const url = window.URL.createObjectURL(new Blob([res.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", query.name);
+    document.body.appendChild(link);
+    link.click();
     return res.data;
 
   }

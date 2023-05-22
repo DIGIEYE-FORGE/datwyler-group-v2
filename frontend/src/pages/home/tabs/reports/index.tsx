@@ -22,6 +22,7 @@ const defaultParams: Params = {
     page: 1,
     perPage: 10,
   },
+
 };
 
 const paramsReducer = (
@@ -137,10 +138,76 @@ function ReportsTab() {
     {
       label: "date",
       header: "Report date ",
+      
       valueGetter: (row) => format(new Date(row.createdAt), "dd/MM/yyyy HH:mm"),
       filter: {
-        type: "date",
-        onChange: () => {},
+        type: "select",
+        options: [{
+          value: "lasthour",
+          label: "last hour",
+        },
+        {
+          value: "last4hours",
+          label: "last 4 hours",
+        }
+        ,
+        {
+          value: "last12hours",
+          label: "last 12 hours",
+        },
+        {
+          value: "lastday",
+          label: "last day",
+
+        }
+      ],
+        onChange: (e:string) => {
+          if (e === "lasthour") {
+            const date = addHours(new Date(), -1);
+            setParams({
+              ...params,
+                where:{
+                  createAt:{
+                    gte: date,
+                  }
+                }
+            });
+          }
+          if (e === "last4hours") {
+            const date = addHours(new Date(), -4);
+            setParams({
+              ...params,
+                where:{
+                  createAt:{
+                    gte: date,
+                  }
+              
+              },
+            });
+          }
+          if (e === "last12hours") {
+            const date = addHours(new Date(), -12);
+            setParams({
+              ...params,
+                where:{
+                  createAt:{
+                    gte: date,
+                  }
+              },
+            });
+          }
+          if (e === "lastday") {
+            const date = addDays(new Date(), -1);
+            setParams({
+              ...params,
+                where:{
+                  createAt:{
+                    gte: date,
+                  }
+              },
+            });
+          }  
+        },
       },
     },
     {
