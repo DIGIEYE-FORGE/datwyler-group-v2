@@ -11,11 +11,10 @@ import Popover from "../../../../components/popover";
 import { FaUserEdit } from "react-icons/fa";
 import { AiOutlineUserDelete } from "react-icons/ai";
 import Modal from "../../../../components/modal";
-import { ReactComponent as Users } from "../../../../assets/user.svg";
 import { useProvider } from "../../../../components/provider";
 import { AppContext } from "../../../../App";
 import { z } from "zod";
-import { RegisterUser, registerSchema } from "../../../../api/auth";
+import { RegisterUser } from "../../../../api/auth";
 import { toast } from "react-toastify";
 import { RiAdminFill, RiUserFill } from "react-icons/ri";
 
