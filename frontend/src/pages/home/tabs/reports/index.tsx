@@ -5,7 +5,7 @@ import { Device, Group, Params, Report, ReportDevice } from "../../../../utils";
 import { ReactComponent as CsvIcon } from "../../../../assets/icons/csv.svg";
 import { ReactComponent as PdfIcon } from "../../../../assets/icons/pdf.svg";
 import Tooltip from "../../../../components/tooltip";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import Button from "../../../../components/button";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import Modal from "../../../../components/modal";
@@ -36,6 +36,14 @@ const paramsReducer = (
       return {
         ...state,
         pagination: action.payload,
+      };
+    case "where":
+      return {
+        ...state,
+        where: {
+          ...state.where,
+          ...action.payload,
+        }
       };
     default:
       return state;
@@ -132,7 +140,16 @@ function ReportsTab() {
       field: "name",
       filter: {
         type: "text",
-        onChange: () => {},
+        onChange: (e) => {
+          setParams({
+            type:'where',
+            payload:{
+              name:{
+                contains:e,
+              }
+            }
+          })
+        },
       },
     },
     {
@@ -162,54 +179,54 @@ function ReportsTab() {
         }
       ],
         onChange: (e:string) => {
-          if (e === "lasthour") {
-            const date = addHours(new Date(), -1);
+          if (e === "lasthour")
+          {
             setParams({
-              ...params,
-                where:{
-                  createAt:{
-                    gte: date,
-                  }
+              type: "where",
+              payload: {
+                createdAt: {
+                  gte: addHours(new Date(), -1).toISOString(),
+                },
+              },
+            });
+          }
+          else if (e === "last4hours")
+          {
+            setParams({
+              type: "where",
+              payload: {
+                createdAt: {
+                  gte: addHours(new Date(), -4).toISOString(),
+                },
+              },
+            });
+          }
+          else if (e === "last12hours")
+          {
+            setParams({
+              type: "where",
+              payload: {
+                createdAt: {
+                  gte: addHours(new Date(), -12).toISOString(),
+                },
+              },
+            });
+          }
+          else if (e === "lastday")
+          {
+            setParams({
+              type:"where",
+              payload:{
+                createdAt:{
+                  gte: addDays(new Date(),-1).toISOString(),
                 }
-            });
+              }
+            })
           }
-          if (e === "last4hours") {
-            const date = addHours(new Date(), -4);
-            setParams({
-              ...params,
-                where:{
-                  createAt:{
-                    gte: date,
-                  }
-              
-              },
-            });
-          }
-          if (e === "last12hours") {
-            const date = addHours(new Date(), -12);
-            setParams({
-              ...params,
-                where:{
-                  createAt:{
-                    gte: date,
-                  }
-              },
-            });
-          }
-          if (e === "lastday") {
-            const date = addDays(new Date(), -1);
-            setParams({
-              ...params,
-                where:{
-                  createAt:{
-                    gte: date,
-                  }
-              },
-            });
-          }  
         },
       },
     },
+
     {
       label: "type",
       header: "Report type",
@@ -232,7 +249,16 @@ function ReportsTab() {
           { value: "alert", label: "alert" },
           { value: "mesurement", label: "mesurement" },
         ],
-        onChange: () => {},
+        onChange: (e) => {
+          setParams({
+            type: "where",
+            payload: {
+              type: {
+                equals: e,
+              }
+            },
+          });
+        }
       },
     },
   ];
@@ -251,9 +277,11 @@ function ReportsTab() {
     getReports({
       pagination: { page: 1, perPage: 10 },
       where: {
+        ...params.where,
         tenantId: {
           eq: tenantId,
         },
+
       },
     }).then((res) => {
       console.log(res);
