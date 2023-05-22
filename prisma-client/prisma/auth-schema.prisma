@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/auth-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("AUTH_DATABASE_URL")
+}
+
+model User {
+  id          Int     @id @default(autoincrement())
+  firstName   String  @db.VarChar(50)
+  lastName    String  @db.VarChar(50)
+  email       String  @unique @db.VarChar(100)
+  password    String  @db.VarChar(100)
+  avatar      String? @db.VarChar(255)
+  phoneNumber String? @db.VarChar(20)
+  attributes  Json?   @db.Json
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
