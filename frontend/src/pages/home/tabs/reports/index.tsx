@@ -41,15 +41,8 @@ const paramsReducer = (
   }
 };
 
-interface Props {
-  onClick: () => void;
-}
 
 function ReportsTab() {
-  interface Props {
-    onClick: () => void;
-  }
-
   const [params, setParams] = useReducer(paramsReducer, defaultParams);
   const [total, setTotal] = useState(100);
   const [rows, setRows] = useState<Report[]>([]);
