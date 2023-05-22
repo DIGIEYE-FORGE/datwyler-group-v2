@@ -1,5 +1,0 @@
--- AlterTable
-ALTER TABLE "groups" ADD COLUMN     "ip" VARCHAR(50),
-ADD COLUMN     "lat" DOUBLE PRECISION,
-ADD COLUMN     "lng" DOUBLE PRECISION,
-ADD COLUMN     "location" VARCHAR(50);

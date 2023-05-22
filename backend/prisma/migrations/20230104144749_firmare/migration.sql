@@ -1,4 +1,0 @@
--- AlterTable
-ALTER TABLE "firmwares" ALTER COLUMN "name" DROP NOT NULL,
-ALTER COLUMN "version" DROP NOT NULL,
-ALTER COLUMN "hash" DROP NOT NULL;
