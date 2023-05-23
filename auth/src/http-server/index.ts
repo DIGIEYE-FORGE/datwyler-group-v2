@@ -83,6 +83,8 @@ app.use(async (req: RequestWithUser, res, next) => {
   });
 });
 
+
+
 app.post(
   "/register",
   multer({ storage: storage }).single("avatar"),
@@ -138,17 +140,11 @@ app.patch(
           ...rest,
           password: hashedPassword,
         },
-        select: {
-          id: true,
-          email: true,
-        },
       });
       if (!user)
         return res.status(404).json({ error: "user with id not found" });
       res.send(user);
     } catch (err) {
-      if (err instanceof z.ZodError)
-        res.status(400).json({ error: err.issues });
       if (req.file && req.file.path) {
         fs.unlink(req.file.path, (err) => {
           if (err) {
