@@ -202,6 +202,7 @@ interface Column {
 }
 
 interface DataGridProps {
+  actions?: boolean;
   height?: string;
   width?: string;
   rowGap?: string;
@@ -227,7 +228,12 @@ interface DataGridProps {
   }>;
 }
 
-const DataGrid = ({ columns, rows, ...props }: DataGridProps) => {
+const DataGrid = ({
+  columns,
+  actions = true,
+  rows,
+  ...props
+}: DataGridProps) => {
   const [selectedColumns, setSelectedColumns] = React.useState(columns);
 
   const rowGap = props.rowGap || "1em";
@@ -326,87 +332,89 @@ const DataGrid = ({ columns, rows, ...props }: DataGridProps) => {
                     </div>
                   </th>
                 ))}
-              <th className="w-3">
-                <div className="h-full flex align-end mb-7  justify-center">
-                  <Popover>
-                    <ColumnsSelect />
-                    <div className="relative ">
-                      <Card
-                        className="absolute t-0 r-0 z-3 w-15 p-4"
-                        style={{
-                          transform: "translateY(-1.5rem)",
-                        }}
-                      >
-                        <div className="flex  w-full h-2 align-center gap-4">
-                          <input
-                            type="checkbox"
-                            id={`column-all`}
-                            checked={
-                              selectedColumns.filter(
-                                (column) => column.show !== false
-                              ).length === selectedColumns.length
-                            }
-                            onChange={(e) => {
-                              if (!e.target.value) return;
-                              const newColumns = selectedColumns.map(
-                                (column) => {
-                                  return {
-                                    ...column,
-                                    show: true,
-                                  };
-                                }
-                              );
-                              setSelectedColumns(newColumns);
-                            }}
-                          />
-                          <label className="pointer" htmlFor={`column-all`}>
-                            All
-                          </label>
-                        </div>
-                        {selectedColumns.map((column, index) => (
-                          <div
-                            key={index}
-                            className="flex  w-full h-2 align-center gap-4"
-                          >
+              {actions && (
+                <th className="w-3">
+                  <div className="h-full flex align-end mb-7  justify-center">
+                    <Popover>
+                      <ColumnsSelect />
+                      <div className="relative ">
+                        <Card
+                          className="absolute t-0 r-0 z-3 w-15 p-4"
+                          style={{
+                            transform: "translateY(-1.5rem)",
+                          }}
+                        >
+                          <div className="flex  w-full h-2 align-center gap-4">
                             <input
                               type="checkbox"
-                              id={`column-${index}`}
-                              checked={column.show !== false}
+                              id={`column-all`}
+                              checked={
+                                selectedColumns.filter(
+                                  (column) => column.show !== false
+                                ).length === selectedColumns.length
+                              }
                               onChange={(e) => {
-                                if (
-                                  selectedColumns.filter(
-                                    (column) => column.show !== false
-                                  ).length === 1 &&
-                                  !e.target.checked
-                                )
-                                  return;
+                                if (!e.target.value) return;
                                 const newColumns = selectedColumns.map(
-                                  (column, i) => {
-                                    if (i === index) {
-                                      return {
-                                        ...column,
-                                        show: e.target.checked,
-                                      };
-                                    }
-                                    return column;
+                                  (column) => {
+                                    return {
+                                      ...column,
+                                      show: true,
+                                    };
                                   }
                                 );
                                 setSelectedColumns(newColumns);
                               }}
                             />
-                            <label
-                              className="pointer"
-                              htmlFor={`column-${index}`}
-                            >
-                              {column.label}
+                            <label className="pointer" htmlFor={`column-all`}>
+                              All
                             </label>
                           </div>
-                        ))}
-                      </Card>
-                    </div>
-                  </Popover>
-                </div>
-              </th>
+                          {selectedColumns.map((column, index) => (
+                            <div
+                              key={index}
+                              className="flex  w-full h-2 align-center gap-4"
+                            >
+                              <input
+                                type="checkbox"
+                                id={`column-${index}`}
+                                checked={column.show !== false}
+                                onChange={(e) => {
+                                  if (
+                                    selectedColumns.filter(
+                                      (column) => column.show !== false
+                                    ).length === 1 &&
+                                    !e.target.checked
+                                  )
+                                    return;
+                                  const newColumns = selectedColumns.map(
+                                    (column, i) => {
+                                      if (i === index) {
+                                        return {
+                                          ...column,
+                                          show: e.target.checked,
+                                        };
+                                      }
+                                      return column;
+                                    }
+                                  );
+                                  setSelectedColumns(newColumns);
+                                }}
+                              />
+                              <label
+                                className="pointer"
+                                htmlFor={`column-${index}`}
+                              >
+                                {column.label}
+                              </label>
+                            </div>
+                          ))}
+                        </Card>
+                      </div>
+                    </Popover>
+                  </div>
+                </th>
+              )}
             </tr>
           </thead>
           <tbody className={`${props.bodyClassName}`} style={props.bodyStyle}>
@@ -442,23 +450,25 @@ const DataGrid = ({ columns, rows, ...props }: DataGridProps) => {
                       </td>
                     );
                   })}
-                <td>
-                  <Button variant="none">
-                    <Delete
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (props.onRowSelect)
-                          props.onRowSelect({
-                            type: "delete",
-                            row,
-                          });
-                      }}
-                      className=" p-2 h-2 pointer"
-                    >
-                      <DeleteIcon />
-                    </Delete>
-                  </Button>
-                </td>
+                {actions && (
+                  <td>
+                    <Button variant="none">
+                      <Delete
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (props.onRowSelect)
+                            props.onRowSelect({
+                              type: "delete",
+                              row,
+                            });
+                        }}
+                        className=" p-2 h-2 pointer"
+                      >
+                        <DeleteIcon />
+                      </Delete>
+                    </Button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
@@ -468,7 +478,7 @@ const DataGrid = ({ columns, rows, ...props }: DataGridProps) => {
       ) : (
         <></>
       )}
-      {(rows.length === 0 && state != "loading") && (
+      {rows.length === 0 && state != "loading" && (
         <div className="flex flex-col gap-6 justify-center align-center  h-full w-full">
           <span>{props.noData || "No data"}</span>
         </div>

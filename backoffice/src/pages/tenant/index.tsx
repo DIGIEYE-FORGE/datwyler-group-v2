@@ -13,6 +13,7 @@ import Provider, { useProvider } from "../../components/provider";
 import backIcon from "../../assets/icons/back.svg";
 import Input from "../../components/input";
 import { UserContext } from "../../App";
+import axios from "axios";
 
 function parseJSON(value: string) {
   try {
@@ -20,6 +21,56 @@ function parseJSON(value: string) {
   } catch (error) {
     return undefined;
   }
+}
+
+async function fetchTenants(tenantId: number) {
+  const result = await axios.get(
+    `http://${window.location.hostname}:4000/tenant/`,
+    {
+      params: {
+        where: JSON.stringify({ parentId: tenantId }),
+        include: JSON.stringify({
+          _count: true,
+          children: {
+            include: {
+              _count: true,
+            },
+          },
+        }),
+      },
+    }
+  );
+  return result.data;
+}
+
+async function createTenant(tenant: Tenant) {
+  const { name, parentId } = tenant;
+  const result = await axios.post(
+    `http://${window.location.hostname}:4000/tenant/`,
+    {
+      name,
+      parentId,
+    }
+  );
+  return result.data;
+}
+
+async function updateTenant(tenant: Tenant) {
+  const { name } = tenant;
+  const result = await axios.patch(
+    `http://${window.location.hostname}:4000/tenant/${tenant.id}`,
+    {
+      name,
+    }
+  );
+  return result.data;
+}
+
+async function deleteTenant(tenant: Tenant) {
+  const result = await axios.delete(
+    `http://${window.location.hostname}:4000/tenant/${tenant.id}`
+  );
+  return result.data;
 }
 
 const NoData = () => {
@@ -30,29 +81,6 @@ const NoData = () => {
   );
 };
 
-const dateMap: {
-  [key: string]: {
-    lt?: Date;
-    gt?: Date;
-  };
-} = {
-  "1h": {
-    gt: new Date(new Date().getTime() - 60 * 60 * 1000),
-  },
-  "4h": {
-    gt: new Date(new Date().getTime() - 4 * 60 * 60 * 1000),
-  },
-  "12h": {
-    gt: new Date(new Date().getTime() - 12 * 60 * 60 * 1000),
-  },
-  "last day": {
-    gt: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
-  },
-  "last week": {
-    gt: new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000),
-  },
-};
-
 type Tenant = {
   id?: number;
   parentId?: number;
@@ -61,37 +89,15 @@ type Tenant = {
     users: number;
     subTenants: number;
   };
+  children?: Tenant[];
   createdAt?: Date;
   updatedAt?: Date;
 };
 
-const defualtTenants: Tenant[] = [
-  {
-    id: 1,
-    name: "tenant 1",
-    _count: {
-      users: 10,
-      subTenants: 5,
-    },
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: 2,
-    name: "tenant 2",
-    _count: {
-      users: 11,
-      subTenants: 5,
-    },
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-];
-
 function TenantPage() {
   const [tenantId] = useProvider<UserContext>().tenantSelected;
 
-  const [tenants, setTenants] = useState<Tenant[]>(defualtTenants);
+  const [tenants, setTenants] = useState<Tenant[]>([]);
   const [selectedTenant, setSelectedTenant] = useState<Tenant | null>(null);
   const [affirm, AffirmModal] = useAffirm({
     defautlMessage: "Are you sure?",
@@ -123,7 +129,7 @@ function TenantPage() {
     },
     {
       header: "subTenants",
-      valueGetter: (row) => row._count.subTenants,
+      valueGetter: (row) => row._count.children,
       label: "type",
     },
     {
@@ -132,6 +138,38 @@ function TenantPage() {
       label: "last updated",
     },
   ];
+
+  useEffect(() => {
+    fetchTenants(tenantId).then((data) => {
+      console.log(data);
+      setTenants(data);
+    });
+  }, [tenantId]);
+
+  async function handleSave() {
+    try {
+      if (selectedTenant?.id) {
+        const tenant = await updateTenant(selectedTenant);
+        console.log(tenant);
+        setSelectedTenant(null);
+        setTenants((prev) =>
+          prev.map((item) => (item.id === tenant.id ? tenant : item))
+        );
+      } else if (selectedTenant) {
+        const tenant = await createTenant(selectedTenant);
+        console.log(tenant);
+        setSelectedTenant(null);
+        setTenants((prev) => [...prev, tenant]);
+      }
+      toast.success(
+        `Tenant ${selectedTenant?.id ? "updated" : "created"} successfully`
+      );
+    } catch (error) {
+      console.log(error);
+
+      toast.error("Error saving tenant");
+    }
+  }
 
   return (
     <Provider value={{}}>
@@ -178,7 +216,6 @@ function TenantPage() {
                 noData={<NoData />}
                 onRowSelect={({ type, row }) => {
                   if (type === "view") {
-                    console.log("edit", row);
                     setSelectedTenant(row as Tenant);
                   }
                   if (type === "delete") {
@@ -208,7 +245,7 @@ function TenantPage() {
             </Button>
           </div>
           <div
-            className="body"
+            className="body "
             style={{
               borderTop: "1px solid #2125293a",
             }}
@@ -218,7 +255,7 @@ function TenantPage() {
               <div>
                 <Input
                   id="name"
-                  value={selectedTenant?.name}
+                  value={selectedTenant?.name || ""}
                   placeholder="Name"
                   onChange={(e) => {
                     if (!selectedTenant) return;
@@ -230,6 +267,70 @@ function TenantPage() {
                 />
               </div>
             </div>
+            {selectedTenant?.children && (
+              <>
+                <div
+                  className="p-4 pt-8  capitalize"
+                  style={{
+                    fontSize: "18px",
+                    fontWeight: 500,
+                  }}
+                >
+                  children
+                </div>
+                <DataGrid
+                  headerClassName="capitalize bg-gray-50 "
+                  className="shadow"
+                  headerStyle={{
+                    borderBottom: "2px solid #7f7f7f2f",
+                    borderTop: "2px solid #7f7f7f2f",
+                    height: "50px",
+                  }}
+                  rowStyle={{
+                    borderBottom: "2px solid #7f7f7f2f",
+                    height: "50px",
+                  }}
+                  columns={[
+                    {
+                      header: "name",
+                      field: "name",
+                      label: "name",
+                    },
+                    {
+                      header: "users",
+                      valueGetter: (row) => row._count?.users,
+                      label: "users",
+                    },
+                    {
+                      header: "children",
+                      valueGetter: (row) => row._count?.children,
+                      label: "children",
+                    },
+                    {
+                      header: "created at",
+                      valueGetter: (row) =>
+                        format(new Date(row.createdAt), "dd/MM/yyyy HH:mm"),
+                      label: "children",
+                    },
+                  ]}
+                  rows={selectedTenant?.children || []}
+                  actions={false}
+                />
+              </>
+            )}
+            4
+          </div>
+          <div className="flex items-center justify-between p-6">
+            <Button
+              onClick={() => {
+                setSelectedTenant(null);
+              }}
+            >
+              cancel
+            </Button>
+            <Button disabled={!selectedTenant?.name} onClick={handleSave}>
+              save
+            </Button>
           </div>
         </div>
       </SplitableTabs>
