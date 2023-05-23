@@ -323,7 +323,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/ubuntu/prisma-client/src/backend-client",
+      "value": "/home/isel-jao/Desktop/datwyler-group-v2/prisma-client/src/backend-client",
       "fromEnvVar": null
     },
     "config": {

@@ -8,42 +8,28 @@ datasource db {
   url      = env("MULTITENANCY_DATABASE_URL")
 }
 
-
 enum Role {
   ADMIN
   USER
 }
 
-
 model Tenant {
-  id       Int           @id @default(autoincrement())
+  id       Int      @id @default(autoincrement())
   name     String
-  parent   Tenant?       @relation("TenantToTenant", fields: [parentId], references: [id])
-  parentId Int?          @map("parent_id")
-  children Tenant[]      @relation("TenantToTenant")
-  users    UserTeanant[]
+  parent   Tenant?  @relation("TenantToTenant", fields: [parentId], references: [id])
+  parentId Int?     @map("parent_id")
+  children Tenant[] @relation("TenantToTenant")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+  users     User[]
 
   @@map("tenant")
 }
 
-model UserTeanant {
-  userId   Int    @map("user_id")
-  tenantId Int    @map("tenant_id")
-  role     Role   @default(USER)
-  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-
-  @@id([userId, tenantId])
-  @@map("user_tenant")
-}
-
 model User {
-  id      Int           @id @default(autoincrement())
-  tenants UserTeanant[]
+  id       Int    @id @default(autoincrement())
+  role     Role   @default(USER)
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+  tenantId Int
 }

@@ -25,23 +25,13 @@ export type Tenant = {
 }
 
 /**
- * Model UserTeanant
- * 
- */
-export type UserTeanant = {
-  userId: number
-  tenantId: number
-  role: Role
-  createdAt: Date
-  updatedAt: Date
-}
-
-/**
  * Model User
  * 
  */
 export type User = {
   id: number
+  role: Role
+  tenantId: number
 }
 
 
@@ -186,16 +176,6 @@ export class PrismaClient<
     * ```
     */
   get tenant(): Prisma.TenantDelegate<GlobalReject>;
-
-  /**
-   * `prisma.userTeanant`: Exposes CRUD operations for the **UserTeanant** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more UserTeanants
-    * const userTeanants = await prisma.userTeanant.findMany()
-    * ```
-    */
-  get userTeanant(): Prisma.UserTeanantDelegate<GlobalReject>;
 
   /**
    * `prisma.user`: Exposes CRUD operations for the **User** model.
@@ -676,7 +656,6 @@ export namespace Prisma {
 
   export const ModelName: {
     Tenant: 'Tenant',
-    UserTeanant: 'UserTeanant',
     User: 'User'
   };
 
@@ -879,49 +858,6 @@ export namespace Prisma {
      * Select specific fields to fetch from the TenantCountOutputType
      */
     select?: TenantCountOutputTypeSelect | null
-  }
-
-
-
-  /**
-   * Count Type UserCountOutputType
-   */
-
-
-  export type UserCountOutputType = {
-    tenants: number
-  }
-
-  export type UserCountOutputTypeSelect = {
-    tenants?: boolean
-  }
-
-  export type UserCountOutputTypeGetPayload<S extends boolean | null | undefined | UserCountOutputTypeArgs> =
-    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
-    S extends true ? UserCountOutputType :
-    S extends undefined ? never :
-    S extends { include: any } & (UserCountOutputTypeArgs)
-    ? UserCountOutputType 
-    : S extends { select: any } & (UserCountOutputTypeArgs)
-      ? {
-    [P in TruthyKeys<S['select']>]:
-    P extends keyof UserCountOutputType ? UserCountOutputType[P] : never
-  } 
-      : UserCountOutputType
-
-
-
-
-  // Custom InputTypes
-
-  /**
-   * UserCountOutputType without action
-   */
-  export type UserCountOutputTypeArgs = {
-    /**
-     * Select specific fields to fetch from the UserCountOutputType
-     */
-    select?: UserCountOutputTypeSelect | null
   }
 
 
@@ -1157,7 +1093,7 @@ export namespace Prisma {
     [P in TruthyKeys<S['include']>]:
         P extends 'parent' ? TenantGetPayload<S['include'][P]> | null :
         P extends 'children' ? Array < TenantGetPayload<S['include'][P]>>  :
-        P extends 'users' ? Array < UserTeanantGetPayload<S['include'][P]>>  :
+        P extends 'users' ? Array < UserGetPayload<S['include'][P]>>  :
         P extends '_count' ? TenantCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
     : S extends { select: any } & (TenantArgs | TenantFindManyArgs)
@@ -1165,7 +1101,7 @@ export namespace Prisma {
     [P in TruthyKeys<S['select']>]:
         P extends 'parent' ? TenantGetPayload<S['select'][P]> | null :
         P extends 'children' ? Array < TenantGetPayload<S['select'][P]>>  :
-        P extends 'users' ? Array < UserTeanantGetPayload<S['select'][P]>>  :
+        P extends 'users' ? Array < UserGetPayload<S['select'][P]>>  :
         P extends '_count' ? TenantCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof Tenant ? Tenant[P] : never
   } 
       : Tenant
@@ -1542,7 +1478,7 @@ export namespace Prisma {
 
     children<T extends Tenant$childrenArgs= {}>(args?: Subset<T, Tenant$childrenArgs>): Prisma.PrismaPromise<Array<TenantGetPayload<T>>| Null>;
 
-    users<T extends Tenant$usersArgs= {}>(args?: Subset<T, Tenant$usersArgs>): Prisma.PrismaPromise<Array<UserTeanantGetPayload<T>>| Null>;
+    users<T extends Tenant$usersArgs= {}>(args?: Subset<T, Tenant$usersArgs>): Prisma.PrismaPromise<Array<UserGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -1925,19 +1861,19 @@ export namespace Prisma {
    */
   export type Tenant$usersArgs = {
     /**
-     * Select specific fields to fetch from the UserTeanant
+     * Select specific fields to fetch from the User
      */
-    select?: UserTeanantSelect | null
+    select?: UserSelect | null
     /**
      * Choose, which related nodes to fetch as well.
      */
-    include?: UserTeanantInclude | null
-    where?: UserTeanantWhereInput
-    orderBy?: Enumerable<UserTeanantOrderByWithRelationInput>
-    cursor?: UserTeanantWhereUniqueInput
+    include?: UserInclude | null
+    where?: UserWhereInput
+    orderBy?: Enumerable<UserOrderByWithRelationInput>
+    cursor?: UserWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: Enumerable<UserTeanantScalarFieldEnum>
+    distinct?: Enumerable<UserScalarFieldEnum>
   }
 
 
@@ -1958,981 +1894,6 @@ export namespace Prisma {
 
 
   /**
-   * Model UserTeanant
-   */
-
-
-  export type AggregateUserTeanant = {
-    _count: UserTeanantCountAggregateOutputType | null
-    _avg: UserTeanantAvgAggregateOutputType | null
-    _sum: UserTeanantSumAggregateOutputType | null
-    _min: UserTeanantMinAggregateOutputType | null
-    _max: UserTeanantMaxAggregateOutputType | null
-  }
-
-  export type UserTeanantAvgAggregateOutputType = {
-    userId: number | null
-    tenantId: number | null
-  }
-
-  export type UserTeanantSumAggregateOutputType = {
-    userId: number | null
-    tenantId: number | null
-  }
-
-  export type UserTeanantMinAggregateOutputType = {
-    userId: number | null
-    tenantId: number | null
-    role: Role | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type UserTeanantMaxAggregateOutputType = {
-    userId: number | null
-    tenantId: number | null
-    role: Role | null
-    createdAt: Date | null
-    updatedAt: Date | null
-  }
-
-  export type UserTeanantCountAggregateOutputType = {
-    userId: number
-    tenantId: number
-    role: number
-    createdAt: number
-    updatedAt: number
-    _all: number
-  }
-
-
-  export type UserTeanantAvgAggregateInputType = {
-    userId?: true
-    tenantId?: true
-  }
-
-  export type UserTeanantSumAggregateInputType = {
-    userId?: true
-    tenantId?: true
-  }
-
-  export type UserTeanantMinAggregateInputType = {
-    userId?: true
-    tenantId?: true
-    role?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type UserTeanantMaxAggregateInputType = {
-    userId?: true
-    tenantId?: true
-    role?: true
-    createdAt?: true
-    updatedAt?: true
-  }
-
-  export type UserTeanantCountAggregateInputType = {
-    userId?: true
-    tenantId?: true
-    role?: true
-    createdAt?: true
-    updatedAt?: true
-    _all?: true
-  }
-
-  export type UserTeanantAggregateArgs = {
-    /**
-     * Filter which UserTeanant to aggregate.
-     */
-    where?: UserTeanantWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UserTeanants to fetch.
-     */
-    orderBy?: Enumerable<UserTeanantOrderByWithRelationInput>
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: UserTeanantWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UserTeanants from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UserTeanants.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned UserTeanants
-    **/
-    _count?: true | UserTeanantCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: UserTeanantAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: UserTeanantSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: UserTeanantMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: UserTeanantMaxAggregateInputType
-  }
-
-  export type GetUserTeanantAggregateType<T extends UserTeanantAggregateArgs> = {
-        [P in keyof T & keyof AggregateUserTeanant]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregateUserTeanant[P]>
-      : GetScalarType<T[P], AggregateUserTeanant[P]>
-  }
-
-
-
-
-  export type UserTeanantGroupByArgs = {
-    where?: UserTeanantWhereInput
-    orderBy?: Enumerable<UserTeanantOrderByWithAggregationInput>
-    by: UserTeanantScalarFieldEnum[]
-    having?: UserTeanantScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: UserTeanantCountAggregateInputType | true
-    _avg?: UserTeanantAvgAggregateInputType
-    _sum?: UserTeanantSumAggregateInputType
-    _min?: UserTeanantMinAggregateInputType
-    _max?: UserTeanantMaxAggregateInputType
-  }
-
-
-  export type UserTeanantGroupByOutputType = {
-    userId: number
-    tenantId: number
-    role: Role
-    createdAt: Date
-    updatedAt: Date
-    _count: UserTeanantCountAggregateOutputType | null
-    _avg: UserTeanantAvgAggregateOutputType | null
-    _sum: UserTeanantSumAggregateOutputType | null
-    _min: UserTeanantMinAggregateOutputType | null
-    _max: UserTeanantMaxAggregateOutputType | null
-  }
-
-  type GetUserTeanantGroupByPayload<T extends UserTeanantGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickArray<UserTeanantGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof UserTeanantGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], UserTeanantGroupByOutputType[P]>
-            : GetScalarType<T[P], UserTeanantGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type UserTeanantSelect = {
-    userId?: boolean
-    tenantId?: boolean
-    role?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
-    user?: boolean | UserArgs
-    tenant?: boolean | TenantArgs
-  }
-
-
-  export type UserTeanantInclude = {
-    user?: boolean | UserArgs
-    tenant?: boolean | TenantArgs
-  }
-
-  export type UserTeanantGetPayload<S extends boolean | null | undefined | UserTeanantArgs> =
-    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
-    S extends true ? UserTeanant :
-    S extends undefined ? never :
-    S extends { include: any } & (UserTeanantArgs | UserTeanantFindManyArgs)
-    ? UserTeanant  & {
-    [P in TruthyKeys<S['include']>]:
-        P extends 'user' ? UserGetPayload<S['include'][P]> :
-        P extends 'tenant' ? TenantGetPayload<S['include'][P]> :  never
-  } 
-    : S extends { select: any } & (UserTeanantArgs | UserTeanantFindManyArgs)
-      ? {
-    [P in TruthyKeys<S['select']>]:
-        P extends 'user' ? UserGetPayload<S['select'][P]> :
-        P extends 'tenant' ? TenantGetPayload<S['select'][P]> :  P extends keyof UserTeanant ? UserTeanant[P] : never
-  } 
-      : UserTeanant
-
-
-  type UserTeanantCountArgs = 
-    Omit<UserTeanantFindManyArgs, 'select' | 'include'> & {
-      select?: UserTeanantCountAggregateInputType | true
-    }
-
-  export interface UserTeanantDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
-
-    /**
-     * Find zero or one UserTeanant that matches the filter.
-     * @param {UserTeanantFindUniqueArgs} args - Arguments to find a UserTeanant
-     * @example
-     * // Get one UserTeanant
-     * const userTeanant = await prisma.userTeanant.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUnique<T extends UserTeanantFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
-      args: SelectSubset<T, UserTeanantFindUniqueArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'UserTeanant'> extends True ? Prisma__UserTeanantClient<UserTeanantGetPayload<T>> : Prisma__UserTeanantClient<UserTeanantGetPayload<T> | null, null>
-
-    /**
-     * Find one UserTeanant that matches the filter or throw an error  with `error.code='P2025'` 
-     *     if no matches were found.
-     * @param {UserTeanantFindUniqueOrThrowArgs} args - Arguments to find a UserTeanant
-     * @example
-     * // Get one UserTeanant
-     * const userTeanant = await prisma.userTeanant.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findUniqueOrThrow<T extends UserTeanantFindUniqueOrThrowArgs>(
-      args?: SelectSubset<T, UserTeanantFindUniqueOrThrowArgs>
-    ): Prisma__UserTeanantClient<UserTeanantGetPayload<T>>
-
-    /**
-     * Find the first UserTeanant that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserTeanantFindFirstArgs} args - Arguments to find a UserTeanant
-     * @example
-     * // Get one UserTeanant
-     * const userTeanant = await prisma.userTeanant.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirst<T extends UserTeanantFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
-      args?: SelectSubset<T, UserTeanantFindFirstArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'UserTeanant'> extends True ? Prisma__UserTeanantClient<UserTeanantGetPayload<T>> : Prisma__UserTeanantClient<UserTeanantGetPayload<T> | null, null>
-
-    /**
-     * Find the first UserTeanant that matches the filter or
-     * throw `NotFoundError` if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserTeanantFindFirstOrThrowArgs} args - Arguments to find a UserTeanant
-     * @example
-     * // Get one UserTeanant
-     * const userTeanant = await prisma.userTeanant.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-    **/
-    findFirstOrThrow<T extends UserTeanantFindFirstOrThrowArgs>(
-      args?: SelectSubset<T, UserTeanantFindFirstOrThrowArgs>
-    ): Prisma__UserTeanantClient<UserTeanantGetPayload<T>>
-
-    /**
-     * Find zero or more UserTeanants that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserTeanantFindManyArgs=} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all UserTeanants
-     * const userTeanants = await prisma.userTeanant.findMany()
-     * 
-     * // Get first 10 UserTeanants
-     * const userTeanants = await prisma.userTeanant.findMany({ take: 10 })
-     * 
-     * // Only select the `userId`
-     * const userTeanantWithUserIdOnly = await prisma.userTeanant.findMany({ select: { userId: true } })
-     * 
-    **/
-    findMany<T extends UserTeanantFindManyArgs>(
-      args?: SelectSubset<T, UserTeanantFindManyArgs>
-    ): Prisma.PrismaPromise<Array<UserTeanantGetPayload<T>>>
-
-    /**
-     * Create a UserTeanant.
-     * @param {UserTeanantCreateArgs} args - Arguments to create a UserTeanant.
-     * @example
-     * // Create one UserTeanant
-     * const UserTeanant = await prisma.userTeanant.create({
-     *   data: {
-     *     // ... data to create a UserTeanant
-     *   }
-     * })
-     * 
-    **/
-    create<T extends UserTeanantCreateArgs>(
-      args: SelectSubset<T, UserTeanantCreateArgs>
-    ): Prisma__UserTeanantClient<UserTeanantGetPayload<T>>
-
-    /**
-     * Create many UserTeanants.
-     *     @param {UserTeanantCreateManyArgs} args - Arguments to create many UserTeanants.
-     *     @example
-     *     // Create many UserTeanants
-     *     const userTeanant = await prisma.userTeanant.createMany({
-     *       data: {
-     *         // ... provide data here
-     *       }
-     *     })
-     *     
-    **/
-    createMany<T extends UserTeanantCreateManyArgs>(
-      args?: SelectSubset<T, UserTeanantCreateManyArgs>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Delete a UserTeanant.
-     * @param {UserTeanantDeleteArgs} args - Arguments to delete one UserTeanant.
-     * @example
-     * // Delete one UserTeanant
-     * const UserTeanant = await prisma.userTeanant.delete({
-     *   where: {
-     *     // ... filter to delete one UserTeanant
-     *   }
-     * })
-     * 
-    **/
-    delete<T extends UserTeanantDeleteArgs>(
-      args: SelectSubset<T, UserTeanantDeleteArgs>
-    ): Prisma__UserTeanantClient<UserTeanantGetPayload<T>>
-
-    /**
-     * Update one UserTeanant.
-     * @param {UserTeanantUpdateArgs} args - Arguments to update one UserTeanant.
-     * @example
-     * // Update one UserTeanant
-     * const userTeanant = await prisma.userTeanant.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-    **/
-    update<T extends UserTeanantUpdateArgs>(
-      args: SelectSubset<T, UserTeanantUpdateArgs>
-    ): Prisma__UserTeanantClient<UserTeanantGetPayload<T>>
-
-    /**
-     * Delete zero or more UserTeanants.
-     * @param {UserTeanantDeleteManyArgs} args - Arguments to filter UserTeanants to delete.
-     * @example
-     * // Delete a few UserTeanants
-     * const { count } = await prisma.userTeanant.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-    **/
-    deleteMany<T extends UserTeanantDeleteManyArgs>(
-      args?: SelectSubset<T, UserTeanantDeleteManyArgs>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more UserTeanants.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserTeanantUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many UserTeanants
-     * const userTeanant = await prisma.userTeanant.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-    **/
-    updateMany<T extends UserTeanantUpdateManyArgs>(
-      args: SelectSubset<T, UserTeanantUpdateManyArgs>
-    ): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create or update one UserTeanant.
-     * @param {UserTeanantUpsertArgs} args - Arguments to update or create a UserTeanant.
-     * @example
-     * // Update or create a UserTeanant
-     * const userTeanant = await prisma.userTeanant.upsert({
-     *   create: {
-     *     // ... data to create a UserTeanant
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the UserTeanant we want to update
-     *   }
-     * })
-    **/
-    upsert<T extends UserTeanantUpsertArgs>(
-      args: SelectSubset<T, UserTeanantUpsertArgs>
-    ): Prisma__UserTeanantClient<UserTeanantGetPayload<T>>
-
-    /**
-     * Count the number of UserTeanants.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserTeanantCountArgs} args - Arguments to filter UserTeanants to count.
-     * @example
-     * // Count the number of UserTeanants
-     * const count = await prisma.userTeanant.count({
-     *   where: {
-     *     // ... the filter for the UserTeanants we want to count
-     *   }
-     * })
-    **/
-    count<T extends UserTeanantCountArgs>(
-      args?: Subset<T, UserTeanantCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends _Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], UserTeanantCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a UserTeanant.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserTeanantAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends UserTeanantAggregateArgs>(args: Subset<T, UserTeanantAggregateArgs>): Prisma.PrismaPromise<GetUserTeanantAggregateType<T>>
-
-    /**
-     * Group by UserTeanant.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {UserTeanantGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends UserTeanantGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: UserTeanantGroupByArgs['orderBy'] }
-        : { orderBy?: UserTeanantGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends TupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, UserTeanantGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserTeanantGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for UserTeanant.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export class Prisma__UserTeanantClient<T, Null = never> implements Prisma.PrismaPromise<T> {
-    private readonly _dmmf;
-    private readonly _queryType;
-    private readonly _rootField;
-    private readonly _clientMethod;
-    private readonly _args;
-    private readonly _dataPath;
-    private readonly _errorFormat;
-    private readonly _measurePerformance?;
-    private _isList;
-    private _callsite;
-    private _requestPromise?;
-    readonly [Symbol.toStringTag]: 'PrismaPromise';
-    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
-
-    user<T extends UserArgs= {}>(args?: Subset<T, UserArgs>): Prisma__UserClient<UserGetPayload<T> | Null>;
-
-    tenant<T extends TenantArgs= {}>(args?: Subset<T, TenantArgs>): Prisma__TenantClient<TenantGetPayload<T> | Null>;
-
-    private get _document();
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
-  }
-
-
-
-  // Custom InputTypes
-
-  /**
-   * UserTeanant base type for findUnique actions
-   */
-  export type UserTeanantFindUniqueArgsBase = {
-    /**
-     * Select specific fields to fetch from the UserTeanant
-     */
-    select?: UserTeanantSelect | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: UserTeanantInclude | null
-    /**
-     * Filter, which UserTeanant to fetch.
-     */
-    where: UserTeanantWhereUniqueInput
-  }
-
-  /**
-   * UserTeanant findUnique
-   */
-  export interface UserTeanantFindUniqueArgs extends UserTeanantFindUniqueArgsBase {
-   /**
-    * Throw an Error if query returns no results
-    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
-    */
-    rejectOnNotFound?: RejectOnNotFound
-  }
-      
-
-  /**
-   * UserTeanant findUniqueOrThrow
-   */
-  export type UserTeanantFindUniqueOrThrowArgs = {
-    /**
-     * Select specific fields to fetch from the UserTeanant
-     */
-    select?: UserTeanantSelect | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: UserTeanantInclude | null
-    /**
-     * Filter, which UserTeanant to fetch.
-     */
-    where: UserTeanantWhereUniqueInput
-  }
-
-
-  /**
-   * UserTeanant base type for findFirst actions
-   */
-  export type UserTeanantFindFirstArgsBase = {
-    /**
-     * Select specific fields to fetch from the UserTeanant
-     */
-    select?: UserTeanantSelect | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: UserTeanantInclude | null
-    /**
-     * Filter, which UserTeanant to fetch.
-     */
-    where?: UserTeanantWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UserTeanants to fetch.
-     */
-    orderBy?: Enumerable<UserTeanantOrderByWithRelationInput>
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for UserTeanants.
-     */
-    cursor?: UserTeanantWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UserTeanants from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UserTeanants.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of UserTeanants.
-     */
-    distinct?: Enumerable<UserTeanantScalarFieldEnum>
-  }
-
-  /**
-   * UserTeanant findFirst
-   */
-  export interface UserTeanantFindFirstArgs extends UserTeanantFindFirstArgsBase {
-   /**
-    * Throw an Error if query returns no results
-    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
-    */
-    rejectOnNotFound?: RejectOnNotFound
-  }
-      
-
-  /**
-   * UserTeanant findFirstOrThrow
-   */
-  export type UserTeanantFindFirstOrThrowArgs = {
-    /**
-     * Select specific fields to fetch from the UserTeanant
-     */
-    select?: UserTeanantSelect | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: UserTeanantInclude | null
-    /**
-     * Filter, which UserTeanant to fetch.
-     */
-    where?: UserTeanantWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UserTeanants to fetch.
-     */
-    orderBy?: Enumerable<UserTeanantOrderByWithRelationInput>
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for UserTeanants.
-     */
-    cursor?: UserTeanantWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UserTeanants from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UserTeanants.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of UserTeanants.
-     */
-    distinct?: Enumerable<UserTeanantScalarFieldEnum>
-  }
-
-
-  /**
-   * UserTeanant findMany
-   */
-  export type UserTeanantFindManyArgs = {
-    /**
-     * Select specific fields to fetch from the UserTeanant
-     */
-    select?: UserTeanantSelect | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: UserTeanantInclude | null
-    /**
-     * Filter, which UserTeanants to fetch.
-     */
-    where?: UserTeanantWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of UserTeanants to fetch.
-     */
-    orderBy?: Enumerable<UserTeanantOrderByWithRelationInput>
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing UserTeanants.
-     */
-    cursor?: UserTeanantWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` UserTeanants from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` UserTeanants.
-     */
-    skip?: number
-    distinct?: Enumerable<UserTeanantScalarFieldEnum>
-  }
-
-
-  /**
-   * UserTeanant create
-   */
-  export type UserTeanantCreateArgs = {
-    /**
-     * Select specific fields to fetch from the UserTeanant
-     */
-    select?: UserTeanantSelect | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: UserTeanantInclude | null
-    /**
-     * The data needed to create a UserTeanant.
-     */
-    data: XOR<UserTeanantCreateInput, UserTeanantUncheckedCreateInput>
-  }
-
-
-  /**
-   * UserTeanant createMany
-   */
-  export type UserTeanantCreateManyArgs = {
-    /**
-     * The data used to create many UserTeanants.
-     */
-    data: Enumerable<UserTeanantCreateManyInput>
-    skipDuplicates?: boolean
-  }
-
-
-  /**
-   * UserTeanant update
-   */
-  export type UserTeanantUpdateArgs = {
-    /**
-     * Select specific fields to fetch from the UserTeanant
-     */
-    select?: UserTeanantSelect | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: UserTeanantInclude | null
-    /**
-     * The data needed to update a UserTeanant.
-     */
-    data: XOR<UserTeanantUpdateInput, UserTeanantUncheckedUpdateInput>
-    /**
-     * Choose, which UserTeanant to update.
-     */
-    where: UserTeanantWhereUniqueInput
-  }
-
-
-  /**
-   * UserTeanant updateMany
-   */
-  export type UserTeanantUpdateManyArgs = {
-    /**
-     * The data used to update UserTeanants.
-     */
-    data: XOR<UserTeanantUpdateManyMutationInput, UserTeanantUncheckedUpdateManyInput>
-    /**
-     * Filter which UserTeanants to update
-     */
-    where?: UserTeanantWhereInput
-  }
-
-
-  /**
-   * UserTeanant upsert
-   */
-  export type UserTeanantUpsertArgs = {
-    /**
-     * Select specific fields to fetch from the UserTeanant
-     */
-    select?: UserTeanantSelect | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: UserTeanantInclude | null
-    /**
-     * The filter to search for the UserTeanant to update in case it exists.
-     */
-    where: UserTeanantWhereUniqueInput
-    /**
-     * In case the UserTeanant found by the `where` argument doesn't exist, create a new UserTeanant with this data.
-     */
-    create: XOR<UserTeanantCreateInput, UserTeanantUncheckedCreateInput>
-    /**
-     * In case the UserTeanant was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<UserTeanantUpdateInput, UserTeanantUncheckedUpdateInput>
-  }
-
-
-  /**
-   * UserTeanant delete
-   */
-  export type UserTeanantDeleteArgs = {
-    /**
-     * Select specific fields to fetch from the UserTeanant
-     */
-    select?: UserTeanantSelect | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: UserTeanantInclude | null
-    /**
-     * Filter which UserTeanant to delete.
-     */
-    where: UserTeanantWhereUniqueInput
-  }
-
-
-  /**
-   * UserTeanant deleteMany
-   */
-  export type UserTeanantDeleteManyArgs = {
-    /**
-     * Filter which UserTeanants to delete
-     */
-    where?: UserTeanantWhereInput
-  }
-
-
-  /**
-   * UserTeanant without action
-   */
-  export type UserTeanantArgs = {
-    /**
-     * Select specific fields to fetch from the UserTeanant
-     */
-    select?: UserTeanantSelect | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: UserTeanantInclude | null
-  }
-
-
-
-  /**
    * Model User
    */
 
@@ -2947,44 +1908,60 @@ export namespace Prisma {
 
   export type UserAvgAggregateOutputType = {
     id: number | null
+    tenantId: number | null
   }
 
   export type UserSumAggregateOutputType = {
     id: number | null
+    tenantId: number | null
   }
 
   export type UserMinAggregateOutputType = {
     id: number | null
+    role: Role | null
+    tenantId: number | null
   }
 
   export type UserMaxAggregateOutputType = {
     id: number | null
+    role: Role | null
+    tenantId: number | null
   }
 
   export type UserCountAggregateOutputType = {
     id: number
+    role: number
+    tenantId: number
     _all: number
   }
 
 
   export type UserAvgAggregateInputType = {
     id?: true
+    tenantId?: true
   }
 
   export type UserSumAggregateInputType = {
     id?: true
+    tenantId?: true
   }
 
   export type UserMinAggregateInputType = {
     id?: true
+    role?: true
+    tenantId?: true
   }
 
   export type UserMaxAggregateInputType = {
     id?: true
+    role?: true
+    tenantId?: true
   }
 
   export type UserCountAggregateInputType = {
     id?: true
+    role?: true
+    tenantId?: true
     _all?: true
   }
 
@@ -3077,6 +2054,8 @@ export namespace Prisma {
 
   export type UserGroupByOutputType = {
     id: number
+    role: Role
+    tenantId: number
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
     _sum: UserSumAggregateOutputType | null
@@ -3100,14 +2079,14 @@ export namespace Prisma {
 
   export type UserSelect = {
     id?: boolean
-    tenants?: boolean | User$tenantsArgs
-    _count?: boolean | UserCountOutputTypeArgs
+    role?: boolean
+    tenantId?: boolean
+    tenant?: boolean | TenantArgs
   }
 
 
   export type UserInclude = {
-    tenants?: boolean | User$tenantsArgs
-    _count?: boolean | UserCountOutputTypeArgs
+    tenant?: boolean | TenantArgs
   }
 
   export type UserGetPayload<S extends boolean | null | undefined | UserArgs> =
@@ -3117,14 +2096,12 @@ export namespace Prisma {
     S extends { include: any } & (UserArgs | UserFindManyArgs)
     ? User  & {
     [P in TruthyKeys<S['include']>]:
-        P extends 'tenants' ? Array < UserTeanantGetPayload<S['include'][P]>>  :
-        P extends '_count' ? UserCountOutputTypeGetPayload<S['include'][P]> :  never
+        P extends 'tenant' ? TenantGetPayload<S['include'][P]> :  never
   } 
     : S extends { select: any } & (UserArgs | UserFindManyArgs)
       ? {
     [P in TruthyKeys<S['select']>]:
-        P extends 'tenants' ? Array < UserTeanantGetPayload<S['select'][P]>>  :
-        P extends '_count' ? UserCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof User ? User[P] : never
+        P extends 'tenant' ? TenantGetPayload<S['select'][P]> :  P extends keyof User ? User[P] : never
   } 
       : User
 
@@ -3496,7 +2473,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: 'PrismaPromise';
     constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
-    tenants<T extends User$tenantsArgs= {}>(args?: Subset<T, User$tenantsArgs>): Prisma.PrismaPromise<Array<UserTeanantGetPayload<T>>| Null>;
+    tenant<T extends TenantArgs= {}>(args?: Subset<T, TenantArgs>): Prisma__TenantClient<TenantGetPayload<T> | Null>;
 
     private get _document();
     /**
@@ -3854,27 +2831,6 @@ export namespace Prisma {
 
 
   /**
-   * User.tenants
-   */
-  export type User$tenantsArgs = {
-    /**
-     * Select specific fields to fetch from the UserTeanant
-     */
-    select?: UserTeanantSelect | null
-    /**
-     * Choose, which related nodes to fetch as well.
-     */
-    include?: UserTeanantInclude | null
-    where?: UserTeanantWhereInput
-    orderBy?: Enumerable<UserTeanantOrderByWithRelationInput>
-    cursor?: UserTeanantWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: Enumerable<UserTeanantScalarFieldEnum>
-  }
-
-
-  /**
    * User without action
    */
   export type UserArgs = {
@@ -3935,21 +2891,12 @@ export namespace Prisma {
 
 
   export const UserScalarFieldEnum: {
-    id: 'id'
+    id: 'id',
+    role: 'role',
+    tenantId: 'tenantId'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
-
-
-  export const UserTeanantScalarFieldEnum: {
-    userId: 'userId',
-    tenantId: 'tenantId',
-    role: 'role',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
-  };
-
-  export type UserTeanantScalarFieldEnum = (typeof UserTeanantScalarFieldEnum)[keyof typeof UserTeanantScalarFieldEnum]
 
 
   /**
@@ -3968,7 +2915,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter | Date | string
     parent?: XOR<TenantRelationFilter, TenantWhereInput> | null
     children?: TenantListRelationFilter
-    users?: UserTeanantListRelationFilter
+    users?: UserListRelationFilter
   }
 
   export type TenantOrderByWithRelationInput = {
@@ -3979,7 +2926,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     parent?: TenantOrderByWithRelationInput
     children?: TenantOrderByRelationAggregateInput
-    users?: UserTeanantOrderByRelationAggregateInput
+    users?: UserOrderByRelationAggregateInput
   }
 
   export type TenantWhereUniqueInput = {
@@ -4010,68 +2957,21 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter | Date | string
   }
 
-  export type UserTeanantWhereInput = {
-    AND?: Enumerable<UserTeanantWhereInput>
-    OR?: Enumerable<UserTeanantWhereInput>
-    NOT?: Enumerable<UserTeanantWhereInput>
-    userId?: IntFilter | number
-    tenantId?: IntFilter | number
-    role?: EnumRoleFilter | Role
-    createdAt?: DateTimeFilter | Date | string
-    updatedAt?: DateTimeFilter | Date | string
-    user?: XOR<UserRelationFilter, UserWhereInput>
-    tenant?: XOR<TenantRelationFilter, TenantWhereInput>
-  }
-
-  export type UserTeanantOrderByWithRelationInput = {
-    userId?: SortOrder
-    tenantId?: SortOrder
-    role?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    user?: UserOrderByWithRelationInput
-    tenant?: TenantOrderByWithRelationInput
-  }
-
-  export type UserTeanantWhereUniqueInput = {
-    userId_tenantId?: UserTeanantUserIdTenantIdCompoundUniqueInput
-  }
-
-  export type UserTeanantOrderByWithAggregationInput = {
-    userId?: SortOrder
-    tenantId?: SortOrder
-    role?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-    _count?: UserTeanantCountOrderByAggregateInput
-    _avg?: UserTeanantAvgOrderByAggregateInput
-    _max?: UserTeanantMaxOrderByAggregateInput
-    _min?: UserTeanantMinOrderByAggregateInput
-    _sum?: UserTeanantSumOrderByAggregateInput
-  }
-
-  export type UserTeanantScalarWhereWithAggregatesInput = {
-    AND?: Enumerable<UserTeanantScalarWhereWithAggregatesInput>
-    OR?: Enumerable<UserTeanantScalarWhereWithAggregatesInput>
-    NOT?: Enumerable<UserTeanantScalarWhereWithAggregatesInput>
-    userId?: IntWithAggregatesFilter | number
-    tenantId?: IntWithAggregatesFilter | number
-    role?: EnumRoleWithAggregatesFilter | Role
-    createdAt?: DateTimeWithAggregatesFilter | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter | Date | string
-  }
-
   export type UserWhereInput = {
     AND?: Enumerable<UserWhereInput>
     OR?: Enumerable<UserWhereInput>
     NOT?: Enumerable<UserWhereInput>
     id?: IntFilter | number
-    tenants?: UserTeanantListRelationFilter
+    role?: EnumRoleFilter | Role
+    tenantId?: IntFilter | number
+    tenant?: XOR<TenantRelationFilter, TenantWhereInput>
   }
 
   export type UserOrderByWithRelationInput = {
     id?: SortOrder
-    tenants?: UserTeanantOrderByRelationAggregateInput
+    role?: SortOrder
+    tenantId?: SortOrder
+    tenant?: TenantOrderByWithRelationInput
   }
 
   export type UserWhereUniqueInput = {
@@ -4080,6 +2980,8 @@ export namespace Prisma {
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
+    role?: SortOrder
+    tenantId?: SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -4092,6 +2994,8 @@ export namespace Prisma {
     OR?: Enumerable<UserScalarWhereWithAggregatesInput>
     NOT?: Enumerable<UserScalarWhereWithAggregatesInput>
     id?: IntWithAggregatesFilter | number
+    role?: EnumRoleWithAggregatesFilter | Role
+    tenantId?: IntWithAggregatesFilter | number
   }
 
   export type TenantCreateInput = {
@@ -4100,7 +3004,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     parent?: TenantCreateNestedOneWithoutChildrenInput
     children?: TenantCreateNestedManyWithoutParentInput
-    users?: UserTeanantCreateNestedManyWithoutTenantInput
+    users?: UserCreateNestedManyWithoutTenantInput
   }
 
   export type TenantUncheckedCreateInput = {
@@ -4110,7 +3014,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     children?: TenantUncheckedCreateNestedManyWithoutParentInput
-    users?: UserTeanantUncheckedCreateNestedManyWithoutTenantInput
+    users?: UserUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type TenantUpdateInput = {
@@ -4119,7 +3023,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     parent?: TenantUpdateOneWithoutChildrenNestedInput
     children?: TenantUpdateManyWithoutParentNestedInput
-    users?: UserTeanantUpdateManyWithoutTenantNestedInput
+    users?: UserUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantUncheckedUpdateInput = {
@@ -4129,7 +3033,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     children?: TenantUncheckedUpdateManyWithoutParentNestedInput
-    users?: UserTeanantUncheckedUpdateManyWithoutTenantNestedInput
+    users?: UserUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantCreateManyInput = {
@@ -4154,88 +3058,42 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type UserTeanantCreateInput = {
-    role?: Role
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutTenantsInput
-    tenant: TenantCreateNestedOneWithoutUsersInput
-  }
-
-  export type UserTeanantUncheckedCreateInput = {
-    userId: number
-    tenantId: number
-    role?: Role
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type UserTeanantUpdateInput = {
-    role?: EnumRoleFieldUpdateOperationsInput | Role
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutTenantsNestedInput
-    tenant?: TenantUpdateOneRequiredWithoutUsersNestedInput
-  }
-
-  export type UserTeanantUncheckedUpdateInput = {
-    userId?: IntFieldUpdateOperationsInput | number
-    tenantId?: IntFieldUpdateOperationsInput | number
-    role?: EnumRoleFieldUpdateOperationsInput | Role
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type UserTeanantCreateManyInput = {
-    userId: number
-    tenantId: number
-    role?: Role
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type UserTeanantUpdateManyMutationInput = {
-    role?: EnumRoleFieldUpdateOperationsInput | Role
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type UserTeanantUncheckedUpdateManyInput = {
-    userId?: IntFieldUpdateOperationsInput | number
-    tenantId?: IntFieldUpdateOperationsInput | number
-    role?: EnumRoleFieldUpdateOperationsInput | Role
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
   export type UserCreateInput = {
-    tenants?: UserTeanantCreateNestedManyWithoutUserInput
+    role?: Role
+    tenant: TenantCreateNestedOneWithoutUsersInput
   }
 
   export type UserUncheckedCreateInput = {
     id?: number
-    tenants?: UserTeanantUncheckedCreateNestedManyWithoutUserInput
+    role?: Role
+    tenantId: number
   }
 
   export type UserUpdateInput = {
-    tenants?: UserTeanantUpdateManyWithoutUserNestedInput
+    role?: EnumRoleFieldUpdateOperationsInput | Role
+    tenant?: TenantUpdateOneRequiredWithoutUsersNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    tenants?: UserTeanantUncheckedUpdateManyWithoutUserNestedInput
+    role?: EnumRoleFieldUpdateOperationsInput | Role
+    tenantId?: IntFieldUpdateOperationsInput | number
   }
 
   export type UserCreateManyInput = {
     id?: number
+    role?: Role
+    tenantId: number
   }
 
   export type UserUpdateManyMutationInput = {
-
+    role?: EnumRoleFieldUpdateOperationsInput | Role
   }
 
   export type UserUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
+    role?: EnumRoleFieldUpdateOperationsInput | Role
+    tenantId?: IntFieldUpdateOperationsInput | number
   }
 
   export type IntFilter = {
@@ -4297,17 +3155,17 @@ export namespace Prisma {
     none?: TenantWhereInput
   }
 
-  export type UserTeanantListRelationFilter = {
-    every?: UserTeanantWhereInput
-    some?: UserTeanantWhereInput
-    none?: UserTeanantWhereInput
+  export type UserListRelationFilter = {
+    every?: UserWhereInput
+    some?: UserWhereInput
+    none?: UserWhereInput
   }
 
   export type TenantOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
-  export type UserTeanantOrderByRelationAggregateInput = {
+  export type UserOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -4416,47 +3274,31 @@ export namespace Prisma {
     not?: NestedEnumRoleFilter | Role
   }
 
-  export type UserRelationFilter = {
-    is?: UserWhereInput
-    isNot?: UserWhereInput
-  }
-
-  export type UserTeanantUserIdTenantIdCompoundUniqueInput = {
-    userId: number
-    tenantId: number
-  }
-
-  export type UserTeanantCountOrderByAggregateInput = {
-    userId?: SortOrder
-    tenantId?: SortOrder
+  export type UserCountOrderByAggregateInput = {
+    id?: SortOrder
     role?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type UserTeanantAvgOrderByAggregateInput = {
-    userId?: SortOrder
     tenantId?: SortOrder
   }
 
-  export type UserTeanantMaxOrderByAggregateInput = {
-    userId?: SortOrder
+  export type UserAvgOrderByAggregateInput = {
+    id?: SortOrder
     tenantId?: SortOrder
+  }
+
+  export type UserMaxOrderByAggregateInput = {
+    id?: SortOrder
     role?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
-  }
-
-  export type UserTeanantMinOrderByAggregateInput = {
-    userId?: SortOrder
     tenantId?: SortOrder
-    role?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
   }
 
-  export type UserTeanantSumOrderByAggregateInput = {
-    userId?: SortOrder
+  export type UserMinOrderByAggregateInput = {
+    id?: SortOrder
+    role?: SortOrder
+    tenantId?: SortOrder
+  }
+
+  export type UserSumOrderByAggregateInput = {
+    id?: SortOrder
     tenantId?: SortOrder
   }
 
@@ -4468,26 +3310,6 @@ export namespace Prisma {
     _count?: NestedIntFilter
     _min?: NestedEnumRoleFilter
     _max?: NestedEnumRoleFilter
-  }
-
-  export type UserCountOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
-  export type UserAvgOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
-  export type UserMaxOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
-  export type UserMinOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
-  export type UserSumOrderByAggregateInput = {
-    id?: SortOrder
   }
 
   export type TenantCreateNestedOneWithoutChildrenInput = {
@@ -4503,11 +3325,11 @@ export namespace Prisma {
     connect?: Enumerable<TenantWhereUniqueInput>
   }
 
-  export type UserTeanantCreateNestedManyWithoutTenantInput = {
-    create?: XOR<Enumerable<UserTeanantCreateWithoutTenantInput>, Enumerable<UserTeanantUncheckedCreateWithoutTenantInput>>
-    connectOrCreate?: Enumerable<UserTeanantCreateOrConnectWithoutTenantInput>
-    createMany?: UserTeanantCreateManyTenantInputEnvelope
-    connect?: Enumerable<UserTeanantWhereUniqueInput>
+  export type UserCreateNestedManyWithoutTenantInput = {
+    create?: XOR<Enumerable<UserCreateWithoutTenantInput>, Enumerable<UserUncheckedCreateWithoutTenantInput>>
+    connectOrCreate?: Enumerable<UserCreateOrConnectWithoutTenantInput>
+    createMany?: UserCreateManyTenantInputEnvelope
+    connect?: Enumerable<UserWhereUniqueInput>
   }
 
   export type TenantUncheckedCreateNestedManyWithoutParentInput = {
@@ -4517,11 +3339,11 @@ export namespace Prisma {
     connect?: Enumerable<TenantWhereUniqueInput>
   }
 
-  export type UserTeanantUncheckedCreateNestedManyWithoutTenantInput = {
-    create?: XOR<Enumerable<UserTeanantCreateWithoutTenantInput>, Enumerable<UserTeanantUncheckedCreateWithoutTenantInput>>
-    connectOrCreate?: Enumerable<UserTeanantCreateOrConnectWithoutTenantInput>
-    createMany?: UserTeanantCreateManyTenantInputEnvelope
-    connect?: Enumerable<UserTeanantWhereUniqueInput>
+  export type UserUncheckedCreateNestedManyWithoutTenantInput = {
+    create?: XOR<Enumerable<UserCreateWithoutTenantInput>, Enumerable<UserUncheckedCreateWithoutTenantInput>>
+    connectOrCreate?: Enumerable<UserCreateOrConnectWithoutTenantInput>
+    createMany?: UserCreateManyTenantInputEnvelope
+    connect?: Enumerable<UserWhereUniqueInput>
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -4556,18 +3378,18 @@ export namespace Prisma {
     deleteMany?: Enumerable<TenantScalarWhereInput>
   }
 
-  export type UserTeanantUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<Enumerable<UserTeanantCreateWithoutTenantInput>, Enumerable<UserTeanantUncheckedCreateWithoutTenantInput>>
-    connectOrCreate?: Enumerable<UserTeanantCreateOrConnectWithoutTenantInput>
-    upsert?: Enumerable<UserTeanantUpsertWithWhereUniqueWithoutTenantInput>
-    createMany?: UserTeanantCreateManyTenantInputEnvelope
-    set?: Enumerable<UserTeanantWhereUniqueInput>
-    disconnect?: Enumerable<UserTeanantWhereUniqueInput>
-    delete?: Enumerable<UserTeanantWhereUniqueInput>
-    connect?: Enumerable<UserTeanantWhereUniqueInput>
-    update?: Enumerable<UserTeanantUpdateWithWhereUniqueWithoutTenantInput>
-    updateMany?: Enumerable<UserTeanantUpdateManyWithWhereWithoutTenantInput>
-    deleteMany?: Enumerable<UserTeanantScalarWhereInput>
+  export type UserUpdateManyWithoutTenantNestedInput = {
+    create?: XOR<Enumerable<UserCreateWithoutTenantInput>, Enumerable<UserUncheckedCreateWithoutTenantInput>>
+    connectOrCreate?: Enumerable<UserCreateOrConnectWithoutTenantInput>
+    upsert?: Enumerable<UserUpsertWithWhereUniqueWithoutTenantInput>
+    createMany?: UserCreateManyTenantInputEnvelope
+    set?: Enumerable<UserWhereUniqueInput>
+    disconnect?: Enumerable<UserWhereUniqueInput>
+    delete?: Enumerable<UserWhereUniqueInput>
+    connect?: Enumerable<UserWhereUniqueInput>
+    update?: Enumerable<UserUpdateWithWhereUniqueWithoutTenantInput>
+    updateMany?: Enumerable<UserUpdateManyWithWhereWithoutTenantInput>
+    deleteMany?: Enumerable<UserScalarWhereInput>
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -4600,24 +3422,18 @@ export namespace Prisma {
     deleteMany?: Enumerable<TenantScalarWhereInput>
   }
 
-  export type UserTeanantUncheckedUpdateManyWithoutTenantNestedInput = {
-    create?: XOR<Enumerable<UserTeanantCreateWithoutTenantInput>, Enumerable<UserTeanantUncheckedCreateWithoutTenantInput>>
-    connectOrCreate?: Enumerable<UserTeanantCreateOrConnectWithoutTenantInput>
-    upsert?: Enumerable<UserTeanantUpsertWithWhereUniqueWithoutTenantInput>
-    createMany?: UserTeanantCreateManyTenantInputEnvelope
-    set?: Enumerable<UserTeanantWhereUniqueInput>
-    disconnect?: Enumerable<UserTeanantWhereUniqueInput>
-    delete?: Enumerable<UserTeanantWhereUniqueInput>
-    connect?: Enumerable<UserTeanantWhereUniqueInput>
-    update?: Enumerable<UserTeanantUpdateWithWhereUniqueWithoutTenantInput>
-    updateMany?: Enumerable<UserTeanantUpdateManyWithWhereWithoutTenantInput>
-    deleteMany?: Enumerable<UserTeanantScalarWhereInput>
-  }
-
-  export type UserCreateNestedOneWithoutTenantsInput = {
-    create?: XOR<UserCreateWithoutTenantsInput, UserUncheckedCreateWithoutTenantsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutTenantsInput
-    connect?: UserWhereUniqueInput
+  export type UserUncheckedUpdateManyWithoutTenantNestedInput = {
+    create?: XOR<Enumerable<UserCreateWithoutTenantInput>, Enumerable<UserUncheckedCreateWithoutTenantInput>>
+    connectOrCreate?: Enumerable<UserCreateOrConnectWithoutTenantInput>
+    upsert?: Enumerable<UserUpsertWithWhereUniqueWithoutTenantInput>
+    createMany?: UserCreateManyTenantInputEnvelope
+    set?: Enumerable<UserWhereUniqueInput>
+    disconnect?: Enumerable<UserWhereUniqueInput>
+    delete?: Enumerable<UserWhereUniqueInput>
+    connect?: Enumerable<UserWhereUniqueInput>
+    update?: Enumerable<UserUpdateWithWhereUniqueWithoutTenantInput>
+    updateMany?: Enumerable<UserUpdateManyWithWhereWithoutTenantInput>
+    deleteMany?: Enumerable<UserScalarWhereInput>
   }
 
   export type TenantCreateNestedOneWithoutUsersInput = {
@@ -4630,62 +3446,12 @@ export namespace Prisma {
     set?: Role
   }
 
-  export type UserUpdateOneRequiredWithoutTenantsNestedInput = {
-    create?: XOR<UserCreateWithoutTenantsInput, UserUncheckedCreateWithoutTenantsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutTenantsInput
-    upsert?: UserUpsertWithoutTenantsInput
-    connect?: UserWhereUniqueInput
-    update?: XOR<UserUpdateWithoutTenantsInput, UserUncheckedUpdateWithoutTenantsInput>
-  }
-
   export type TenantUpdateOneRequiredWithoutUsersNestedInput = {
     create?: XOR<TenantCreateWithoutUsersInput, TenantUncheckedCreateWithoutUsersInput>
     connectOrCreate?: TenantCreateOrConnectWithoutUsersInput
     upsert?: TenantUpsertWithoutUsersInput
     connect?: TenantWhereUniqueInput
     update?: XOR<TenantUpdateWithoutUsersInput, TenantUncheckedUpdateWithoutUsersInput>
-  }
-
-  export type UserTeanantCreateNestedManyWithoutUserInput = {
-    create?: XOR<Enumerable<UserTeanantCreateWithoutUserInput>, Enumerable<UserTeanantUncheckedCreateWithoutUserInput>>
-    connectOrCreate?: Enumerable<UserTeanantCreateOrConnectWithoutUserInput>
-    createMany?: UserTeanantCreateManyUserInputEnvelope
-    connect?: Enumerable<UserTeanantWhereUniqueInput>
-  }
-
-  export type UserTeanantUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<Enumerable<UserTeanantCreateWithoutUserInput>, Enumerable<UserTeanantUncheckedCreateWithoutUserInput>>
-    connectOrCreate?: Enumerable<UserTeanantCreateOrConnectWithoutUserInput>
-    createMany?: UserTeanantCreateManyUserInputEnvelope
-    connect?: Enumerable<UserTeanantWhereUniqueInput>
-  }
-
-  export type UserTeanantUpdateManyWithoutUserNestedInput = {
-    create?: XOR<Enumerable<UserTeanantCreateWithoutUserInput>, Enumerable<UserTeanantUncheckedCreateWithoutUserInput>>
-    connectOrCreate?: Enumerable<UserTeanantCreateOrConnectWithoutUserInput>
-    upsert?: Enumerable<UserTeanantUpsertWithWhereUniqueWithoutUserInput>
-    createMany?: UserTeanantCreateManyUserInputEnvelope
-    set?: Enumerable<UserTeanantWhereUniqueInput>
-    disconnect?: Enumerable<UserTeanantWhereUniqueInput>
-    delete?: Enumerable<UserTeanantWhereUniqueInput>
-    connect?: Enumerable<UserTeanantWhereUniqueInput>
-    update?: Enumerable<UserTeanantUpdateWithWhereUniqueWithoutUserInput>
-    updateMany?: Enumerable<UserTeanantUpdateManyWithWhereWithoutUserInput>
-    deleteMany?: Enumerable<UserTeanantScalarWhereInput>
-  }
-
-  export type UserTeanantUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<Enumerable<UserTeanantCreateWithoutUserInput>, Enumerable<UserTeanantUncheckedCreateWithoutUserInput>>
-    connectOrCreate?: Enumerable<UserTeanantCreateOrConnectWithoutUserInput>
-    upsert?: Enumerable<UserTeanantUpsertWithWhereUniqueWithoutUserInput>
-    createMany?: UserTeanantCreateManyUserInputEnvelope
-    set?: Enumerable<UserTeanantWhereUniqueInput>
-    disconnect?: Enumerable<UserTeanantWhereUniqueInput>
-    delete?: Enumerable<UserTeanantWhereUniqueInput>
-    connect?: Enumerable<UserTeanantWhereUniqueInput>
-    update?: Enumerable<UserTeanantUpdateWithWhereUniqueWithoutUserInput>
-    updateMany?: Enumerable<UserTeanantUpdateManyWithWhereWithoutUserInput>
-    deleteMany?: Enumerable<UserTeanantScalarWhereInput>
   }
 
   export type NestedIntFilter = {
@@ -4842,7 +3608,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     parent?: TenantCreateNestedOneWithoutChildrenInput
-    users?: UserTeanantCreateNestedManyWithoutTenantInput
+    users?: UserCreateNestedManyWithoutTenantInput
   }
 
   export type TenantUncheckedCreateWithoutChildrenInput = {
@@ -4851,7 +3617,7 @@ export namespace Prisma {
     parentId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
-    users?: UserTeanantUncheckedCreateNestedManyWithoutTenantInput
+    users?: UserUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type TenantCreateOrConnectWithoutChildrenInput = {
@@ -4864,7 +3630,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     children?: TenantCreateNestedManyWithoutParentInput
-    users?: UserTeanantCreateNestedManyWithoutTenantInput
+    users?: UserCreateNestedManyWithoutTenantInput
   }
 
   export type TenantUncheckedCreateWithoutParentInput = {
@@ -4873,7 +3639,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     children?: TenantUncheckedCreateNestedManyWithoutParentInput
-    users?: UserTeanantUncheckedCreateNestedManyWithoutTenantInput
+    users?: UserUncheckedCreateNestedManyWithoutTenantInput
   }
 
   export type TenantCreateOrConnectWithoutParentInput = {
@@ -4886,27 +3652,22 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type UserTeanantCreateWithoutTenantInput = {
+  export type UserCreateWithoutTenantInput = {
     role?: Role
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    user: UserCreateNestedOneWithoutTenantsInput
   }
 
-  export type UserTeanantUncheckedCreateWithoutTenantInput = {
-    userId: number
+  export type UserUncheckedCreateWithoutTenantInput = {
+    id?: number
     role?: Role
-    createdAt?: Date | string
-    updatedAt?: Date | string
   }
 
-  export type UserTeanantCreateOrConnectWithoutTenantInput = {
-    where: UserTeanantWhereUniqueInput
-    create: XOR<UserTeanantCreateWithoutTenantInput, UserTeanantUncheckedCreateWithoutTenantInput>
+  export type UserCreateOrConnectWithoutTenantInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutTenantInput, UserUncheckedCreateWithoutTenantInput>
   }
 
-  export type UserTeanantCreateManyTenantInputEnvelope = {
-    data: Enumerable<UserTeanantCreateManyTenantInput>
+  export type UserCreateManyTenantInputEnvelope = {
+    data: Enumerable<UserCreateManyTenantInput>
     skipDuplicates?: boolean
   }
 
@@ -4920,7 +3681,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     parent?: TenantUpdateOneWithoutChildrenNestedInput
-    users?: UserTeanantUpdateManyWithoutTenantNestedInput
+    users?: UserUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantUncheckedUpdateWithoutChildrenInput = {
@@ -4929,7 +3690,7 @@ export namespace Prisma {
     parentId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    users?: UserTeanantUncheckedUpdateManyWithoutTenantNestedInput
+    users?: UserUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantUpsertWithWhereUniqueWithoutParentInput = {
@@ -4959,44 +3720,29 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter | Date | string
   }
 
-  export type UserTeanantUpsertWithWhereUniqueWithoutTenantInput = {
-    where: UserTeanantWhereUniqueInput
-    update: XOR<UserTeanantUpdateWithoutTenantInput, UserTeanantUncheckedUpdateWithoutTenantInput>
-    create: XOR<UserTeanantCreateWithoutTenantInput, UserTeanantUncheckedCreateWithoutTenantInput>
-  }
-
-  export type UserTeanantUpdateWithWhereUniqueWithoutTenantInput = {
-    where: UserTeanantWhereUniqueInput
-    data: XOR<UserTeanantUpdateWithoutTenantInput, UserTeanantUncheckedUpdateWithoutTenantInput>
-  }
-
-  export type UserTeanantUpdateManyWithWhereWithoutTenantInput = {
-    where: UserTeanantScalarWhereInput
-    data: XOR<UserTeanantUpdateManyMutationInput, UserTeanantUncheckedUpdateManyWithoutUsersInput>
-  }
-
-  export type UserTeanantScalarWhereInput = {
-    AND?: Enumerable<UserTeanantScalarWhereInput>
-    OR?: Enumerable<UserTeanantScalarWhereInput>
-    NOT?: Enumerable<UserTeanantScalarWhereInput>
-    userId?: IntFilter | number
-    tenantId?: IntFilter | number
-    role?: EnumRoleFilter | Role
-    createdAt?: DateTimeFilter | Date | string
-    updatedAt?: DateTimeFilter | Date | string
-  }
-
-  export type UserCreateWithoutTenantsInput = {
-
-  }
-
-  export type UserUncheckedCreateWithoutTenantsInput = {
-    id?: number
-  }
-
-  export type UserCreateOrConnectWithoutTenantsInput = {
+  export type UserUpsertWithWhereUniqueWithoutTenantInput = {
     where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutTenantsInput, UserUncheckedCreateWithoutTenantsInput>
+    update: XOR<UserUpdateWithoutTenantInput, UserUncheckedUpdateWithoutTenantInput>
+    create: XOR<UserCreateWithoutTenantInput, UserUncheckedCreateWithoutTenantInput>
+  }
+
+  export type UserUpdateWithWhereUniqueWithoutTenantInput = {
+    where: UserWhereUniqueInput
+    data: XOR<UserUpdateWithoutTenantInput, UserUncheckedUpdateWithoutTenantInput>
+  }
+
+  export type UserUpdateManyWithWhereWithoutTenantInput = {
+    where: UserScalarWhereInput
+    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutUsersInput>
+  }
+
+  export type UserScalarWhereInput = {
+    AND?: Enumerable<UserScalarWhereInput>
+    OR?: Enumerable<UserScalarWhereInput>
+    NOT?: Enumerable<UserScalarWhereInput>
+    id?: IntFilter | number
+    role?: EnumRoleFilter | Role
+    tenantId?: IntFilter | number
   }
 
   export type TenantCreateWithoutUsersInput = {
@@ -5021,19 +3767,6 @@ export namespace Prisma {
     create: XOR<TenantCreateWithoutUsersInput, TenantUncheckedCreateWithoutUsersInput>
   }
 
-  export type UserUpsertWithoutTenantsInput = {
-    update: XOR<UserUpdateWithoutTenantsInput, UserUncheckedUpdateWithoutTenantsInput>
-    create: XOR<UserCreateWithoutTenantsInput, UserUncheckedCreateWithoutTenantsInput>
-  }
-
-  export type UserUpdateWithoutTenantsInput = {
-
-  }
-
-  export type UserUncheckedUpdateWithoutTenantsInput = {
-    id?: IntFieldUpdateOperationsInput | number
-  }
-
   export type TenantUpsertWithoutUsersInput = {
     update: XOR<TenantUpdateWithoutUsersInput, TenantUncheckedUpdateWithoutUsersInput>
     create: XOR<TenantCreateWithoutUsersInput, TenantUncheckedCreateWithoutUsersInput>
@@ -5056,46 +3789,6 @@ export namespace Prisma {
     children?: TenantUncheckedUpdateManyWithoutParentNestedInput
   }
 
-  export type UserTeanantCreateWithoutUserInput = {
-    role?: Role
-    createdAt?: Date | string
-    updatedAt?: Date | string
-    tenant: TenantCreateNestedOneWithoutUsersInput
-  }
-
-  export type UserTeanantUncheckedCreateWithoutUserInput = {
-    tenantId: number
-    role?: Role
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type UserTeanantCreateOrConnectWithoutUserInput = {
-    where: UserTeanantWhereUniqueInput
-    create: XOR<UserTeanantCreateWithoutUserInput, UserTeanantUncheckedCreateWithoutUserInput>
-  }
-
-  export type UserTeanantCreateManyUserInputEnvelope = {
-    data: Enumerable<UserTeanantCreateManyUserInput>
-    skipDuplicates?: boolean
-  }
-
-  export type UserTeanantUpsertWithWhereUniqueWithoutUserInput = {
-    where: UserTeanantWhereUniqueInput
-    update: XOR<UserTeanantUpdateWithoutUserInput, UserTeanantUncheckedUpdateWithoutUserInput>
-    create: XOR<UserTeanantCreateWithoutUserInput, UserTeanantUncheckedCreateWithoutUserInput>
-  }
-
-  export type UserTeanantUpdateWithWhereUniqueWithoutUserInput = {
-    where: UserTeanantWhereUniqueInput
-    data: XOR<UserTeanantUpdateWithoutUserInput, UserTeanantUncheckedUpdateWithoutUserInput>
-  }
-
-  export type UserTeanantUpdateManyWithWhereWithoutUserInput = {
-    where: UserTeanantScalarWhereInput
-    data: XOR<UserTeanantUpdateManyMutationInput, UserTeanantUncheckedUpdateManyWithoutTenantsInput>
-  }
-
   export type TenantCreateManyParentInput = {
     id?: number
     name: string
@@ -5103,11 +3796,9 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type UserTeanantCreateManyTenantInput = {
-    userId: number
+  export type UserCreateManyTenantInput = {
+    id?: number
     role?: Role
-    createdAt?: Date | string
-    updatedAt?: Date | string
   }
 
   export type TenantUpdateWithoutParentInput = {
@@ -5115,7 +3806,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     children?: TenantUpdateManyWithoutParentNestedInput
-    users?: UserTeanantUpdateManyWithoutTenantNestedInput
+    users?: UserUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantUncheckedUpdateWithoutParentInput = {
@@ -5124,7 +3815,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     children?: TenantUncheckedUpdateManyWithoutParentNestedInput
-    users?: UserTeanantUncheckedUpdateManyWithoutTenantNestedInput
+    users?: UserUncheckedUpdateManyWithoutTenantNestedInput
   }
 
   export type TenantUncheckedUpdateManyWithoutChildrenInput = {
@@ -5134,53 +3825,18 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type UserTeanantUpdateWithoutTenantInput = {
+  export type UserUpdateWithoutTenantInput = {
     role?: EnumRoleFieldUpdateOperationsInput | Role
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    user?: UserUpdateOneRequiredWithoutTenantsNestedInput
   }
 
-  export type UserTeanantUncheckedUpdateWithoutTenantInput = {
-    userId?: IntFieldUpdateOperationsInput | number
+  export type UserUncheckedUpdateWithoutTenantInput = {
+    id?: IntFieldUpdateOperationsInput | number
     role?: EnumRoleFieldUpdateOperationsInput | Role
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type UserTeanantUncheckedUpdateManyWithoutUsersInput = {
-    userId?: IntFieldUpdateOperationsInput | number
+  export type UserUncheckedUpdateManyWithoutUsersInput = {
+    id?: IntFieldUpdateOperationsInput | number
     role?: EnumRoleFieldUpdateOperationsInput | Role
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type UserTeanantCreateManyUserInput = {
-    tenantId: number
-    role?: Role
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type UserTeanantUpdateWithoutUserInput = {
-    role?: EnumRoleFieldUpdateOperationsInput | Role
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    tenant?: TenantUpdateOneRequiredWithoutUsersNestedInput
-  }
-
-  export type UserTeanantUncheckedUpdateWithoutUserInput = {
-    tenantId?: IntFieldUpdateOperationsInput | number
-    role?: EnumRoleFieldUpdateOperationsInput | Role
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-  }
-
-  export type UserTeanantUncheckedUpdateManyWithoutTenantsInput = {
-    tenantId?: IntFieldUpdateOperationsInput | number
-    role?: EnumRoleFieldUpdateOperationsInput | Role
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

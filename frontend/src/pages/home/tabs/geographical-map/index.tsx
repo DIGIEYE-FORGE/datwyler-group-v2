@@ -32,7 +32,10 @@ export type GeographicalMapTabContext = {
 function MapControls({ bounds }: { bounds?: [number, number][] }) {
   const map = useMap();
   useEffect(() => {
-    if (bounds) map.fitBounds(bounds);
+    if (bounds) {
+      if (bounds.length == 1) map.setView(bounds[0], 10);
+      else if (bounds.length > 1) map.fitBounds(bounds);
+    }
   }, [bounds]);
   return null;
 }
@@ -100,11 +103,6 @@ function GeographicalMapTab() {
   }, [tenantId, params]);
 
   const bounds = useMemo(() => {
-    if (groups.length < 1)
-      return [
-        [15, 18],
-        [41, 47],
-      ] as [number, number][];
     return groups.map((group) => [group.lat, group.lng] as [number, number]);
   }, [groups]);
 
@@ -126,7 +124,8 @@ function GeographicalMapTab() {
               : [25.2048, 55.2708]
           }
           zoom={6}
-          minZoom={3}
+          minZoom={4}
+          maxZoom={8}
           attributionControl={false}
           zoomControl={false}
         >
