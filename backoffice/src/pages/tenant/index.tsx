@@ -152,14 +152,18 @@ function TenantPage() {
         const tenant = await updateTenant(selectedTenant);
         console.log(tenant);
         setSelectedTenant(null);
-        // setTenants((prev) =>
-        //   prev.map((item) => (item.id === tenant.id ? tenant : item))
-        // );
+        fetchTenants(tenantId).then((data) => {
+          console.log(data);
+          setTenants(data);
+        });
       } else if (selectedTenant) {
         const tenant = await createTenant(selectedTenant);
         console.log(tenant);
         setSelectedTenant(null);
-        // setTenants((prev) => [...prev, tenant]);
+        fetchTenants(tenantId).then((data) => {
+          console.log(data);
+          setTenants(data);
+        });
       }
       toast.success(
         `Tenant ${selectedTenant?.id ? "updated" : "created"} successfully`
