@@ -21,30 +21,6 @@ const users: CreateUser[] = [
     lastName: "jamil",
     phoneNumber: "0682712855",
   },
-  {
-    id: 2,
-    email: "iseljao@gmail.com",
-    password: "12345678",
-    firstName: "issam",
-    lastName: "el jaouhary",
-    phoneNumber: "0682712855",
-  },
-  {
-    id: 3,
-    email: "yassinouraq@gmail.com",
-    password: "12345678",
-    firstName: "yassin",
-    lastName: "ouraq",
-    phoneNumber: "0682712855",
-  },
-  {
-    id: 4,
-    email: "ismailsalam@gmail.com",
-    password: "12345678",
-    firstName: "ismail",
-    lastName: "salam",
-    phoneNumber: "0682712855",
-  },
 ];
 
 async function seedUsers() {
