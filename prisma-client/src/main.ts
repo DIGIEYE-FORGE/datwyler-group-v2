@@ -67,9 +67,19 @@ const sites: CreateSite[] = [
 
 
 async function main() {
-  const datwyler = await multitenancyClient.tenant.findUnique({
+  const datwyler = await multitenancyClient.tenant.update({
     where: { id: 2 },
-    include: { children: true }
+    include: { children: true },
+    data: {
+      children: {
+        createMany: {
+          data: [
+            { name: "subdatwyler 1" },
+            { name: "subdatwyler 2" },
+          ]
+        },
+      }
+    }
   })
   console.log(datwyler);
 

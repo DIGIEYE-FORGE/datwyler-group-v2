@@ -153,6 +153,7 @@ class TenantService {
 
   public async getTenantUsers(tenantId: number): Promise<any> {
     const users = await this.getRecTenantUsers(tenantId);
+    if (users.length === 0) return [];
     const authUsers = await authClient.getUsers({
       ids: users.map((u) => u.userId),
     });
