@@ -20,5 +20,5 @@ EXPOSE ${HTTP_PORT} ${GRPC_PORT}
 RUN chown -R node:node /usr/src/app
 USER node
 # && 
-CMD yarn deploy:migration  && yarn deploy:seed && yarn dev
+CMD yarn dev
 

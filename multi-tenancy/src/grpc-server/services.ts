@@ -127,7 +127,7 @@ const GetMe: MultiTenancyHandlers["GetMe"] = (call, callback) => {
         });
       });
   } catch (err) {
-    console.log("--------------------", err);
+    console.log(err);
 
     if (err instanceof z.ZodError) {
       callback(
