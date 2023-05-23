@@ -22,11 +22,11 @@ import {
 } from "@tanstack/react-query";
 import { is } from "date-fns/locale";
 // axios.defaults.baseURL = import.meta.env.VITE_BACK_API;
+const accessToken = localStorage.getItem("accessToken");
+const refreshToken = localStorage.getItem("refreshToken");
 axios.defaults.baseURL = `http://${window.location.hostname}:3001`;
 
-axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem(
-  "accessToken"
-)}`;
+axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 
 export type UserContext = {
   user: [any, React.Dispatch<React.SetStateAction<any>>];
@@ -44,14 +44,19 @@ axios.interceptors.response.use(
       });
       auth
         .post("/refresh", {
-          refreshToken: localStorage.getItem("refreshToken"),
+          accessToken
         })
         .then((res) => {
           localStorage.setItem("accessToken", res.data.accessToken);
+          localStorage.setItem("refreshToken", res.data.refreshToken);
+          axios.defaults.headers.common["Authorization"] = `Bearer ${
+            res.data.accessToken
+          }`;
+
         })
         .catch((err) => {
           toast.error("Please login first");
-          // window.location.href = "/login";
+          window.location.href = "/login";
         });
     }
     return Promise.reject(error);
@@ -109,12 +114,10 @@ export const getUserConnecter = async () => {
 };
 function App() {
   const [tenantSelected, setTenantSelected] = useState<number>(0);
-  axios.defaults.headers.common["Tenant-Id"] =
-    tenantSelected > 0 ? tenantSelected : localStorage.getItem("tenantId");
+  axios.defaults.headers.common["Tenant-Id"] =tenantSelected > 0 ? tenantSelected : localStorage.getItem("tenantId");
   const [lang, setLang] = useLocalStorage("lang", "en");
   const [user, setUser] = useState<any>({});
   const [islogin, setIslogin] = useState<boolean>(false);
-
   const [getUserQuery] = useQueries({
     queries: [
       {

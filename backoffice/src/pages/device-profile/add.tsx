@@ -10,10 +10,11 @@ import SelectV2 from "../../components/select-version2";
 import AddIconGren from "../../assets/icons/add-icon-gren.svg";
 import { postdeviceProfile } from "../../api/deviceProfile";
 import { toast } from "react-toastify";
-import { Context, Protocol, DeviceTypes, Decoder } from ".";
+import { Protocol, DeviceTypes, Decoder, ContextDeviceProfile } from ".";
 import deleteIcon from "../../assets/icons/trash.svg";
 import addIcon from "../../assets/icons/add-outlined.svg";
 import { useMutation } from "@tanstack/react-query";
+import { UserContext } from "../../App";
 
 const AddIcon = () => <img src={addIcon} alt="delete-icon" />;
 const DeleteIcon = () => <img src={deleteIcon} alt="delete-icon" />;
@@ -33,7 +34,7 @@ const Attribute = ({ text }: { text: React.ReactNode }) => (
 );
 
 const Add = () => {
-  const context = useProvider<Context>();
+  const context = useProvider<ContextDeviceProfile>();
   const [, setOpen] = context.open;
   const [protocol] = context.protocol;
   const [index, setIndex] = React.useState(0);
@@ -78,7 +79,7 @@ const Add = () => {
     onSuccess: (data) => {
       setOpen(false);
       toast.success("success");
-      setSave((curr) => !curr);
+      setSave((curr:boolean) => !curr);
       clearData();
     },
     onError: (err: any) => {
@@ -105,7 +106,7 @@ const Add = () => {
   const back = () => {
     clearData();
     setIndex(0);
-    setOpen((curr) => !curr);
+    setOpen((curr:boolean) => !curr);
   };
   return (
     <div className="add-edit ">
