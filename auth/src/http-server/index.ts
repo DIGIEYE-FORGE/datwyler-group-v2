@@ -140,6 +140,14 @@ app.patch(
           ...rest,
           password: hashedPassword,
         },
+        select: {
+          id: true,
+          email: true,
+          firstName: true,
+          lastName: true,
+          avatar: true,
+          phoneNumber: true,
+        },
       });
       if (!user)
         return res.status(404).json({ error: "user with id not found" });
