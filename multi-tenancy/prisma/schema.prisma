@@ -32,6 +32,6 @@ model Tenant {
 model User {
   id       Int    @id @default(autoincrement())
   role     Role   @default(USER)
-  tenant   Tenant @relation(fields: [tenantId], references: [id])
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   tenantId Int
 }
