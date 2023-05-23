@@ -101,8 +101,18 @@ export const getUsers = async (params: any) => {
 }
 
 export const auth = async (data: any) => {
+	try{
 	const response = await api.post(`login`, data);
+	console.log(response.data);
+	axios.defaults.headers.common["Authorization"] = `Bearer ${response.data.accessToken}`;
+	localStorage.setItem("accessToken", response.data.accessToken);
+	localStorage.setItem("refreshToken", response.data.refreshToken);
 	return response.data;
+	}
+	catch(e){
+		console.log(e);
+	}
+
 }
 
 type User = {

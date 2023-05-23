@@ -397,8 +397,8 @@ const Add = () => {
           disabled={postGroupMutation.isLoading || 
           deviceData.name === "" ||
           deviceData.location === "" ||
-          deviceData.lat === "" ||
-          deviceData.lng === "" ||
+          deviceData.lat === undefined ||
+          deviceData.lng === undefined  ||
           deviceData.ip === ""
         }
         >

@@ -48,6 +48,7 @@ const SignIn = () => {
       localStorage.setItem("refreshToken", data.refreshToken);
       createGetMeMutation.mutate();
       navigate("/");
+      // window.location.reload();
     },
     onError: (err: AxiosError) => {
       if (err.code == "ERR_NETWORK") {
