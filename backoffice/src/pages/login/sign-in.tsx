@@ -44,11 +44,13 @@ const SignIn = () => {
   const createLoginMutation = useMutation({
     mutationFn: (data: { email: string; password: string }) => auth(data),
     onSuccess: (data) => {
-      localStorage.setItem("accessToken", data.accessToken);
-      localStorage.setItem("refreshToken", data.refreshToken);
-      createGetMeMutation.mutate();
-      navigate("/");
-      // window.location.reload();
+      if (data.accessToken && data.refreshToken)
+      {
+          localStorage.setItem("accessToken", data.accessToken);
+          localStorage.setItem("refreshToken", data.refreshToken);
+          createGetMeMutation.mutate();
+          navigate("/");
+      }
     },
     onError: (err: AxiosError) => {
       if (err.code == "ERR_NETWORK") {

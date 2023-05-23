@@ -28,10 +28,12 @@ api.interceptors.response.use(
 				.then((response) => {
 					localStorage.setItem("accessToken", response.data.accessToken);
 					localStorage.setItem("refreshToken", response.data.refreshToken);
+					axios.defaults.headers.common["Authorization"] =
+						"Bearer " + response.data.accessToken;
 				}).catch((error) => {
 					localStorage.removeItem("accessToken");
 					localStorage.removeItem("refreshToken");
-					// window.location.href = "/login";
+					window.location.href = "/login";
 				});
 		}
 		return Promise.reject(error);

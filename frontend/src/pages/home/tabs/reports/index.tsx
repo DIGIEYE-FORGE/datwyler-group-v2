@@ -218,7 +218,7 @@ function ReportsTab() {
               type:"where",
               payload:{
                 createdAt:{
-                  gte: addDays(new Date(),-1).toISOString(),
+                  gte: addHours(new Date(),(-24 * 1)).toISOString(),
                 }
               }
             })
@@ -438,36 +438,49 @@ function ReportsTab() {
             </label>
             <Select
               onChange={(v: any) => {
-                if (v === "last hour")
+                if (v.value === "last hour")
+                {
                   setCreateReport({
                     ...createReport,
                     date: new Date(addHours(new Date(), -1)),
                   });
-                if (v === "last 4 hours")
+                }
+                if (v.value === "last 4 hours")
+                {
                   setCreateReport({
                     ...createReport,
                     date: new Date(addHours(new Date(), -4)),
                   });
-                if (v === "last 12 hours")
+                }
+                if (v.value === "last 12 hours")
+                {
                   setCreateReport({
                     ...createReport,
                     date: new Date(addHours(new Date(), -12)),
                   });
-                if (v === "last day")
+                }
+                if (v.value === "last day")
+                {
                   setCreateReport({
                     ...createReport,
-                    date: new Date(addDays(new Date(), -1)),
+                    date: new Date(addDays(new Date(), (-24*1))),
                   });
-                if (v === "last 2 days")
+                }
+                if (v.value === "last 2 days")
+                {
                   setCreateReport({
                     ...createReport,
-                    date: new Date(addDays(new Date(), -2)),
+                    date: new Date(addDays(new Date(), (-24*2))),
                   });
-                if (v === "last week")
+                }
+                if (v.value === "last week")
+                {
+                  console.log("i am here");
                   setCreateReport({
                     ...createReport,
-                    date: new Date(addDays(new Date(), -7)),
+                    date: new Date(addDays(new Date(), (-7*24))),
                   });
+                }
               }}
               classNames={{
                 option: (state) =>
@@ -513,7 +526,6 @@ function ReportsTab() {
                 if (v.value == "PDF")
                   setCreateReport({ ...createReport, format: "pdf" });
                 if (v.value == "CSV") {
-                  console.log("------------------------------");
                   setCreateReport({ ...createReport, format: "csv" });
                 }
               }}

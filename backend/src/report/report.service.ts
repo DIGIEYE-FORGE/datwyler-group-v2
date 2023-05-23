@@ -38,9 +38,9 @@ export class ReportService {
           deviceId: {
             in: data.devices,
           },
-          // createdAt: {
-          //   gte: new Date(data.date),
-          // },
+          createdAt: {
+            gte: new Date(data.date).toISOString(),
+          },
         },
       });
     } else if (data.type == 'Mesurement') {
@@ -48,6 +48,9 @@ export class ReportService {
         where: {
           deviceId: {
             in: data.devices,
+          },
+          createdAt: {
+            gte: new Date(data.date).toISOString(),
           },
         },
       });
@@ -99,8 +102,24 @@ export class ReportService {
   async generateFileExcel(name: string, data: Record<string, any>[]) {
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet('Report');
-
-    const dataExcel = data.map((item) => Object.values(item));
+    data.forEach((item) => {
+      delete item.updatedAt;
+      delete item.attributes;
+    });
+    const dataExcel = data.map((item) =>
+      Object.values(item).map((i) => {
+        if (typeof i == 'boolean') {
+          return i ? 'true' : 'false';
+        }
+        if (typeof i == 'object') {
+          return JSON.stringify(i);
+        }
+        if (typeof i == 'number') {
+          return i.toString();
+        }
+        return i;
+      }),
+    );
     dataExcel.unshift(Object.keys(data[0]));
     worksheet.addRows(dataExcel);
     const filename = `${name}.xlsx`;

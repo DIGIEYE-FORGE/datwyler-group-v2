@@ -161,7 +161,7 @@ function App() {
       if (!user) {
         localStorage.clear();
         toast.error("Please login first");
-        // window.location.href = "/login";
+        window.location.href = "/login";
       }
     }
   }, [location.pathname]);
