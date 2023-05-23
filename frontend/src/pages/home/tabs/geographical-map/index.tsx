@@ -125,6 +125,7 @@ function GeographicalMapTab() {
           }
           zoom={6}
           minZoom={4}
+          maxZoom={8}
           attributionControl={false}
           zoomControl={false}
         >
