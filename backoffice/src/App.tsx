@@ -44,15 +44,14 @@ axios.interceptors.response.use(
       });
       auth
         .post("/refresh", {
-          accessToken
+          accessToken,
         })
         .then((res) => {
           localStorage.setItem("accessToken", res.data.accessToken);
           localStorage.setItem("refreshToken", res.data.refreshToken);
-          axios.defaults.headers.common["Authorization"] = `Bearer ${
-            res.data.accessToken
-          }`;
-
+          axios.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${res.data.accessToken}`;
         })
         .catch((err) => {
           toast.error("Please login first");
@@ -114,7 +113,8 @@ export const getUserConnecter = async () => {
 };
 function App() {
   const [tenantSelected, setTenantSelected] = useState<number>(0);
-  axios.defaults.headers.common["Tenant-Id"] =tenantSelected > 0 ? tenantSelected : localStorage.getItem("tenantId");
+  axios.defaults.headers.common["Tenant-Id"] =
+    tenantSelected > 0 ? tenantSelected : localStorage.getItem("tenantId");
   const [lang, setLang] = useLocalStorage("lang", "en");
   const [user, setUser] = useState<any>({});
   const [islogin, setIslogin] = useState<boolean>(false);

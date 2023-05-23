@@ -10,6 +10,7 @@ import GroupPage from "../../pages/group";
 import SignUpPage from "../../pages/signup";
 import FilePage from "../../pages/file";
 import User from "../../pages/users";
+import TenantPage from "../../pages/tenant";
 const RouterView = () => {
   return (
     <Routes>
@@ -23,6 +24,7 @@ const RouterView = () => {
       <Route path="/signup" element={<SignUpPage />} />
       <Route path="/files" element={<FilePage />} />
       <Route path="/users" element={<User />} />
+      <Route path="/tenants" element={<TenantPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
