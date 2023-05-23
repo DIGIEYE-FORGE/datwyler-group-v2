@@ -131,7 +131,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/ubuntu/prisma-client/src/auth-client",
+      "value": "/home/isel-jao/Desktop/datwyler-group-v2/prisma-client/src/auth-client",
       "fromEnvVar": null
     },
     "config": {

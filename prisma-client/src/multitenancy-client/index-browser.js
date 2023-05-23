@@ -112,15 +112,9 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
 });
 
 exports.Prisma.UserScalarFieldEnum = {
-  id: 'id'
-};
-
-exports.Prisma.UserTeanantScalarFieldEnum = {
-  userId: 'userId',
-  tenantId: 'tenantId',
+  id: 'id',
   role: 'role',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  tenantId: 'tenantId'
 };
 exports.Role = {
   ADMIN: 'ADMIN',
@@ -129,7 +123,6 @@ exports.Role = {
 
 exports.Prisma.ModelName = {
   Tenant: 'Tenant',
-  UserTeanant: 'UserTeanant',
   User: 'User'
 };
 

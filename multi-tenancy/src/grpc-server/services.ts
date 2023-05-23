@@ -14,57 +14,33 @@ const getMeSchema = z.object({
   userId: z.number().int(),
 });
 
-
+async function getSubtenants(tenantId: number) {
+  return await prisma.tenant.findMany({
+    where: {
+      OR: [
+        { id: tenantId },
+        { parent: { id: tenantId } },
+        { parent: { parent: { id: tenantId } } },
+        { parent: { parent: { parent: { id: tenantId } } } },
+        { parent: { parent: { parent: { parent: { id: tenantId } } } } },
+      ],
+    }
+  })
+}
 
 const UserTenant: MultiTenancyHandlers["UserTenant"] = (call, callback) => {
   try {
     const { userId, tenantId } = userTenantSchema.parse(call.request);
-    //check if user has access to tenant
+    //TODO check if user has access to tenant
 
     // TODO convert the code below to function and make it recursive
     logger.debug("UserTenant", call.request);
-    // prisma.userTeanant.findMany({
-    //   where: { tenantId, userId }, select: {
-    //     tenant: {
-    //       select: {
-    //         id: true,
-    //         children: {
-    //           select: {
-    //             id: true,
-    //           },
-    //         },
-    //       },
-    //     },
-    //   }
-    // }).then((userTenants) => {
-    //   const tenants = userTenants.map(tenant => tenant.tenant.id)
-    //   console.log("tenants", tenants);
 
-    //   const children = userTenants.map(userTenant => userTenant.tenant.children.map(child => child.id
-    //   )).flat()
-    //   console.log("children", children);
-    //   callback(null, {
-    //     tenantIds: [...tenants, ...children]
-    //   });
-    // });
+    getSubtenants(tenantId)
+      .then((tenants) => {
+        callback(null, { tenantIds: tenants.map(tenant => tenant.id) });
+      })
 
-    prisma.tenant.findUnique({
-      where: { id: tenantId },
-      select: {
-        id: true,
-        children: {
-          select: {
-            id: true,
-          },
-        },
-      },
-    }).then((tenant) => {
-      const children = tenant?.children.map(child => child.id) || []
-      if (tenant) children.push(tenant.id)
-      callback(null, {
-        tenantIds: children
-      });
-    })
   } catch (err) {
     if (err instanceof z.ZodError) {
       callback(
@@ -89,43 +65,43 @@ const GetMe: MultiTenancyHandlers["GetMe"] = (call, callback) => {
   logger.debug("GetMe", call.request);
   try {
     const { userId } = getMeSchema.parse(call.request);
-    prisma.userTeanant
-      .findMany({
-        where: { userId },
-        select: {
-          tenant: {
-            select: {
-              name: true,
-              id: true,
-              children: {
-                select: {
-                  name: true,
-                  id: true,
-                },
-              },
-            },
+    prisma.user.findUnique({
+      where: { id: userId },
+    }).then(async (user) => {
+      if (!user) {
+        callback(
+          {
+            code: grpc.status.NOT_FOUND,
+            message: "User not found",
           },
-          role: true
-        }
-      })
-      ///////////// clean up /////////////
-      .then((userTeanants) => {
-        const children = userTeanants.map(UserTenant => UserTenant.tenant.children.map(child => ({
-          ...child,
-          role: UserTenant.role
+          null
+        );
+      }
+      else {
+        const userTenants = await prisma.tenant.findMany({
+          where: {
+            OR: [
+              { id: user.tenantId },
+              { parent: { id: user.tenantId } },
+              { parent: { parent: { id: user.tenantId } } },
+              { parent: { parent: { parent: { id: user.tenantId } } } },
+              { parent: { parent: { parent: { parent: { id: user.tenantId } } } } },
+            ]
+          }
         })
-        )).flat()
-
-        const tenants = userTeanants.map(tenant => ({
-          name: tenant.tenant.name,
-          id: tenant.tenant.id,
-          role: tenant.role,
-        }
-        ))
         callback(null, {
-          tenants: [...tenants, ...children]
-        });
-      });
+          tenants: userTenants.map(tenant => ({
+            role: user.role,
+            id: tenant.id,
+            name: tenant.name,
+          }))
+        }
+        )
+      }
+    })
+
+
+
   } catch (err) {
     console.log(err);
 

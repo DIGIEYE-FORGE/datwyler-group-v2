@@ -1,4 +1,4 @@
-import { Tenant, UserTeanant } from "@prisma/client";
+import { Role, Tenant } from "@prisma/client";
 import prisma from "../../commun/prisma";
 import {
   CreateTenantDto,
@@ -66,102 +66,66 @@ class TenantService {
     //   });
     // } else throw new Error("Permission denied");
 
-    await prisma.user.upsert({
-      where: { id: user.id },
-      update: {},
-      create: { id: user.id },
-    });
-
     return await prisma.tenant.update({
       where: { id: tenantId },
-      include: { users: true },
       data: {
         users: {
           connectOrCreate: {
-            where: { userId_tenantId: { tenantId: tenantId, userId: user.id } },
-            create: { role: user.role, userId: user.id },
-          },
-        },
-      },
+            where: { id: user.id },
+            create: { role: user.role, id: user.id },
+          }
+        }
+      }
     });
   }
 
   public async removeUser(
     tenantId: number,
     userId: number
-  ): Promise<UserTeanant | null> {
-    const userTeanant = await prisma.userTeanant.findUnique({
-      where: { userId_tenantId: { tenantId, userId } },
-    });
-
-    if (!userTeanant) return null;
-
-    await prisma.userTeanant.delete({
-      where: { userId_tenantId: { tenantId, userId } },
-    });
-
-    // await licenseClient.RemoveAffectation({
-    //   deletedId: userId,
-    //   licenseRequest: {
-    //     tenantId: tenantId,
-    //     type: userTeanant.role,
-    //   },
-    // });
-    return userTeanant;
-  }
-  public async getRecTenantUsers(tenantId: number): Promise<any[]> {
-    const tenant = await prisma.tenant.findUnique({
+  ): Promise<Tenant | null> {
+    return await prisma.tenant.update({
       where: { id: tenantId },
-      select: {
-        name: true,
-        children: {
-          select: {
-            id: true,
-          },
-        },
+      data: {
         users: {
-          select: {
-            user: {
-              select: {
-                id: true,
-              },
-            },
-            role: true,
-          },
-        },
+          disconnect: {
+            id: userId
+          }
+        }
       },
-    });
-    if (!tenant) return [];
-    if (tenant.children.length === 0)
-      return tenant.users.map((u) => ({
-        userId: u.user.id,
-        tenantName: tenant.name,
-        role: u.role,
-      }));
-    const childrenUsers = await Promise.all(
-      tenant.children.map(async (c) => this.getTenantUsers(c.id))
-    );
-    return [
-      ...tenant.users.map((u) => ({
-        userId: u.user.id,
-        role: u.role,
-        tenantName: tenant.name,
-      })),
-      ...childrenUsers.flat(),
-    ];
+    })
+  }
+
+  public async getRecTenantUsers(tenantId: number): Promise<{
+    id: number;
+    role: Role;
+    tenantName: string;
+  }[]> {
+    const users = await prisma.user.findMany({
+      include: { tenant: { select: { name: true } } },
+      where: {
+        OR: [
+          { tenantId },
+          { tenant: { parent: { id: tenantId } } },
+          { tenant: { parent: { parent: { id: tenantId } } } },
+          { tenant: { parent: { parent: { parent: { id: tenantId } } } } },
+          { tenant: { parent: { parent: { parent: { parent: { id: tenantId } } } } } },
+        ]
+      }
+    })
+    return users.map(u => ({ id: u.id, role: u.role, tenantName: u.tenant.name }))
   }
 
   public async getTenantUsers(tenantId: number): Promise<any> {
     const users = await this.getRecTenantUsers(tenantId);
     if (users.length === 0) return [];
     const authUsers = await authClient.getUsers({
-      ids: users.map((u) => u.userId),
+      ids: users.map((u) => u.id),
     });
     if (authUsers && authUsers.users) {
       const usersMap = Object.fromEntries(
         authUsers.users.map((u) => [u.id, u])
       );
-      return users.map((u) => ({ ...usersMap[u.userId], ...u }));
+      return users.map((u) => ({ ...usersMap[u.id], ...u }));
     }
     return users;
   }

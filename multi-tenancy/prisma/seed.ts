@@ -54,21 +54,15 @@ const seedTenant = async (
       id: data.id,
       name: data.name,
       parentId,
-      users: data.users
-        ? {
-            create: data.users.map((user) => ({
-              user: {
-                connectOrCreate: {
-                  where: { id: user.userId },
-                  create: { id: user.userId },
-                },
-              },
-              role: user.role,
-            })),
-          }
-        : undefined,
+      users: data.users ? {
+        createMany: {
+          data: data.users.map(user => ({
+            userId: user.userId,
+            role: user.role
+          }))
+        },
+      } : undefined,
     },
-
     include: {
       children: true,
       users: true,
