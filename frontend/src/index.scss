@@ -97,7 +97,13 @@ $h: 2rem;
       }
     }
     .toggle {
-      @apply mt-auto w-[2.5rem] aspect-square flex-center hover:bg-white/10 active:bg-white/20 rounded-full cursor-pointer rotate-180 mb-[0.5rem] transition-[background-color,transform];
+      @apply w-[2.5rem] aspect-square flex-center hover:bg-white/10 active:bg-white/20 rounded-full cursor-pointer rotate-180 mb-[0.5rem] transition-[background-color,transform];
+    }
+    .water-mark {
+      @apply mt-auto mb-4 opacity-0 transition-opacity;
+      * {
+        @apply text-dark/30 dark:text-light/30 fill-dark/20 dark:fill-light/20;
+      }
     }
   }
   .router-view {
@@ -105,6 +111,7 @@ $h: 2rem;
     top: $up-bar-height;
     left: $compact-side-bar-width;
   }
+
   input:checked {
     & ~ .side-bar {
       .link.active {
@@ -129,6 +136,9 @@ $h: 2rem;
       }
       .toggle {
         @apply rotate-0;
+      }
+      .water-mark {
+        @apply opacity-100;
       }
     }
     & ~ .router-view {
