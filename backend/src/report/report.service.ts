@@ -29,7 +29,6 @@ export class ReportService {
 
   @HandleRequestErrors()
   async generate(data: GenerateRapport) {
-    console.log('------data-----------', data);
     let res;
     let file;
     if (data.type == 'alert') {
@@ -136,10 +135,23 @@ export class ReportService {
   }
 
   async generateFilePdf(name: string, data: Record<string, any>[]) {
+    for (const item of data) {
+      delete item.updatedAt;
+      delete item.acknowledgedBy;
+      if (item.attributes) {
+        item.acknowledgedBy = item?.attributes?.user || 'not acknowledged';
+      }
+
+      delete item.attributes;
+      if (item.createdAt) {
+        item.createdAt = new Date(item.createdAt).toLocaleString();
+      }
+      item.toString();
+    }
     const pdfData = {
       content: [
         {
-          text: name,
+          text: "rapport d'alerte",
           style: 'header',
         },
         {
@@ -147,7 +159,7 @@ export class ReportService {
           table: {
             body: [
               Object.keys(data[0]),
-              ...data.map((item) => Object.values(item)),
+              ...data.map((item) => Object.values(item).map((i) => i)),
             ],
           },
         },

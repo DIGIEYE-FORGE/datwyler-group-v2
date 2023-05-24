@@ -218,7 +218,7 @@ const DataGrid = (props: DataGridProps) => {
           {props.rows.length === 0 && (
             <tr>
               <td colSpan={selectedColumns.length}>
-                {props.noData || "No data"}
+                {props.noData || "No data found"}
               </td>
             </tr>
           )}

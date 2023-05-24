@@ -113,7 +113,7 @@ function ReportsTab() {
     const res = await backendApi.getGroups({
       pagination: {
         page: 1,
-        perPage: 100,
+        perPage: 10,
       },
     });
     return res;
@@ -266,7 +266,7 @@ function ReportsTab() {
   const [open, setOpen] = useState(false);
   const [GroupsData, setGroupsData] = useState<Group[]>([]);
   const [DevicesData, setDevicesData] = useState<Device[]>([]);
-
+  const [checkUpdate, setCheckUpdate] = useState(false);
   useEffect(() => {
     getGroups().then((res) => {
       setGroupsData(res.results);
@@ -275,7 +275,7 @@ function ReportsTab() {
 
   useEffect(() => {
     getReports({
-      pagination: { page: 1, perPage: 10 },
+      pagination: params.pagination,
       where: {
         ...params.where,
         tenantId: {
@@ -288,7 +288,7 @@ function ReportsTab() {
       setRows(res?.results || []);
       setTotal(res?.totalResult || 0);
     });
-  }, [params, tenantId]);
+  }, [params, tenantId, checkUpdate]);
 
   useEffect(() => {
     if (createReport.groups && createReport.groups.length > 0) {
@@ -337,10 +337,7 @@ function ReportsTab() {
         headClassName="h-[5.5rem] bg-dark/5 dark:bg-light/5 text-[#697681] [&>*]:px-2 "
         rowClassName="h-[4rem] [&>*]:px-2 even:bg-dark/5 dark:even:bg-light/5 hover:bg-dark/10 dark:hover:bg-light/10"
         columns={columns}
-        rows={rows.slice(
-          (params.pagination.page - 1) * params.pagination.perPage,
-          params.pagination.page * params.pagination.perPage
-        )}
+        rows={rows}
         action={action}
       ></DataGrid>
       <Modal
@@ -602,6 +599,7 @@ function ReportsTab() {
                 .generateFile(createReport)
                 .then((res) => {
                   toast.success("Report generated successfully");
+                  setCheckUpdate(!checkUpdate);
                 })
                 .catch((err) => {
                   toast.error(err);

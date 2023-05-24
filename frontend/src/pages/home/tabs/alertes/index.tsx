@@ -99,8 +99,8 @@ function AlertsTab() {
 
   const handleAcknowledge = (id: number) => {
     confirm({
-      title: "Acknolodge alert",
-      description: "Are you sure you want to acknolodge this alert?",
+      title: "Acknowledge alert",
+      description: "Are you sure you want to Acknowledge this alert?",
       onConfirm: () => {
         backendApi
           .acklowledgeAlerts({
@@ -116,7 +116,7 @@ function AlertsTab() {
             });
           })
           .catch((e) => {
-            console.log("error acknolodging alert", e);
+            console.log("error Acknowledging  alert", e);
           });
       },
     });
@@ -222,18 +222,18 @@ function AlertsTab() {
       },
     },
     {
-      label: "acknoledgement",
-      header: "Acknoledgement",
+      label: "Acknowledgement",
+      header: "Acknowledgement",
       filter: {
         type: "select",
         options: [
           {
-            label: "Acknoledged",
-            value: "acknoledged",
+            label: "Acknowledge",
+            value: "Acknowledge",
           },
           {
-            label: "Not acknoledged",
-            value: "not acknoledged",
+            label: "Not Acknowledge",
+            value: "not Acknowledge",
           },
         ],
         onChange: () => {},
