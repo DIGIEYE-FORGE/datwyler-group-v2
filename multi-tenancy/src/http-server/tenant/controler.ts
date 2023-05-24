@@ -131,7 +131,8 @@ class TenantController {
       try {
         const tenantId = z.number().int().parse(+req.params.id);
         const result = await this.service.getTenantUsers(tenantId);
-        res.send(result);
+        
+        res.send(result.filter((user:any) => user.firstName));
       } catch (err) {
         if (err instanceof z.ZodError) res.status(400).send(err.errors);
         else {

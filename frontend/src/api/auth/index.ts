@@ -120,6 +120,15 @@ export default class AuthApi {
     });
   }
 
+
+  async deleteAccount(id:string): Promise<void> {
+    try{
+    await this.api.delete(`users/${id}`);
+    }catch(err){
+      throw err;
+    }
+  }
+
   async login({
     email,
     password,
