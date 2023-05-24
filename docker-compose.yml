@@ -73,6 +73,7 @@ services:
     volumes:
       - ./auth/src:/usr/src/app/src
       - ./auth/prisma:/usr/src/app/prisma
+      - ./auth/uploads:/usr/src/app/uploads
     depends_on:
       - postgres
       - redis

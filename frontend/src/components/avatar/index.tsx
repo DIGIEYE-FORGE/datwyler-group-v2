@@ -11,8 +11,8 @@ function Avatar({ user, className }: AppProps) {
   if (user?.avatar && !error)
     return (
       <img
-        src={user?.avatar}
-        className={`aspect-square rounded-full ${className} `}
+        src={`http://${window.location.hostname}:5000/${user?.avatar}`}
+        className={`aspect-square rounded-full ${className}`}
         onError={(e) => {
           setError(true);
         }}

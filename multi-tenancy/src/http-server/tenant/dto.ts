@@ -25,7 +25,7 @@ export const queryPramsSchema = z.object({
 
 export const addUserSchema = z.object({
   id: z.number().int(),
-  role: z.enum(roles),
+  role: z.enum(roles).optional(),
 });
 
 export type CreateTenantDto = z.infer<typeof createTenantSchema>;

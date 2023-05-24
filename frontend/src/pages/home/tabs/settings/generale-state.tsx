@@ -62,15 +62,21 @@ function GeneraleState() {
               </div>
               <div className="flex flex-col gap-[0.5rem] px-[3rem]">
                 <div className="flex gap-[1rem]">
-                  <input type="file" className="hidden" id="avatar" />
+                  <input type="file" className="hidden" id="avatar" onChange={(e)=>{
+                    const file = e.currentTarget.files?.[0];
+                    if (file) {
+                      // setData({
+                      //   ...data,
+                        
+                      // });
+                    }
+                  }}/>
                  
                     <label  htmlFor="avatar" className="h-[3rem] w-[17rem] bg-primary/10 inline-block flex-center text-primary font-semibold rounded">
                       Upload Profile Photo
                     </label>
                   
-                  <Button variant="outlined" className="px-4">
-                    Delete
-                  </Button>
+
                 </div>
                 <div className="font-light text-sm text-[#a6a8a8]">
                   {" "}

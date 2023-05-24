@@ -106,7 +106,6 @@ function getServers(server: grpc.Server) {
 		},
 		AffectUser: (req, res) => {
 			const data = affectType.parse(req.request);
-
 			prisma.license.findFirst({
 				where: {
 					id: data.licenseId,
