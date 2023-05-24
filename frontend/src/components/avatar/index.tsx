@@ -2,16 +2,20 @@ import { useState } from "react";
 import { User } from "../../utils";
 
 interface AppProps extends React.HTMLAttributes<HTMLDivElement> {
-  user: User | undefined;
+  user: {
+    firstName?: string;
+    lastName?: string;
+    avatar?: string;
+  } | undefined;
 }
 function Avatar({ user, className }: AppProps) {
   const [error, setError] = useState(false);
-  const FirstLetter = user?.firstName[0]?.toUpperCase() || "F";
-  const SecondLetter = user?.lastName[0]?.toUpperCase() || "L";
+  const FirstLetter = user?.firstName?.[0]?.toUpperCase() || "F";
+  const SecondLetter = user?.lastName?.[0]?.toUpperCase() || "L";
   if (user?.avatar && !error)
     return (
       <img
-        src={`http://${window.location.hostname}:5000/${user?.avatar}`}
+        src ={user.firstName ? `http://${window.location.hostname}:5000/${user?.avatar}` : `${user?.avatar}`}
         className={`aspect-square rounded-full ${className}`}
         onError={(e) => {
           setError(true);

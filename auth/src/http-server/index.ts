@@ -124,20 +124,30 @@ app.patch(
   "/update/:id",
   multer({ storage: storage }).single("avatar"),
   async (req, res) => {
+  
+    
     const id = parseInt(req.params.id);
-    try {
+    try {      
       if (req.file) {
-        console.log("true conidtion req.file");
+        console.log("i am here")
+        console.log("true conidtion req.file", req.file);
         req.body.avatar = req.file.filename || "";
       }
-      const { password, ...rest } = updateUserSchema.parse(req.body);
+      const { password,attributes, ...rest } = updateUserSchema.parse(req.body);
       const hashedPassword = password
         ? await hashPassword(password)
         : undefined;
+      const avataruser = await prisma.user.findFirst({
+        where: { id },
+        select: {
+          avatar: true,
+        },
+      });
       const user = await prisma.user.update({
         where: { id },
         data: {
           ...rest,
+          attributes: typeof attributes === "string" ? JSON.parse(attributes) : attributes,
           password: hashedPassword,
         },
         select: {
@@ -151,6 +161,14 @@ app.patch(
       });
       if (!user)
         return res.status(404).json({ error: "user with id not found" });
+      if (req.file && avataruser?.avatar) {
+        fs.unlink(`uploads/${avataruser?.avatar}`, (err) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+        });
+      }
       res.send(user);
     } catch (err) {
       if (req.file && req.file.path) {

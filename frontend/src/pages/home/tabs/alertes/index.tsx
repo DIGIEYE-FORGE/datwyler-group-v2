@@ -393,7 +393,7 @@ function AlertsTab() {
           );
         return (
           <Button variant="outlined" onClick={() => handleAcknowledge(row.id)}>
-            Acknolodge
+            Acknowledge
           </Button>
         );
       },

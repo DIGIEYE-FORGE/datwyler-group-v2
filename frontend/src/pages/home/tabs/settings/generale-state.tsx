@@ -16,6 +16,7 @@ function GeneraleState() {
   const { user ,authApi,setUser, confirm} = useProvider<AppContext>();
   const [data, setData] = useState<User>(user!);
   const [changePassword, setChangePassword] = useState<boolean>(false);
+  const [avatarData, setAvatarData] = useState<File | null>(null);
   const [datachangePassword, setDataChangePassword] = useState<{
     oldPassword: string;
     newPassword: string;
@@ -47,7 +48,10 @@ function GeneraleState() {
             <div className="flex  items-center  md:flex-col lg-fex-row xl:flex-row flex-row w-[100%] ">
               <div className="w-[8rem] h-[8rem]  flex items-center justify-center">
                 <Avatar
-                  user={user}
+                  user={avatarData ? {
+                    avatar:URL.createObjectURL(avatarData)
+                  
+                  } : user!}
                   className="w-[10rem] text-4xl"
                 ></Avatar>
                 {/* <img
@@ -65,10 +69,12 @@ function GeneraleState() {
                   <input type="file" className="hidden" id="avatar" onChange={(e)=>{
                     const file = e.currentTarget.files?.[0];
                     if (file) {
-                      // setData({
-                      //   ...data,
-                        
-                      // });
+                      setAvatarData(file);
+                      console.log("hello----",avatarData);
+                      setData({
+                        ...data,
+                        avatar: file,
+                      });
                     }
                   }}/>
                  
@@ -246,10 +252,10 @@ function GeneraleState() {
                   lastName: data.lastName,
                   phoneNumber: data.phoneNumber,
                   email: data.email,
-                  attributes: data.attributes!= null ? data.attributes : undefined
+                  attributes: data.attributes!= null ? data.attributes : undefined,
+                  avatar: avatarData || data.avatar? data.avatar : undefined
                 }, user!.id).then((res)=>{
                     toast.success("updated successfully")
-
                     console.log(res);
                     
                     setUser(curr => {
@@ -260,7 +266,7 @@ function GeneraleState() {
                       }
                       return curr
                     })
-                    // window.location.reload()
+  
                 }
                 ).catch((err)=>{
                   toast.error("something went wrong")

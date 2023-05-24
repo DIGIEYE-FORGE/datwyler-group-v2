@@ -26,7 +26,7 @@ export type User = {
   firstName: string;
   lastName: string;
   email: string;
-  avatar?: string | null;
+  avatar?: any | null;
   tenants?: Tenant[];
   [other: string]: any;
 };

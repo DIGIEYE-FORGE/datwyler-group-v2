@@ -16,6 +16,7 @@ import { CgDarkMode } from "react-icons/cg";
 import { RxMoon, RxSun } from "react-icons/rx";
 import For from "../for";
 import { te } from "date-fns/locale";
+import { FaRegUser } from "react-icons/fa";
 function UpBar() {
   const {
     user,
@@ -26,6 +27,7 @@ function UpBar() {
     authApi,
     theme,
     setTheme,
+    selectTab,
     tenantId,
     setTenantId,
   } = useProvider<AppContext>();
@@ -170,6 +172,15 @@ function UpBar() {
           >
             <span>log out</span>
             <BiLogOutCircle className="inline-block ml-2" />
+          </div>
+          <div
+            onClick={()=>{
+              selectTab(7);
+            }}
+            className="rounded p-2 hover:bg-primary/10 active:bg-primary/20 whitespace-nowrap"
+          >
+            <span>Profile</span>
+            <FaRegUser className="inline-block ml-2" />
           </div>
         </div>
       </Tooltip>
