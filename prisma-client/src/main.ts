@@ -10,25 +10,11 @@ const multitenancyClient = new MultitenancyClient();
 
 
 async function main() {
-  const datwyler1 = await multitenancyClient.tenant.update({
-    where: { id: 4 },
-    include: { users: true },
+  const tenant = await multitenancyClient.tenant.create({
     data: {
-      users: {
-        createMany: {
-          data: [
-            { id: 9, role: Role.ADMIN },
-            { id: 10, role: Role.USER },
-            { id: 11, role: Role.USER },
-            { id: 12, role: Role.USER },
-          ]
-        }
-      }
-    }
+      name: "digi-forge",
+    },
   });
-  console.log(datwyler1);
-
-
 }
 
 main()
