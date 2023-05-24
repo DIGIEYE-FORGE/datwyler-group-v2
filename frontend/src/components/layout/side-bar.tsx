@@ -6,6 +6,7 @@ import { ReactComponent as LogoName } from "../../assets/logo-name.svg";
 import { ReactComponent as LogoNameColored } from "../../assets/logo-name-colored.svg";
 import { ReactComponent as LogoShape } from "../../assets/logo-shape.svg";
 import { ReactComponent as LogoShapeColored } from "../../assets/logo-shape-colored.svg";
+import { ReactComponent as AbaLogo } from "../../assets/aba-logo.svg";
 
 import tabs from "../../pages/home/tabs";
 
@@ -43,6 +44,10 @@ function SideBar() {
           </div>
         );
       })}
+      <span className="water-mark">
+        <span>developed by</span>
+        <AbaLogo />
+      </span>
       <label htmlFor="toggle-side-bar" className="toggle">
         <DoubleArrowLeftIcon />
       </label>
