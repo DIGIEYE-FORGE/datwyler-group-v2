@@ -1,19 +1,15 @@
 import { useEffect, useReducer, useState } from "react";
 import DataGrid, { Column } from "../../../../components/data-grid";
 import Pagination from "../../../../components/pagination";
-import { Alert, Params } from "../../../../utils";
+import { Alert, Params, classNames } from "../../../../utils";
 import { format } from "date-fns";
 import Button from "../../../../components/button";
-import { AiOutlineCheckCircle, AiOutlinePlusCircle } from "react-icons/ai";
-import { GiBattery25, GiLeak } from "react-icons/gi";
+import { AiOutlineCheckCircle } from "react-icons/ai";
 import { BiExport } from "react-icons/bi";
-import {
-  FaHandHoldingWater,
-  FaTemperatureHigh,
-  FaTemperatureLow,
-} from "react-icons/fa";
+import { AiOutlineAlert } from "react-icons/ai";
 import { useProvider } from "../../../../components/provider";
 import { AppContext } from "../../../../App";
+
 const defaultParams: Params = {
   pagination: {
     page: 1,
@@ -30,43 +26,26 @@ const defaultParams: Params = {
   },
 };
 
-type AlertType =
-  | "low battery"
-  | "high temperature"
-  | "low temperature"
-  | "low water level"
-  | "water leak";
-
-const alertsComponentMap: {
-  [key in AlertType]: JSX.Element;
-} = {
-  "low battery": (
-    <div className="flex items-center gap-2 text-gray-400">
-      low battery <GiBattery25 />
-    </div>
-  ),
-  "high temperature": (
-    <div className="flex items-center gap-2 text-red-400">
-      high temperature <FaTemperatureHigh />
-    </div>
-  ),
-  "low temperature": (
-    <div className="flex items-center gap-2 text-blue-400">
-      low temperature <FaTemperatureLow />
-    </div>
-  ),
-  "low water level": (
-    <div className="flex items-center gap-2 text-yellow-500">
-      low water level <FaHandHoldingWater />
-    </div>
-  ),
-  "water leak": (
-    <div className="flex items-center gap-2 text-red-400">
-      water leak <GiLeak />
-    </div>
-  ),
+const dateMap: Record<
+  string,
+  {
+    gte: string;
+    lt?: string;
+  }
+> = {
+  "last hour": {
+    gte: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
+  },
+  "last 4 hours": {
+    gte: new Date(Date.now() - 1000 * 60 * 60 * 4).toISOString(),
+  },
+  "last 24 hours": {
+    gte: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
+  },
+  "last 7 days": {
+    gte: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7).toISOString(),
+  },
 };
-
 const paramsReducer = (
   state: Params,
   action: { type: string; payload: any }
@@ -79,23 +58,121 @@ const paramsReducer = (
         ...state,
         pagination: action.payload,
       };
+    case "level":
+      return {
+        ...state,
+        where: {
+          ...state.where,
+          level: action.payload,
+        },
+      };
+    case "location":
+      return {
+        ...state,
+        where: {
+          ...state.where,
+          device: {
+            ...state.where?.device,
+            group: {
+              ...state.where?.device?.group,
+              location: {
+                contains: action.payload,
+                mode: "insensitive",
+              },
+            },
+          },
+        },
+      };
+    case "site":
+      return {
+        ...state,
+        where: {
+          ...state.where,
+          device: {
+            ...state.where?.device,
+            group: {
+              ...state.where?.device?.group,
+              name: {
+                contains: action.payload,
+                mode: "insensitive",
+              },
+            },
+          },
+        },
+      };
+    case "system":
+      return {
+        ...state,
+        where: {
+          ...state.where,
+          device: {
+            ...state.where?.device,
+            name: action.payload || undefined,
+          },
+        },
+      };
+    case "type":
+      return {
+        ...state,
+        where: {
+          ...state.where,
+          type: action.payload || undefined,
+        },
+      };
+    case "acknowledged":
+      return {
+        ...state,
+        where: {
+          ...state.where,
+          acknowledgedBy: action.payload
+            ? action.payload === "true"
+              ? { not: null }
+              : null
+            : undefined,
+        },
+      };
+    case "date":
+      return {
+        ...state,
+        where: {
+          ...state.where,
+          updatedAt: dateMap[action.payload] || undefined,
+        },
+      };
+
     default:
       return state;
   }
 };
 
 function AlertsTab() {
-  const [params, setParams] = useReducer(paramsReducer, defaultParams);
   const { backendApi, tenantId, confirm, user } = useProvider<AppContext>();
+  const [params, dispatch] = useReducer(paramsReducer, defaultParams);
   const [total, setTotal] = useState(100);
   const [rows, setRows] = useState<Alert[]>([]);
 
   useEffect(() => {
-    backendApi.getAlerts(params).then((res) => {
-      setRows(res.results);
-      setTotal(res.totalResult);
-    });
-  }, []);
+    console.log("params", params);
+
+    backendApi
+      .getAlerts({
+        ...params,
+        where: {
+          ...params.where,
+          device: {
+            ...params.where?.device,
+            tenantId,
+          },
+        },
+      })
+      .then((res) => {
+        setRows(res.results);
+        setTotal(res.totalResult);
+      })
+      .catch((e) => {
+        console.log("error getting alerts", e);
+      });
+  }, [params, tenantId]);
 
   const handleAcknowledge = (id: number) => {
     confirm({
@@ -129,7 +206,12 @@ function AlertsTab() {
       valueGetter: (row: Alert) => row.device?.group?.location?.toUpperCase(),
       filter: {
         type: "text",
-        onChange: () => {},
+        onChange: (val) => {
+          dispatch({
+            type: "location",
+            payload: val,
+          });
+        },
       },
     },
     {
@@ -138,7 +220,12 @@ function AlertsTab() {
       valueGetter: (row: Alert) => row.device?.group?.name?.toUpperCase(),
       filter: {
         type: "text",
-        onChange: () => {},
+        onChange: (val) => {
+          dispatch({
+            type: "site",
+            payload: val,
+          });
+        },
       },
     },
     {
@@ -150,65 +237,101 @@ function AlertsTab() {
         options: [
           {
             label: "UPS",
-            value: "ups",
+            value: "UPS",
           },
           {
-            label: "Temperature",
-            value: "temperature",
+            label: "PABX",
+            value: "PABX",
           },
           {
-            label: "Humidity",
-            value: "humidity",
+            label: "HVAC",
+            value: "HVAC",
           },
           {
-            label: "Water cooler",
-            value: "water cooler",
+            label: "CCTV",
+            value: "CCTV",
+          },
+          {
+            label: "Public Address",
+            value: "Public Address",
+          },
+          {
+            label: "Fire Alarm",
+            value: "Fire Alarm",
+          },
+          {
+            label: "Access Control",
+            value: "Access Control",
           },
         ],
-        onChange: () => {},
+        onChange: (val: string) => {
+          dispatch({ type: "system", payload: val });
+        },
       },
     },
     {
-      label: "deviceID",
-      header: "Device ID",
-      valueGetter: (row: Alert) => row.device?.serial,
+      label: "level",
+      header: "level",
+      valueGetter: (row: Alert) => (
+        <div
+          className={classNames("flex items-center gap-2", {
+            "text-yellow-600": row.level === "WARNING",
+            "text-red-600": row.level === "CRITICAL",
+          })}
+        >
+          <span>{row.level} </span>
+          <AiOutlineAlert className="text-2xl" />
+        </div>
+      ),
       filter: {
-        type: "text",
-        onChange: () => {},
+        type: "select",
+        options: [
+          {
+            label: "Warning",
+            value: "WARNING",
+          },
+          {
+            label: "Critical",
+            value: "CRITICAL",
+          },
+          {
+            label: "Info",
+            value: "INFO",
+          },
+        ],
+        onChange: (val: string) => {
+          dispatch({ type: "level", payload: val });
+        },
       },
     },
 
     {
       label: "type",
       header: "Alert Type",
-      valueGetter(row: Alert) {
-        return alertsComponentMap[row.type as AlertType];
-      },
+      field: "type",
       filter: {
         type: "select",
         options: [
           {
-            label: "Low battery",
-            value: "low battery",
+            label: "VOLTAGE",
+            value: "VOLTAGE",
           },
           {
-            label: "High temperature",
-            value: "high temperature",
+            label: "TEMPERATURE",
+            value: "TEMPERATURE",
           },
           {
-            label: "Low temperature",
-            value: "low temperature",
+            label: "FIRE",
+            value: "FIRE",
           },
           {
-            label: "Low water level",
-            value: "low water level",
-          },
-          {
-            label: "Water leak",
-            value: "water leak",
+            label: "DOOR",
+            value: "DOOR",
           },
         ],
-        onChange: () => {},
+        onChange: (val) => {
+          dispatch({ type: "type", payload: val });
+        },
       },
     },
     {
@@ -217,8 +340,28 @@ function AlertsTab() {
       valueGetter: (row: Alert) =>
         format(new Date(row.updatedAt), "dd/MM/yyyy HH:mm"),
       filter: {
-        type: "date",
-        onChange: () => {},
+        type: "select",
+        options: [
+          {
+            label: "last hour",
+            value: "last hour",
+          },
+          {
+            label: "last 4 hours",
+            value: "last 4 hours",
+          },
+          {
+            label: "last 24 hours",
+            value: "last 24 hours",
+          },
+          {
+            label: "last 7 days",
+            value: "last 7 days",
+          },
+        ],
+        onChange: (val) => {
+          dispatch({ type: "date", payload: val });
+        },
       },
     },
     {
@@ -228,15 +371,17 @@ function AlertsTab() {
         type: "select",
         options: [
           {
-            label: "Acknowledge",
-            value: "Acknowledge",
+            label: "Acknowledged",
+            value: "true",
           },
           {
-            label: "Not Acknowledge",
-            value: "not Acknowledge",
+            label: "Not Acknowledged",
+            value: "false",
           },
         ],
-        onChange: () => {},
+        onChange: (val) => {
+          dispatch({ type: "acknowledged", payload: val });
+        },
       },
       valueGetter: (row: Alert) => {
         if (row.acknowledgedBy)
@@ -257,13 +402,9 @@ function AlertsTab() {
   return (
     <div className="flex flex-col  w-full gap-6 p-6">
       <div className="flex gap-4 items-center flex-wrap justify-end">
-        <select className="min-w-[10rem] mr-auto">
-          <option value="">site1</option>
-          <option value="">site2</option>
-        </select>
         <Pagination
           value={params.pagination}
-          onChange={(v) => setParams({ type: "pagination", payload: v })}
+          onChange={(v) => dispatch({ type: "pagination", payload: v })}
           total={total}
         />
         <Button className="flex items-center gap-2">

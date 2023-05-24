@@ -1,6 +1,6 @@
 type ClassName = { [key: string]: boolean } | string;
 export type JsonObject = { [Key in string]?: JsonValue };
-export interface JsonArray extends Array<JsonValue> {}
+export interface JsonArray extends Array<JsonValue> { }
 type JsonValue = string | number | boolean | JsonObject | JsonArray | null;
 export function classNames(...classes: ClassName[]): string {
   return classes
@@ -74,12 +74,12 @@ export type Report = {
   format: string;
 }
 export type ReportDevice = {
-    name: string;
-    date: Date;
-    groups?: number[];
-    devices: number[];
-    type: "alert" | "mesurement";
-    format: "pdf" | "csv";
+  name: string;
+  date: Date;
+  groups?: number[];
+  devices: number[];
+  type: "alert" | "mesurement";
+  format: "pdf" | "csv";
 }
 export type LastTelemetry = {
   name: string;
@@ -131,7 +131,7 @@ export type Params = {
     page: number;
     perPage: number;
   };
-  where?: JsonObject;
+  where?: Record<string, any>;
   orderBy?: JsonObject;
   include?: JsonObject;
 };
