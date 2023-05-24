@@ -7,16 +7,19 @@ import { User } from "../../../../utils";
 import Modal from "../../../../components/modal";
 import { toast } from "react-toastify";
 import { set } from "date-fns";
-import { da } from "date-fns/locale";
+import { da, te } from "date-fns/locale";
 import Avatar from "../../../../components/avatar";
+import MultiTenancyApi from "../../../../api/multitenancy";
+import { useNavigate } from "react-router-dom";
 
 
 function GeneraleState() {
   <div className=""></div>;
-  const { user ,authApi,setUser, confirm} = useProvider<AppContext>();
+  const { user ,authApi,setUser, confirm,multiTenancyApi,tenantId} = useProvider<AppContext>();
   const [data, setData] = useState<User>(user!);
   const [changePassword, setChangePassword] = useState<boolean>(false);
   const [avatarData, setAvatarData] = useState<File | null>(null);
+  const navigate = useNavigate();
   const [datachangePassword, setDataChangePassword] = useState<{
     oldPassword: string;
     newPassword: string;
@@ -31,7 +34,17 @@ function GeneraleState() {
       title: "Acknowledge alert",
       description: "Are you sure you want to Acknowledge this alert?",
       onConfirm: () => {
-        console.log("acknowledged");
+        authApi.deleteAccount(user?.id+"").then((res) => {
+          multiTenancyApi.removeUserFromTenant(user?.id+"",tenantId+"").then((res)=>{
+            toast.success("Account Deleted");
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("refreshToken");
+            navigate("/login");
+          }).catch((err)=>{
+            toast.error("Error");
+          })
+        }
+        );
       },
       confirmText: "Close",
       cancelText: "Cancel",

@@ -42,4 +42,17 @@ export default class MultiTenancyApi {
     const res = await this.api.patch(`/tenant/${tenantId}/add-user`, user);
     return res.data;
   }
+
+
+  public async removeUserFromTenant(userId:string, tenantId: string) {
+    try{
+    await this.api.patch(`/tenant/${tenantId}/remove-user`, {
+      userId,
+    });
+  }
+  catch(err){
+    throw err;
+  }
+}
+
 }
