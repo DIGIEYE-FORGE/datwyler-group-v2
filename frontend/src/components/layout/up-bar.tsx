@@ -30,6 +30,7 @@ function UpBar() {
     selectTab,
     tenantId,
     setTenantId,
+    selectedTabs,
   } = useProvider<AppContext>();
   const [isFullScreen, setIsFullScreen] = useState(false);
   const { t, i18n } = useTranslation();
@@ -174,7 +175,7 @@ function UpBar() {
             <BiLogOutCircle className="inline-block ml-2" />
           </div>
           <div
-            onClick={()=>{
+            onClick={() => {
               selectTab(7);
             }}
             className="rounded p-2 hover:bg-primary/10 active:bg-primary/20 whitespace-nowrap"

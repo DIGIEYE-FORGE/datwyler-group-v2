@@ -9,9 +9,17 @@ import { ReactComponent as LogoShapeColored } from "../../assets/logo-shape-colo
 import { ReactComponent as AbaLogo } from "../../assets/aba-logo.svg";
 
 import tabs from "../../pages/home/tabs";
+import { useMemo } from "react";
 
 function SideBar() {
-  const { activeTab, selectTab, theme } = useProvider<AppContext>();
+  const { activeTab, selectTab, theme, user } = useProvider<AppContext>();
+  const role = useMemo<"ADMIN" | "USER">(() => {
+    if (user?.tenants?.[0]) {
+      const tenant: any = user?.tenants?.[0];
+      if (tenant?.role === "ADMIN") return "ADMIN";
+    }
+    return "USER";
+  }, [user]);
   return (
     <div className="side-bar">
       <div className="logo">
@@ -27,23 +35,26 @@ function SideBar() {
         )}
       </div>
       <div className="h-[1rem]"></div>
-      {tabs.map((link, index) => {
-        const isActive = activeTab === index;
-        return (
-          <div
-            key={link.name}
-            onClick={() => selectTab(index)}
-            className={classNames("link ", {
-              "hover:bg-primary/10 active:bg-bg-primary/10": theme === "light",
-              "hover:bg-light/10 active:bg-bg-light/10": theme !== "light",
-              active: isActive,
-            })}
-          >
-            <div className="icon ">{link.icon}</div>
-            <div className="name">{link.name}</div>
-          </div>
-        );
-      })}
+      {tabs
+        .filter((tab) => tab.name !== "Admin user" || role === "ADMIN")
+        .map((link, index) => {
+          const isActive = activeTab === index;
+          return (
+            <div
+              key={link.name}
+              onClick={() => selectTab(index)}
+              className={classNames("link ", {
+                "hover:bg-primary/10 active:bg-bg-primary/10":
+                  theme === "light",
+                "hover:bg-light/10 active:bg-bg-light/10": theme !== "light",
+                active: isActive,
+              })}
+            >
+              <div className="icon ">{link.icon}</div>
+              <div className="name">{link.name}</div>
+            </div>
+          );
+        })}
       <span className="water-mark">
         <span>developed by</span>
         <AbaLogo />

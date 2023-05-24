@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { AppContext } from "../../App";
 import Layout from "../../components/layout";
 import { useProvider } from "../../components/provider";
-import { classNames } from "../../utils";
-import tabs from "./tabs";
+import { Tab, classNames } from "../../utils";
+import alltabs from "./tabs";
 import { ReactComponent as XIcon } from "../../assets/icons/x.svg";
 import Lottie from "react-lottie";
 import animationData from "./no-tab-lottie.json";
@@ -39,8 +39,16 @@ const SwipeableTabs = (props: Props) => {
 };
 
 function HomePage() {
-  const { selectedTabs, activeTab, selectTab, closeTab } =
+  const { selectedTabs, activeTab, selectTab, closeTab, user } =
     useProvider<AppContext>();
+
+  const tabs = useMemo<Tab[]>(() => {
+    if (user?.tenants?.[0]) {
+      const tenant: any = user?.tenants?.[0];
+      if (tenant?.role === "ADMIN") return alltabs;
+    }
+    return alltabs.filter((tab) => tab.name !== "Admin user");
+  }, [user]);
 
   function getIndex() {
     if (activeTab === null) return 0;
@@ -65,7 +73,7 @@ function HomePage() {
               return (
                 <button
                   key={tabIdx}
-                  className={classNames(`capitalize`,{
+                  className={classNames(`capitalize`, {
                     "tab-label stroke-dark": true,
                     active: activeTab === tabIdx,
                   })}
