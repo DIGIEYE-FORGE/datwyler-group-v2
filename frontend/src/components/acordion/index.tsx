@@ -24,14 +24,15 @@ function Accordion({ items, className, ...props }: Props) {
         <>
           <Button
             onClick={() => handleClick(index)}
+            className="transition-colors duration-500"
             variant={index === activeIndex ? "contained" : "outlined"}
           >
             <span>{item.title}</span>
           </Button>
           <span
             className={`${
-              index === activeIndex ? "block" : "hidden"
-            } px-4 py-2`}
+              index === activeIndex ? "text-sm px-4 py-2" : "text-[0] "
+            } transition-[font-size,padding] duration-500 ease-in-out`}
           >
             {item.content}
           </span>
