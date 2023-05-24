@@ -23,7 +23,7 @@ export const registerSchema = z.object({
     .min(2, {
       message: "Last name must be at least 2 characters",
     }),
-  avatar: z.string().optional(),
+  avatar: z.any().optional(),
   phoneNumber: z
     .string()
     .regex(/^\d{10}$/)
@@ -56,13 +56,14 @@ export const updateUserSchema = z.object({
       message: "Last name can only contain letters",
     })
     .optional(),
-  avatar: z.string().optional(),
+  avatar: z.any().optional(),
   phoneNumber: z
     .string()
     .regex(/^\d{10}$/)
     .optional(),
-  attributes: z.record(z.any()).optional(),
-});
+    //parse to object
+  attributes: z.union([z.string(), z.record(z.any())]).optional(),
+  });
 
 export const loginSchema = z.object({
   email: z.string().email(),

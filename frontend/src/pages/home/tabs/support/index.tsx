@@ -97,7 +97,7 @@ function SupportTab() {
         <div className="w-[60%]  h-[0.2rem] bg-[#0091AE]/[.3] mt-4"></div>
         <div className="flex flex-col gap-[1rem] items-center mt-4 ">
           <VideoIcons />
-          <div className="font-bold text-black text-[1.7rem]">
+          <div className="font-bold text-[1.7rem]">
             Video Tutorials
           </div>
           <div className="">

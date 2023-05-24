@@ -66,7 +66,7 @@ export const updateSchema = z.object({
       message: "Phone number must be 10 digits",
     })
     .optional(),
-
+    avatar:z.any().optional(),
     attributes: z.record(z.string()).optional(),
    
 });
@@ -157,8 +157,26 @@ export default class AuthApi {
     return res.data;
   }
 
-  async update(user: UpdateUser,id:number): Promise<User> {
-    const res = await this.api.patch(`/update/${id}`, user);
+  async update(user: any,id:number): Promise<User> {
+    console.log("-----",user);
+    const formData = new FormData();
+   
+    for (const key in user) {
+      if (key === "attributes") {
+        formData.append(key, JSON.stringify(user[key]));
+      } else {
+        if (user[key] === null || user[key] === undefined) {
+          continue;
+        }
+        formData.append(key, user[key] as string);
+      }
+    }
+    const res = await this.api.patch(`/update/${id}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        },
+        }
+      );
     return res.data;
   }
 }
