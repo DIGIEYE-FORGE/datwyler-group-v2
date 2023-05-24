@@ -146,6 +146,7 @@ function ReportsTab() {
             payload:{
               name:{
                 contains:e,
+                mode:'insensitive'
               }
             }
           })
