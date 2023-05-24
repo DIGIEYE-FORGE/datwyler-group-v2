@@ -29,7 +29,7 @@ const tabs: Tab[] = [
     component: <GeographicalMapTab />,
   },
   {
-    name: "Alertes",
+    name: "Alert",
     icon: <InfoIcon />,
     component: <AlertsTab />,
   },

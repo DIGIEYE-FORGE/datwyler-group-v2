@@ -73,6 +73,20 @@ export default class AuthApi {
     this.refreshToken = refreshToken;
   }
 
+  async updatePassword({
+    oldPassword, newPassword,
+    id
+  }: {
+    oldPassword: string;
+    newPassword: string;
+    id: string;
+  }): Promise<void> {
+    await this.api.patch(`update-password/${id}`, {
+      oldPassword,
+      newPassword,
+    });
+  }
+
   async login({
     email,
     password,

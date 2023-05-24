@@ -14,7 +14,7 @@ function SettingsTab() {
           className="translate-y-[2px]"
           labels={[
             <div className="pb-4">General settings</div>,
-            <div className="pb-4">Subscription</div>,
+           
           ]}
           activeClassName="text-primary font-semibold "
           index={state}
@@ -25,7 +25,6 @@ function SettingsTab() {
       </div>
       <SwipeableTabs index={state} className="w-[100%] h-full">
         <GeneraleState />
-        <Subscription />
       </SwipeableTabs>
     </div>
   );

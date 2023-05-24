@@ -65,7 +65,7 @@ function HomePage() {
               return (
                 <button
                   key={tabIdx}
-                  className={classNames({
+                  className={classNames(`capitalize`,{
                     "tab-label stroke-dark": true,
                     active: activeTab === tabIdx,
                   })}
