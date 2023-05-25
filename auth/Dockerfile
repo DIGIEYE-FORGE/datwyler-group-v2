@@ -8,7 +8,7 @@ RUN yarn
 COPY ./ ./ 
 
 RUN yarn generate
-# RUN yarn build 
+RUN yarn build 
 COPY *.proto ./dest
 ARG HTTP_PORT=5000
 ARG GRPC_PORT=5001
@@ -18,6 +18,6 @@ EXPOSE ${HTTP_PORT} ${GRPC_PORT}
 RUN chown -R node:node /usr/src/app
 USER node
 # && 
-# CMD yarn deploy:migration  && yarn deploy:seed && yarn dev
+CMD  yarn start:prod
 
-CMD yarn dev
+# CMD yarn dev
