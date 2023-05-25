@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import DataGrid, { Column } from "../../../../components/data-grid";
 import Pagination from "../../../../components/pagination";
 import { Alert, Params, classNames } from "../../../../utils";
@@ -151,11 +151,9 @@ function AlertsTab() {
   const [total, setTotal] = useState(100);
   const [rows, setRows] = useState<Alert[]>([]);
 
-  useEffect(() => {
-    console.log("params", params);
-
-    backendApi
-      .getAlerts({
+  const getAlerts = useCallback(async () => {
+    try {
+      const alerts = await backendApi.getAlerts({
         ...params,
         where: {
           ...params.where,
@@ -164,17 +162,19 @@ function AlertsTab() {
             tenantId,
           },
         },
-      })
-      .then((res) => {
-        setRows(res.results);
-        setTotal(res.totalResult);
-      })
-      .catch((e) => {
-        console.log("error getting alerts", e);
       });
+      setRows(alerts.results);
+      setTotal(alerts.totalResult);
+    } catch (e) {
+      console.log("error getting alerts", e);
+    }
   }, [params, tenantId]);
 
-  const handleAcknowledge = (id: number) => {
+  useEffect(() => {
+    getAlerts();
+  }, [params, tenantId]);
+
+  const handleAcknowledge = async (id: number) => {
     confirm({
       title: "Acknowledge alert",
       description: "Are you sure you want to Acknowledge this alert?",
@@ -185,12 +185,7 @@ function AlertsTab() {
             user: `${user?.firstName} ${user?.lastName}`,
           })
           .then((a) => {
-            setRows(() => {
-              const index = rows.findIndex((r) => r.id === id);
-              const newRows = [...rows];
-              newRows[index] = a;
-              return newRows;
-            });
+            getAlerts();
           })
           .catch((e) => {
             console.log("error Acknowledging  alert", e);
