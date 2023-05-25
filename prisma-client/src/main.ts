@@ -2,7 +2,7 @@ import { PrismaClient as AuthClient } from "./auth-client";
 import { PrismaClient as BackendClient } from "./backend-client";
 import { PrismaClient as MultitenancyClient, Role, Tenant } from "./multitenancy-client";
 import { genSalt, hash } from "bcrypt";
-
+import { systems, alarmsMap } from "./utils";
 const authClient = new AuthClient();
 const backendClient = new BackendClient();
 const multitenancyClient = new MultitenancyClient();
@@ -54,16 +54,6 @@ const defaulTenant: CreateTenant =
 
 
 
-const systems = [
-  "HVAC",
-  "CCTV",
-  "PABX",
-  "Fire Alarm",
-  "Access Control",
-  "Cooling",
-  "Public Address",
-  "UPS",
-]
 
 const descriptions = [
   "HVAC (Heating, Ventilation, and Air Conditioning): HVAC systems are designed to control the temperature, humidity, and air quality within a building or confined space. They provide heating, cooling, and ventilation to maintain a comfortable environment.",
@@ -126,7 +116,7 @@ async function seedDevices({
   groupIds: number[];
 }) {
   return Promise.all(
-    systems.map(async (system, i) => backendClient.device.create({
+    [...systems].map(async (system, i) => backendClient.device.create({
       data: {
         id: i + 1,
         name: system,
@@ -136,10 +126,10 @@ async function seedDevices({
         description: descriptions[i],
         alerts: {
           createMany: {
-            data: Array.from({ length: 10 }, () => ({
-              type: ["UPS", "TEMPERATURE AND HUMIDITY", "COOLING UNIT", "Monitor_IO", "IPDU_A", "IO_Module", "POWER METER"][Math.floor(Math.random() * 6)],
-              level: ["Notice", "General,", "Critical"][Math.floor(Math.random() * 3)],
-              message: ["Temperature is too high", "Humidity is too high", "Power is too high", "Pressure is too high", "Voltage is too high", "Current is too high"][Math.floor(Math.random() * 6)],
+            data: Object.entries(alarmsMap[system]).map(([type, level]) => ({
+              type,
+              level,
+              message: `This is a ${level} alarm for ${type}`
             }))
           }
         },

@@ -1,7 +1,14 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
 import DataGrid, { Column } from "../../../../components/data-grid";
 import Pagination from "../../../../components/pagination";
-import { Alert, Params, classNames } from "../../../../utils";
+import {
+  Alert,
+  Params,
+  alarmLevels,
+  classNames,
+  strTake,
+  systems,
+} from "../../../../utils";
 import { format } from "date-fns";
 import Button from "../../../../components/button";
 import { AiOutlineCheckCircle } from "react-icons/ai";
@@ -9,6 +16,7 @@ import { BiExport } from "react-icons/bi";
 import { AiOutlineAlert } from "react-icons/ai";
 import { useProvider } from "../../../../components/provider";
 import { AppContext } from "../../../../App";
+import Tooltip from "../../../../components/tooltip";
 
 const defaultParams: Params = {
   pagination: {
@@ -116,7 +124,21 @@ const paramsReducer = (
         ...state,
         where: {
           ...state.where,
-          type: action.payload || undefined,
+          type: {
+            contains: action.payload,
+            mode: "insensitive",
+          },
+        },
+      };
+    case "message":
+      return {
+        ...state,
+        where: {
+          ...state.where,
+          message: {
+            contains: action.payload,
+            mode: "insensitive",
+          },
         },
       };
     case "acknowledged":
@@ -229,36 +251,10 @@ function AlertsTab() {
       valueGetter: (row: Alert) => row.device?.name,
       filter: {
         type: "select",
-        options: [
-          {
-            label: "UPS",
-            value: "UPS",
-          },
-          {
-            label: "PABX",
-            value: "PABX",
-          },
-          {
-            label: "HVAC",
-            value: "HVAC",
-          },
-          {
-            label: "CCTV",
-            value: "CCTV",
-          },
-          {
-            label: "Public Address",
-            value: "Public Address",
-          },
-          {
-            label: "Fire Alarm",
-            value: "Fire Alarm",
-          },
-          {
-            label: "Access Control",
-            value: "Access Control",
-          },
-        ],
+        options: systems.map((system) => ({
+          label: system,
+          value: system,
+        })),
         onChange: (val: string) => {
           dispatch({ type: "system", payload: val });
         },
@@ -270,8 +266,8 @@ function AlertsTab() {
       valueGetter: (row: Alert) => (
         <div
           className={classNames("flex items-center gap-2", {
-            "text-yellow-600": row.level === "WARNING",
-            "text-red-600": row.level === "CRITICAL",
+            "text-yellow-600": row.level === "General",
+            "text-red-600": row.level === "Critical",
           })}
         >
           <span>{row.level} </span>
@@ -280,20 +276,10 @@ function AlertsTab() {
       ),
       filter: {
         type: "select",
-        options: [
-          {
-            label: "Warning",
-            value: "WARNING",
-          },
-          {
-            label: "Critical",
-            value: "CRITICAL",
-          },
-          {
-            label: "Info",
-            value: "INFO",
-          },
-        ],
+        options: alarmLevels.map((level) => ({
+          label: level,
+          value: level,
+        })),
         onChange: (val: string) => {
           dispatch({ type: "level", payload: val });
         },
@@ -301,31 +287,29 @@ function AlertsTab() {
     },
 
     {
-      label: "type",
-      header: "Alert Type",
+      label: "name",
+      header: "Alert Name",
       field: "type",
       filter: {
-        type: "select",
-        options: [
-          {
-            label: "VOLTAGE",
-            value: "VOLTAGE",
-          },
-          {
-            label: "TEMPERATURE",
-            value: "TEMPERATURE",
-          },
-          {
-            label: "FIRE",
-            value: "FIRE",
-          },
-          {
-            label: "DOOR",
-            value: "DOOR",
-          },
-        ],
+        type: "text",
         onChange: (val) => {
           dispatch({ type: "type", payload: val });
+        },
+      },
+    },
+    {
+      label: "message",
+      header: "Alert Message",
+      valueGetter: (row: Alert) => (
+        <Tooltip>
+          <span>{strTake(row.message, 25)}</span>
+          <span className="card p-4 whitespace-nowrap">{row.message}</span>
+        </Tooltip>
+      ),
+      filter: {
+        type: "text",
+        onChange: (val) => {
+          dispatch({ type: "message", payload: val });
         },
       },
     },

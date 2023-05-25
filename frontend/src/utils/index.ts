@@ -21,6 +21,12 @@ export type Tab = {
   component: React.ReactNode;
 };
 
+export const systems = ["UPS", "TEMPERATURE AND HUMIDITY", "COOLING UNIT", "Monitor_IO", "IPDU_A", "IO_Module", "POWER METER"] as const;
+export type System = (typeof systems)[number];
+
+export const alarmLevels = ["Notice", "General", "Critical"] as const;
+export type AlarmLevel = (typeof alarmLevels)[number];
+
 export type User = {
   id: number;
   firstName: string;
@@ -37,13 +43,15 @@ export type Alert = {
   device?: Device;
   type?: string;
   message?: string;
-  level?: string;
+  level?: AlarmLevel;
   createdAt: string;
   updatedAt: string;
   attributes?: Record<string, string | number | boolean>;
   acknowledgedBy?: number;
   [key: string]: any;
 };
+
+
 
 export type Group = {
   id: number;
@@ -89,7 +97,7 @@ export type LastTelemetry = {
 
 export type Device = {
   id: string;
-  name: string;
+  name: System;
   serial: string;
   deviceProfile: {
     name: string;

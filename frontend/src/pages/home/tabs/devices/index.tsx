@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import DataGrid, { Column } from "../../../../components/data-grid";
 import Pagination from "../../../../components/pagination";
-import { Device, Params, classNames } from "../../../../utils";
+import { Device, Params, classNames, systems } from "../../../../utils";
 import Button from "../../../../components/button";
 import { BiExport } from "react-icons/bi";
 import { useProvider } from "../../../../components/provider";
@@ -59,24 +59,8 @@ function DevicesTab() {
       valueGetter: (row) => row.name,
       filter: {
         type: "select",
-        options: [
-          {
-            label: "UPS",
-            value: "ups",
-          },
-          {
-            label: "Temperature",
-            value: "temperature",
-          },
-          {
-            label: "Humidity",
-            value: "humidity",
-          },
-          {
-            label: "Water cooler",
-            value: "water cooler",
-          },
-        ],
+        options: systems.map((s) => ({ label: s, value: s })),
+
         onChange: () => {},
       },
     },
@@ -89,32 +73,10 @@ function DevicesTab() {
         onChange: () => {},
       },
     },
-
-    {
-      label: "alertsCount",
-      header: "alerts Count",
-      valueGetter: (row) => (
-        <span
-          className={classNames("text-lg text-primary", {
-            "!text-accent": row._count?.alerts > 0,
-          })}
-        >
-          {row._count?.alerts}
-        </span>
-      ),
-      filter: {
-        type: "text",
-        onChange: () => {},
-      },
-    },
   ];
   return (
     <div className="flex flex-col  w-full gap-6 p-6">
       <div className="flex gap-4 items-center flex-wrap justify-end">
-        <select className="min-w-[10rem] mr-auto">
-          <option value="">site1</option>
-          <option value="">site2</option>
-        </select>
         <Pagination
           value={params.pagination}
           onChange={(v) => setParams({ ...params, pagination: v })}

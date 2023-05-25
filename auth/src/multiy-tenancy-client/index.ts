@@ -65,11 +65,14 @@ class GrpcClient {
   ): Promise<getMeResponse__Output | undefined> {
     return new Promise((resolve, reject) => {
       this.client.GetMe(data, (err, res) => {
+        console.log('getMe', res);
+
         if (err) {
           logger.error("UserTenant error: ", err);
           reject(err);
           return;
         }
+        logger.info("UserTenant response: ", res);
         resolve(res);
       });
     });
