@@ -5,7 +5,7 @@ package multi_tenancy_package;
 service MultiTenancy {
 	rpc UserTenant(UserTenantRequest) returns (UserTenantResponse) {};
 
-	rpc GetMe(GetMeRequest) returns (GetMeResponse) {};
+	rpc GetMe(getMeRequest) returns (getMeResponse) {};
 }
 
 message UserTenantRequest {
@@ -17,19 +17,20 @@ message UserTenantResponse {
 }
 
 message Tenant {
-		 int32 id = 1;
+	 int32 id = 1;
 	 string name = 2;
 	 enum Role{
 		 ADMIN = 0;
 		 USER = 1;
 	 }
 	 Role role = 3;
+	 int32 parentId = 4;
 }
 
-message GetMeRequest {
+message getMeRequest {
 	 int32 userId = 1;
 }
 
-message GetMeResponse {
+message getMeResponse {
 	 repeated Tenant tenants = 1;
 }

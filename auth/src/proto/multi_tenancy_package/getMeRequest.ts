@@ -1,10 +1,10 @@
 // Original file: user-tenant.proto
 
 
-export interface GetMeRequest {
+export interface getMeRequest {
   'userId'?: (number);
 }
 
-export interface GetMeRequest__Output {
+export interface getMeRequest__Output {
   'userId'?: (number);
 }

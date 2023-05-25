@@ -9,12 +9,12 @@ type SubtypeConstructor<Constructor extends new (...args: any) => any, Subtype> 
 
 export interface ProtoGrpcType {
   multi_tenancy_package: {
-    GetMeRequest: MessageTypeDefinition
-    GetMeResponse: MessageTypeDefinition
     MultiTenancy: SubtypeConstructor<typeof grpc.Client, _multi_tenancy_package_MultiTenancyClient> & { service: _multi_tenancy_package_MultiTenancyDefinition }
     Tenant: MessageTypeDefinition
     UserTenantRequest: MessageTypeDefinition
     UserTenantResponse: MessageTypeDefinition
+    getMeRequest: MessageTypeDefinition
+    getMeResponse: MessageTypeDefinition
   }
 }
 

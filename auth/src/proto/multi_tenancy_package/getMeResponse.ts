@@ -2,10 +2,10 @@
 
 import type { Tenant as _multi_tenancy_package_Tenant, Tenant__Output as _multi_tenancy_package_Tenant__Output } from '../multi_tenancy_package/Tenant';
 
-export interface GetMeResponse {
+export interface getMeResponse {
   'tenants'?: (_multi_tenancy_package_Tenant)[];
 }
 
-export interface GetMeResponse__Output {
+export interface getMeResponse__Output {
   'tenants'?: (_multi_tenancy_package_Tenant__Output)[];
 }
