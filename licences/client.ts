@@ -21,7 +21,7 @@
 // const licensePackage = grpcObject.licensePackage;
 // const deadline = new Date();
 // const client = new grpcObject.licensePackage.LicenseService(
-// 	`localhost:2001`,
+// 	`host:2001`,
 // 	grpc.credentials.createInsecure()
 // );
 

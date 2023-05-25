@@ -86,8 +86,10 @@ const GetMe: MultiTenancyHandlers["GetMe"] = (call, callback) => {
               { parent: { parent: { id: user.tenantId } } },
               { parent: { parent: { parent: { id: user.tenantId } } } },
               { parent: { parent: { parent: { parent: { id: user.tenantId } } } } },
+              { parent: { parent: { parent: { parent: { parent: { id: user.tenantId } } } } } },
             ]
-          }
+          },
+          orderBy: { id: "asc" }
         })
         callback(null, {
           tenants: userTenants.map(tenant => ({

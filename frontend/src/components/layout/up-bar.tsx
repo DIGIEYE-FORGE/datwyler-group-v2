@@ -30,13 +30,15 @@ function UpBar() {
     selectTab,
     tenantId,
     setTenantId,
-    selectedTabs,
+    setSelectedTabs,
   } = useProvider<AppContext>();
   const [isFullScreen, setIsFullScreen] = useState(false);
   const { t, i18n } = useTranslation();
   const logout = () => {
     setAccessToken("");
     setRefreshToken("");
+    setSelectedTabs([0]);
+    selectTab(0);
     authApi.logout();
     setLoginState("error");
   };

@@ -21,7 +21,6 @@ type LoginResponse = {
 export default class BackendApi {
   private api = axios.create({
     // baseURL: env.VITE_AUTH_API,
-    // baseURL: "http://localhost:3001",
     baseURL: `http://${window.location.hostname}:3001`,
   });
 

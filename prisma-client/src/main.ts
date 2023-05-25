@@ -137,8 +137,8 @@ async function seedDevices({
         alerts: {
           createMany: {
             data: Array.from({ length: 10 }, () => ({
-              type: ["TEMPERATURE", "HUMIDITY", "POWER", "PRESSURE", "VOLTAGE", "CURRENT"][Math.floor(Math.random() * 6)],
-              level: ["CRITICAL", "WARNING", "INFO"][Math.floor(Math.random() * 3)],
+              type: ["UPS", "TEMPERATURE AND HUMIDITY", "COOLING UNIT", "Monitor_IO", "IPDU_A", "IO_Module", "POWER METER"][Math.floor(Math.random() * 6)],
+              level: ["Notice", "General,", "Critical"][Math.floor(Math.random() * 3)],
               message: ["Temperature is too high", "Humidity is too high", "Power is too high", "Pressure is too high", "Voltage is too high", "Current is too high"][Math.floor(Math.random() * 6)],
             }))
           }

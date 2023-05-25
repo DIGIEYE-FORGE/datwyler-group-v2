@@ -5,7 +5,6 @@ import { User } from "../../utils";
 export default class MultiTenancyApi {
   private api = axios.create({
     // baseURL: env.VITE_AUTH_API,
-    // baseURL: "http://localhost:4000",
     baseURL: `http://${window.location.hostname}:4000`,
   });
 
@@ -44,15 +43,15 @@ export default class MultiTenancyApi {
   }
 
 
-  public async removeUserFromTenant(userId:string, tenantId: string) {
-    try{
-    await this.api.patch(`/tenant/${tenantId}/remove-user`, {
-      userId,
-    });
+  public async removeUserFromTenant(userId: string, tenantId: string) {
+    try {
+      await this.api.patch(`/tenant/${tenantId}/remove-user`, {
+        userId,
+      });
+    }
+    catch (err) {
+      throw err;
+    }
   }
-  catch(err){
-    throw err;
-  }
-}
 
 }

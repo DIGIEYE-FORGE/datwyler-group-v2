@@ -30,6 +30,7 @@ type ConfirmData = {
 export type AppContext = {
   tabs: Tab[];
   selectedTabs: number[];
+  setSelectedTabs: React.Dispatch<React.SetStateAction<number[]>>;
   activeTab: number | null;
   selectTab: (index: number) => void;
   closeTab: (index: number) => void;
@@ -181,6 +182,7 @@ function App() {
     <Provider
       value={{
         selectedTabs,
+        setSelectedTabs,
         activeTab,
         selectTab,
         closeTab,

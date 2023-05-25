@@ -26,7 +26,7 @@ const accessToken = localStorage.getItem("accessToken");
 const refreshToken = localStorage.getItem("refreshToken");
 axios.defaults.baseURL = `http://${window.location.hostname}:3001`;
 
-axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+axios.defaults.headers.common["Authorization"] = `Bearer ${refreshToken}`;
 
 export type UserContext = {
   user: [any, React.Dispatch<React.SetStateAction<any>>];
@@ -44,14 +44,14 @@ axios.interceptors.response.use(
       });
       auth
         .post("/refresh", {
-          accessToken,
+          refreshToken,
         })
         .then((res) => {
           localStorage.setItem("accessToken", res.data.accessToken);
           localStorage.setItem("refreshToken", res.data.refreshToken);
           axios.defaults.headers.common[
             "Authorization"
-          ] = `Bearer ${res.data.accessToken}`;
+          ] = `Bearer ${res.data.refreshToken}`;
         })
         .catch((err) => {
           toast.error("Please login first");
@@ -108,7 +108,6 @@ export const getUserConnecter = async () => {
     return data;
   } catch (err) {
     console.log("error", err);
-    // window.location.href = "/login";
   }
 };
 function App() {
@@ -147,10 +146,7 @@ function App() {
   }, []);
 
   const location = useLocation();
-  const [params, dispatch] = useReducer(paramsReducer, {
-    user: {},
-    tenantSelected: 0,
-  });
+
   useEffect(() => {
     i18n.changeLanguage(lang);
   }, [lang]);
