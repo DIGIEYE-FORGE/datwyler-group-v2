@@ -9,7 +9,7 @@ const multitenancyClient = new MultitenancyClient();
 
 
 type CreateUser = {
-  id: number;
+  id?: number;
   email: string;
   password: string;
   firstName: string;
@@ -18,45 +18,17 @@ type CreateUser = {
 };
 
 type CreateTenant = {
-  id: number;
+  id?: number;
   name: string;
-  users: {
-    id: number;
-    role: Role;
-  }
 }
 
 type CreateGroup = {
-  id?: number;
   name: string;
-  tenantId: number;
   location: string;
   lat: number;
   lng: number;
   ip: string;
 }
-
-const usersSeed: CreateUser[] = [
-  {
-    id: 1,
-    email: "iseljao@gmail.com",
-    password: "12345678",
-    firstName: "isel",
-    lastName: "jao",
-    phoneNumber: "0682712855",
-  },
-];
-
-const tenantsSeed: CreateTenant[] = [
-  {
-    id: 1,
-    name: "dig-forge",
-    users: {
-      id: 1,
-      role: "ADMIN",
-    }
-  },
-];
 
 type CreateDevice = {
   name: string;
@@ -65,10 +37,22 @@ type CreateDevice = {
   serial: string;
 }
 
-
-type CreateAlert = {
-
+const defaulUser: CreateUser =
+{
+  email: "iseljao@gmail.com",
+  password: "12345678",
+  firstName: "isel",
+  lastName: "jao",
+  phoneNumber: "0682712855",
 }
+
+
+const defaulTenant: CreateTenant =
+{
+  name: "dig-forge",
+}
+
+
 
 const systems = [
   "HVAC",
@@ -96,9 +80,7 @@ const descriptions = [
 
 const sites: CreateGroup[] = [
   {
-    id: 1,
     name: "morroco site",
-    tenantId: 1,
     // morroco info
     location: "Morocco",
     lat: 31.791702,
@@ -106,9 +88,7 @@ const sites: CreateGroup[] = [
     ip: "www.google.com",
   },
   {
-    id: 2,
     name: "ksa site",
-    tenantId: 1,
     // france info
     location: "Saudi Arabia",
     lat: 23.885942,
@@ -116,9 +96,7 @@ const sites: CreateGroup[] = [
     ip: "www.google.com",
   },
   {
-    id: 3,
     name: "uae site",
-    tenantId: 1,
     // uea info
     location: "United Arab Emirates",
     lat: 23.424076,
@@ -134,36 +112,27 @@ export async function hashPassword(password: string) {
   return hashedPassword;
 }
 
-async function seedUsers() {
-  return Promise.all(
-    usersSeed.map(async (user) => {
-      const hashedPassword = await hashPassword(user.password);
-      const newUser = await authClient.user.upsert({
-        where: {
-          id: user.id,
-        },
-        update: {},
-        create: {
-          ...user,
-          password: hashedPassword,
-        },
-      });
-      console.log();
-      (`Created user with id: ${newUser.id}`);
-      return newUser;
-    })
-  );
+async function initUser() {
+  return await authClient.user.create({
+    data: { ...defaulUser, password: await hashPassword(defaulUser.password) },
+  });
 }
 
-async function seedDevices() {
+async function seedDevices({
+  tenantId,
+  groupIds,
+}: {
+  tenantId: number;
+  groupIds: number[];
+}) {
   return Promise.all(
     systems.map(async (system, i) => backendClient.device.create({
       data: {
         id: i + 1,
         name: system,
         serial: `serial-${(i + 1).toString().padStart(4, '0')}`,
-        tenantId: 1,
-        groupId: Math.floor(Math.random() * 3) + 1,
+        tenantId,
+        groupId: groupIds[Math.floor(Math.random() * groupIds.length)],
         description: descriptions[i],
         alerts: {
           createMany: {
@@ -188,29 +157,28 @@ async function seedDevices() {
 }
 
 
-async function seedTenants() {
-  return Promise.all(
-    tenantsSeed.map(async (tenant) => {
-      return await multitenancyClient.tenant.create({
-        data: {
-          id: tenant.id,
-          name: tenant.name,
-          users: {
-            createMany: {
-              data: tenant.users
-            }
-          }
+async function initTenant(userId: number) {
+  return await multitenancyClient.tenant.create({
+    data: {
+      name: defaulTenant.name,
+      users: {
+        create: {
+          id: userId,
+          role: "ADMIN",
         }
-      });
-    })
-  );
+      }
+    },
+  });
 }
 
-async function seedSites() {
+async function seedSites(tenantId: number) {
   return Promise.all(
     sites.map(async (site) => {
       return await backendClient.group.create({
-        data: site
+        data: {
+          tenantId,
+          ...site,
+        }
       });
     })
   );
@@ -225,11 +193,14 @@ async function freshStart() {
   await backendClient.lastTelemetry.deleteMany({});
   await backendClient.device.deleteMany({});
   await backendClient.group.deleteMany({});
-  const users = await seedUsers();
-  const tenants = await seedTenants();
-  const sites = await seedSites();
-  const devices = await seedDevices();
-  console.log({ users, tenants, sites, devices });
+  const user = await initUser();
+  const tenant = await initTenant(user.id);
+  const sites = await seedSites(tenant.id);
+  const devices = await seedDevices({
+    tenantId: tenant.id,
+    groupIds: sites.map((site) => site.id),
+  });
+  console.log({ user, tenant, sites, devices });
 
 }
 

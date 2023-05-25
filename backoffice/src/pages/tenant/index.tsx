@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import Button from "../../components/button";
 import { useState, useReducer, useEffect } from "react";
 import SplitableTabs from "../../components/splitable-tabs";
@@ -106,7 +106,7 @@ function TenantPage() {
   const defaultTenant = useMemo(
     () =>
       ({
-        parentId: tenantId,
+        parentId: tenantId || undefined,
         name: "",
         _count: {
           users: 0,
