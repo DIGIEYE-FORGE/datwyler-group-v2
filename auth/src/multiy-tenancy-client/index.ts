@@ -6,13 +6,13 @@ import env from "../common/env";
 import { MultiTenancyClient } from "../proto/multi_tenancy_package/MultiTenancy";
 import logger from "../common/logger";
 import {
-  GetMeRequest,
-  GetMeRequest__Output,
-} from "../proto/multi_tenancy_package/GetMeRequest";
+  getMeRequest,
+  getMeRequest__Output,
+} from "../proto/multi_tenancy_package/getMeRequest";
 import {
-  GetMeResponse,
-  GetMeResponse__Output,
-} from "../proto/multi_tenancy_package/GetMeResponse";
+  getMeResponse,
+  getMeResponse__Output,
+} from "../proto/multi_tenancy_package/getMeResponse";
 
 const PROTO_FILE = path.resolve(__dirname, "..", "..", "user-tenant.proto");
 
@@ -61,8 +61,8 @@ class GrpcClient {
   }
 
   public getUserTenants(
-    data: GetMeRequest
-  ): Promise<GetMeResponse__Output | undefined> {
+    data: getMeRequest
+  ): Promise<getMeResponse__Output | undefined> {
     return new Promise((resolve, reject) => {
       this.client.GetMe(data, (err, res) => {
         if (err) {
