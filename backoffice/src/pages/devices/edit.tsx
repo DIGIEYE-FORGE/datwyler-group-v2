@@ -253,7 +253,11 @@ const Edit = () => {
                 scrollWheelZoom={true}
                 style={{ width: "100%", height: "100%" }}
               >
-                <TileLayer url="https://mt.google.com/vt/lyrs=m&gl=ma&x={x}&y={y}&z={z}" />
+               <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  url="http://{s}.google.com/vt/lyrs=m&hl=en&gl=ma&x={x}&y={y}&z={z}"
+                  subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
+                />
                 <Marker position={[51.505, -0.09]}></Marker>
               </MapContainer>
             </div>

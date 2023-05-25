@@ -125,7 +125,12 @@ function App() {
         onSuccess: (data: any) => {
           setUser(data);
           if (data.tenants.length > 0) {
-            setTenantSelected(data?.tenants?.[0]?.id);
+           if (localStorage.getItem("tenantId"))
+           {
+            setTenantSelected(data.tenants.find((item: any) => item.id === parseInt(localStorage.getItem("tenantId")!)).id);
+           }
+           else
+              setTenantSelected(data?.tenants?.[0]?.id);
             localStorage.setItem("tenantId", data?.tenants?.[0]?.id);
           }
         },

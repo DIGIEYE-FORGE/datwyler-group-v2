@@ -636,7 +636,7 @@ const Layout = (props: Props) => {
                 : user && user?.tenants?.[0]?.id || -1}
               onChange={(e:any) => {
                 setTenantSelected(+e.target.value);
-                localStorage.setItem("tenant", e.target.value);
+                localStorage.setItem("tenantId", e.target.value);
               }}
             >
               <option value={""} disabled>

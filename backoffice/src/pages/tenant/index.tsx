@@ -185,7 +185,7 @@ function TenantPage() {
       >
         <div className="page">
           <div className="header">
-            <div className="title">tenants management</div>
+            <div className="title">tenants managemen {tenantId}</div>
             <Button
               color="success"
               className="flex align-center gap-3"
