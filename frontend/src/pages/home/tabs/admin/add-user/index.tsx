@@ -18,13 +18,12 @@ const defaultUser: RegisterUser = {
 };
 
 interface Props {
-  users: User[];
-  setUsers: React.Dispatch<React.SetStateAction<User[]>>;
+  refetch: () => void;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function AddUser({ users, setUsers, open, setOpen }: Props) {
+function AddUser({ refetch, open, setOpen }: Props) {
   const { tenantId, multiTenancyApi, authApi } = useProvider<AppContext>();
   const [userData, setUserData] = useState<RegisterUser>(defaultUser);
 
@@ -42,14 +41,7 @@ function AddUser({ users, setUsers, open, setOpen }: Props) {
           role: userData.role,
         },
       });
-      setUsers([
-        ...users,
-        {
-          ...userData,
-          id: user.id,
-          tenantName: user.tenants?.find((t) => t.id === tenantId)?.name || "",
-        },
-      ]);
+      refetch();
       toast.success("User created successfully");
       setOpen(false);
       console.log("res", res);

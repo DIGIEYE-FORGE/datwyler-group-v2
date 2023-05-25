@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Button from "../../../../components/button";
 import Pagination from "../../../../components/pagination";
 import { Params, User } from "../../../../utils";
@@ -39,12 +39,13 @@ function AdminTab() {
 
   const [params, setParams] = useState<Params>(defaultParams);
 
-  useEffect(() => {
-    multiTenancyApi.getUsers({ tenantId }).then((res) => {
-      console.log("res", res);
+  const getUsers = useCallback(async () => {
+    const res = await multiTenancyApi.getUsers({ tenantId });
+    setUsers(res);
+  }, [tenantId]);
 
-      setUsers(res);
-    });
+  useEffect(() => {
+    getUsers();
   }, [tenantId]);
 
   const columns: Column[] = [
@@ -151,12 +152,7 @@ function AdminTab() {
           </Popover>
         )}
       />
-      <AddUser
-        users={users}
-        setUsers={setUsers}
-        open={open}
-        setOpen={setOpen}
-      />
+      <AddUser refetch={getUsers} open={open} setOpen={setOpen} />
     </div>
   );
 }
