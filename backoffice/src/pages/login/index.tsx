@@ -144,10 +144,8 @@ const LoginPage = () => {
                 Welcome to <b>DIGIEYE</b>
               </div>
               <p>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Illum
-                facilis inventore nemo, laborum porro recusandae repellat
-                ducimus? Ipsum odit, voluptatibus quos in cumque ad a sed itaque
-                maiores rerum unde?
+                Log in now to unlock the power of Baccofice and embark on a
+                journey of intelligent office management.
               </p>
             </div>
           </div>

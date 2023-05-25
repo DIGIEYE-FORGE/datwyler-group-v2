@@ -8,16 +8,13 @@ import Tooltip from "../../../../components/tooltip";
 
 import ReactApexChart from "react-apexcharts";
 import For from "../../../../components/for";
-import { MapContainer, Marker, TileLayer, ZoomControl } from "react-leaflet";
-import greenMarkerUrl from "../../../../assets/icons/green-marker.svg";
-import redMarkerUrl from "../../../../assets/icons/red-marker.svg";
-import MarkerClusterGroup from "react-leaflet-cluster";
-import L from "leaflet";
+
 import Card from "../../../../components/card";
 import { GiSmokeBomb } from "react-icons/gi";
 import { useProvider } from "../../../../components/provider";
 import { AppContext } from "../../../../App";
 import { Group } from "../../../../utils";
+import GeographicalMap from "./goegraphical-map";
 
 interface IconButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   tooltip?: string;
@@ -101,7 +98,7 @@ function Metrics() {
   );
 }
 
-function Chart({
+export function Chart({
   children,
   title,
   className,
@@ -152,51 +149,6 @@ function Chart({
   );
 }
 
-function GeographicalMap() {
-  const [groups, setGroups] = useState<Group[]>([]);
-
-  return (
-    <Chart
-      title="Geographical map "
-      className="xl:col-span-2  w-full overflow-x-hidden "
-    >
-      <div className="card-body text-dark  relative  h-[calc(100%-4rem)] w-full  ">
-        <MapContainer
-          center={[25.2048, 55.2708]}
-          zoom={2}
-          // minZoom={}
-          attributionControl={false}
-          zoomControl={false}
-        >
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="http://{s}.google.com/vt/lyrs=m&hl=en&gl=ma&x={x}&y={y}&z={z}"
-            subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
-          />
-          <ZoomControl position="bottomright" />
-          <MarkerClusterGroup>
-            <For each={groups}>
-              {(group) => (
-                <Marker
-                  position={[group.lat || 0, group.lng || 0]}
-                  icon={
-                    new L.Icon({
-                      iconUrl: group.attributes?.alerts
-                        ? redMarkerUrl
-                        : greenMarkerUrl,
-                      iconSize: [30, 30],
-                      iconAnchor: [15, 15],
-                    })
-                  }
-                ></Marker>
-              )}
-            </For>
-          </MarkerClusterGroup>
-        </MapContainer>
-      </div>
-    </Chart>
-  );
-}
 const alerts = [
   {
     id: 1,

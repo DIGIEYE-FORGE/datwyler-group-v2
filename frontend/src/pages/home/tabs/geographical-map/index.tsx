@@ -20,6 +20,8 @@ import L from "leaflet";
 import Provider, { useProvider } from "../../../../components/provider";
 import Details from "./details";
 import { AppContext } from "../../../../App";
+import { useLocation } from "react-router-dom";
+import Show from "../../../../components/show";
 
 export type GeographicalMapTabContext = {
   groups: Group[];
@@ -75,32 +77,19 @@ const defaulParams: Params = {
   },
 };
 
-function GeographicalMapTab() {
-  const [groups, setGroups] = useState<Group[]>([]);
-  const [params, setParams] = useState<Params>(defaulParams);
-  const { backendApi, tenantId } = useProvider<AppContext>();
+interface Props {
+  details?: boolean;
+}
+
+function GeographicalMapTab({ details = true }: Props) {
+  const { groups } = useProvider<AppContext>();
+  const location = useLocation();
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
   const [showList, setShowList] = useState<0 | 1 | 2>(0);
-  const filterdGroups = useMemo(() => {
-    return groups.map((g) => ({
-      ...g,
-      alerts:
-        g.devices?.reduce(
-          (acc: Alert[], device) => [...acc, ...(device.alerts || [])],
-          []
-        ) || [],
-    }));
-  }, [groups]);
   function selectGroup(id: number) {
     setSelectedGroup(id);
     setShowList(2);
   }
-
-  useEffect(() => {
-    backendApi.getGroups(params).then((res) => {
-      setGroups(res.results);
-    });
-  }, [tenantId, params]);
 
   const bounds = useMemo(() => {
     return groups.map((group) => [group.lat, group.lng] as [number, number]);
@@ -109,7 +98,7 @@ function GeographicalMapTab() {
   return (
     <Provider
       value={{
-        groups: filterdGroups,
+        groups,
         selectedGroup,
         selectGroup,
         showList,
@@ -129,14 +118,14 @@ function GeographicalMapTab() {
           attributionControl={false}
           zoomControl={false}
         >
-         <TileLayer
+          <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="http://{s}.google.com/vt/lyrs=m&hl=en&gl=ma&x={x}&y={y}&z={z}"
-            subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
+            subdomains={["mt0", "mt1", "mt2", "mt3"]}
           />
           <MapControls bounds={bounds} />
           <ZoomControl position="bottomright" />
-          <For each={filterdGroups}>
+          <For each={groups}>
             {(group) => (
               <Marker
                 position={[group.lat || 0, group.lng || 0]}
@@ -170,21 +159,25 @@ function GeographicalMapTab() {
                       <div className="text-[#82848E]">location: </div>
                       <div className="font-bold">{group.location}</div>
                     </div>
-                    <button
-                      onClick={() => {
-                        group.id && selectGroup(group.id);
-                      }}
-                      className="outline outline-1 rounded py-2 text-lg text-primary capitalize hover:bg-primary/5 active:bg-primary/10 transition-colors"
-                    >
-                      more details
-                    </button>
+                    <Show when={details}>
+                      <button
+                        onClick={() => {
+                          group.id && selectGroup(group.id);
+                        }}
+                        className="outline outline-1 rounded py-2 text-lg text-primary capitalize hover:bg-primary/5 active:bg-primary/10 transition-colors"
+                      >
+                        more details
+                      </button>
+                    </Show>
                   </div>
                 </Popup>
               </Marker>
             )}
           </For>
         </MapContainer>
-        <Details />
+        <Show when={details}>
+          <Details />
+        </Show>
       </div>
     </Provider>
   );
