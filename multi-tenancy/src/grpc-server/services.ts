@@ -96,6 +96,7 @@ const GetMe: MultiTenancyHandlers["GetMe"] = (call, callback) => {
             role: user.role,
             id: tenant.id,
             name: tenant.name,
+            parentId: tenant.parentId || undefined,
           }))
         }
         )

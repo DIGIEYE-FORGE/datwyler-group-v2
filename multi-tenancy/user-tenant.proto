@@ -24,6 +24,7 @@ message Tenant {
 		 USER = 1;
 	 }
 	 Role role = 3;
+	 int32 parentId = 4;
 }
 
 message getMeRequest {
