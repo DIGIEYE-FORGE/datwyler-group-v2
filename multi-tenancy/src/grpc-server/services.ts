@@ -91,12 +91,14 @@ const GetMe: MultiTenancyHandlers["GetMe"] = (call, callback) => {
           },
           orderBy: { id: "asc" }
         })
+
         callback(null, {
           tenants: userTenants.map(tenant => ({
             role: user.role,
             id: tenant.id,
             name: tenant.name,
-            parentId: tenant.parentId || undefined,
+            parentId: tenant.parentId || undefined
+
           }))
         }
         )

@@ -20,12 +20,10 @@ export interface Tenant {
   'id'?: (number);
   'name'?: (string);
   'role'?: (_multi_tenancy_package_Tenant_Role);
-  'parentId'?: (number);
 }
 
 export interface Tenant__Output {
   'id'?: (number);
   'name'?: (string);
   'role'?: (_multi_tenancy_package_Tenant_Role__Output);
-  'parentId'?: (number);
 }
