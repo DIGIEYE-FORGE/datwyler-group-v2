@@ -12,10 +12,15 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 function Accordion({ items, className, ...props }: Props) {
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [activeIndeces, setActiveIndeces] = useState<number[]>([]);
 
   const handleClick = (index: number) => {
-    setActiveIndex(index === activeIndex ? null : index);
+    setActiveIndeces((prev) => {
+      if (prev.includes(index)) {
+        return prev.filter((i) => i !== index);
+      }
+      return [...prev, index];
+    });
   };
 
   return (
@@ -25,13 +30,13 @@ function Accordion({ items, className, ...props }: Props) {
           <Button
             onClick={() => handleClick(index)}
             className="transition-colors duration-500"
-            variant={index === activeIndex ? "contained" : "outlined"}
+            variant={activeIndeces.includes(index) ? "contained" : "outlined"}
           >
             <span>{item.title}</span>
           </Button>
           <span
             className={`${
-              index === activeIndex ? "text-sm px-4 py-2" : "text-[0] "
+              activeIndeces.includes(index) ? "text-sm px-4 py-2" : "text-[0] "
             } transition-[font-size,padding] duration-500 ease-in-out`}
           >
             {item.content}
