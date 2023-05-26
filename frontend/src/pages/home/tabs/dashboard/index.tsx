@@ -384,10 +384,10 @@ function DashboardTab() {
 
   useEffect(() => {
     fetchDashboardData();
-    const interval = setInterval(() => {
-      fetchDashboardData();
-    }, 5000);
-    return () => clearInterval(interval);
+    // const interval = setInterval(() => {
+    //   fetchDashboardData();
+    // }, 5000);
+    // return () => clearInterval(interval);
   }, [tenantId]);
   return (
     <Provider

@@ -126,12 +126,12 @@ function App() {
     backendApi.getGroups(defaulParams).then((res) => {
       setGroups(res.results);
     });
-    const interval = setInterval(() => {
-      backendApi.getGroups(defaulParams).then((res) => {
-        setGroups(res.results);
-      });
-    }, 5000);
-    return () => clearInterval(interval);
+    // const interval = setInterval(() => {
+    //   backendApi.getGroups(defaulParams).then((res) => {
+    //     setGroups(res.results);
+    //   });
+    // }, 5000);
+    // return () => clearInterval(interval);
   }, [tenantId]);
 
   const [user, setUser] = useState<User | null>({
