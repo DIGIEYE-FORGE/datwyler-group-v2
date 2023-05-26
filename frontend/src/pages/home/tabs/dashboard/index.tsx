@@ -383,6 +383,7 @@ function DashboardTab() {
   }
 
   useEffect(() => {
+    fetchDashboardData();
     const interval = setInterval(() => {
       fetchDashboardData();
     }, 5000);
