@@ -50,3 +50,4 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         yield seedLicense(license);
     }
 });
+main();

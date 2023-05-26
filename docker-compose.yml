@@ -83,7 +83,6 @@ services:
     restart: always
     networks:
       - default
-  
   license:
     build: 
       context: ./licences

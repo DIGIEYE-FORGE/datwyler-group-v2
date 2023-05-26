@@ -1,4 +1,4 @@
-// Original file: tenant-liscence.proto
+// Original file: license.proto
 
 import type * as grpc from '@grpc/grpc-js'
 import type { MethodDefinition } from '@grpc/proto-loader'

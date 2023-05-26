@@ -9,7 +9,9 @@ type SubtypeConstructor<Constructor extends new (...args: any) => any, Subtype> 
 
 export interface ProtoGrpcType {
   licensePackage: {
-    AffectUserRequest: MessageTypeDefinition
+    AffectTypeRequest: MessageTypeDefinition
+    AuthPermissionRequest: MessageTypeDefinition
+    AuthPermissionResponse: MessageTypeDefinition
     DeleteAffictaionRequest: MessageTypeDefinition
     DeleteAffictaionResponse: MessageTypeDefinition
     Empty: MessageTypeDefinition

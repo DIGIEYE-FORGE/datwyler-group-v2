@@ -15,7 +15,8 @@ const createlicenseController = async (req: any, res: any) => {
 const getlicenseController = async (req: any, res: any) => {
   try {
     const { id } = req.params;
-    const license = await getLicenseService(id);
+    const { tenantId } = req.query.tenantId;
+    const license = await getLicenseService(+id,+tenantId);
     return res.status(httpStatus.OK).json(license);
   } catch (err) {
     return res.status(400).json(err);
@@ -23,8 +24,10 @@ const getlicenseController = async (req: any, res: any) => {
 };
 
 const getAlllicenseController = async (req: any, res: any) => {
+  
   try {
-    const license = await getallLicenseService();
+    const { tenantId } = req.query.tenantId;
+    const license = await getallLicenseService(tenantId);
     return res.status(httpStatus.OK).json(license);
   } catch (err) {
     return res.status(400).json(err);

@@ -4,16 +4,13 @@
 // Original file: tenant-liscence.proto
 
 export const _licensePackage_LicenseRequest_Type = {
-  USER: 0,
-  ADMIN: 1,
+  USERS: 0,
   DATACENTER: 2,
 } as const;
 
 export type _licensePackage_LicenseRequest_Type =
-  | 'USER'
+  | 'USERS'
   | 0
-  | 'ADMIN'
-  | 1
   | 'DATACENTER'
   | 2
 
