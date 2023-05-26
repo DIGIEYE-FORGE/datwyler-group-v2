@@ -66,24 +66,23 @@ const createLicenseService = async (data: LicenseType) => {
 	}
 	catch(err)
 	{
-		throw new Error("data is not valid for create license");
+		throw new Error(err as string || "data is not valid for create license");
 	}
 }
 
 
-const getLicenseService = async (id: number, tenantId:number) => {
+const getLicenseService = async (id: number) => {
 	try{
 	const license = await prisma.license.findFirst({
 		where: {
 			id: id,
-			tenantId: tenantId
 		},
 	});
 	return license;
 	}
 	catch(err)
 	{
-		throw new Error("license not found");
+		throw new Error(err as string || "license not found");
 	}
 }
 
@@ -99,12 +98,14 @@ const getallLicenseService = async (tenantId?:number) => {
 	}
 	catch(err)
 	{
-		throw new Error("license not found");
+		throw new Error(err as string || "license not found");
 	}
 }
 
 
 const updatedLicenseService = async (tenantId: number, data: UpdateType) => {
+	try{
+
 	const license = await prisma.license.findUnique({
 		where: {
 			id: tenantId
@@ -178,6 +179,11 @@ const updatedLicenseService = async (tenantId: number, data: UpdateType) => {
 	}
 	else 
 		throw new Error("license not found");
+}
+catch(err)
+{
+	throw new Error(err as string || "data is not valid for update license");
+}
 }
 
 

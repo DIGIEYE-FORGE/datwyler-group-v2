@@ -24,3 +24,16 @@ model License {
   dataCenters      Int[]     @default([]) @map("data_centers")
   @@index([tenantId])
 }
+
+model pack{
+  id              Int       @id @default(autoincrement())
+  name            String   @map("name")
+  description     String?   @map("description")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  tenantId        Int       @map("tenant_id")
+  numberOfUsers   Int       @map("number_of_users") @default(0)
+  numberOfDataCenters Int @map("number_of_data_centers") @default(0)
+  expiredAt       DateTime? @map("expired_at")
+  price           Float     @map("price")
+}

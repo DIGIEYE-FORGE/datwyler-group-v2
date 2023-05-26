@@ -26,7 +26,6 @@ message DeleteAffictaionRequest {
 message DeleteAffictaionResponse{
 	string message= 0;
 }
-
 //////////auth //////////////
 message AuthPermissionRequest {
 		int32 userId = 1;

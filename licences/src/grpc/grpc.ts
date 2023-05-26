@@ -41,7 +41,7 @@ function getServers(server: grpc.Server) {
 		AuthPermission: async (req:any, res:any) => {
 			try{
 			const {userId} = req.request;
-			const licence = await prisma.license.findFirst({
+			const license = await prisma.license.findFirst({
 				where:{
 					expiredAt:{
 						gte: new Date()
@@ -51,7 +51,7 @@ function getServers(server: grpc.Server) {
 					}
 				}
 			});
-			if (licence)
+			if (license)
 				res(null, {permission: true});
 			else
 				res(null, {permission: false});

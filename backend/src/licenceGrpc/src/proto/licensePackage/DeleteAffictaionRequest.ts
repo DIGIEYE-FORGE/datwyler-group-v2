@@ -2,14 +2,12 @@
 
 import type { LicenseRequest as _licensePackage_LicenseRequest, LicenseRequest__Output as _licensePackage_LicenseRequest__Output } from '../licensePackage/LicenseRequest';
 
-export interface AffectUserRequest {
+export interface DeleteAffictaionRequest {
   'licenseRequest'?: (_licensePackage_LicenseRequest | null);
-  'licenseId'?: (number);
-  'injectedId'?: (number);
+  'deletedId'?: (number);
 }
 
-export interface AffectUserRequest__Output {
+export interface DeleteAffictaionRequest__Output {
   'licenseRequest'?: (_licensePackage_LicenseRequest__Output);
-  'licenseId'?: (number);
-  'injectedId'?: (number);
+  'deletedId'?: (number);
 }
