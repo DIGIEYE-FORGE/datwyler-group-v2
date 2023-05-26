@@ -18,5 +18,5 @@ ARG GRPC_PORT=3001
 EXPOSE ${HTTP_PORT} ${GRPC_PORT}
 RUN chown -R node:node /usr/src/app
 USER node
-# 
-CMD yarn dev
+#
+CMD  yarn dev
