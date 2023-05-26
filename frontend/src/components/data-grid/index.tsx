@@ -51,6 +51,8 @@ interface DataGridProps extends React.HTMLAttributes<HTMLDivElement> {
   action?: (row: JsonObject) => React.ReactNode;
   hideAction?: boolean;
   onRowSelect?: (params: RowSelectAction) => void;
+  loading?: boolean;
+  error?: boolean;
 }
 
 const DataGrid = (props: DataGridProps) => {
@@ -185,40 +187,96 @@ const DataGrid = (props: DataGridProps) => {
             )}
           </tr>
         </thead>
-        <tbody className={`${props.bodyClassName}`} style={props.bodyStyle}>
-          {props.rows.map((row, index) => (
-            <tr key={index} className={props.rowClassName}>
-              {selectedColumns
-                .filter((column) => column.show !== false)
-                .map((column, index) => {
-                  const value = column.valueGetter ? (
-                    column.valueGetter(row)
-                  ) : (
-                    <span>
-                      {stringify(row[column.field || ""]) || "- - -"}{" "}
-                    </span>
-                  );
-                  return (
-                    <td
-                      key={index}
-                      className={column.className}
-                      style={column.style}
-                    >
-                      {value}
-                    </td>
-                  );
-                })}
-              {!props.hideAction && (
-                <td>{props.action && props.action(row)}</td>
-              )}
-            </tr>
-          ))}
-        </tbody>
-        <tbody className={props.bodyClassName}>
-          {props.rows.length === 0 && (
+        <tbody className={`${props.bodyClassName} `} style={props.bodyStyle}>
+          {props.error && (
             <tr>
-              <td colSpan={selectedColumns.length}>
-                {props.noData || "No data found"}
+              <td
+                colSpan={
+                  selectedColumns.filter((column) => column.show !== false)
+                    .length + 1
+                }
+              >
+                <div className="flex flex-col items-center py-4 gap-4">
+                  <img
+                    src="/data-grid-error.svg"
+                    className="w-1/2 min-h-[20rem] h-[50vh]"
+                  />
+                  <div className="text-center">
+                    <b>Something went wrong!</b>
+                    <div className="text-sm">
+                      Please try again after sometime
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          )}
+          {!props.error &&
+            props.loading &&
+            Array.from({ length: 10 }).map((_, index) => (
+              <tr key={index} className={props.rowClassName}>
+                {selectedColumns
+                  .filter((column) => column.show !== false)
+                  .map((column, index) => (
+                    <td key={index} style={column.style}>
+                      <div className="animate-pulse  !bg-dark/30 !dark:bg-light/30  mx-1 rounded h-12 my-1"></div>
+                    </td>
+                  ))}
+                {!props.hideAction && (
+                  <td>
+                    <div className="animate-pulse  !bg-dark/30 !dark:bg-light/30  w-11/12 rounded h-12 my-1"></div>
+                  </td>
+                )}
+              </tr>
+            ))}
+          {!props.error &&
+            !props.loading &&
+            props.rows.map((row, index) => (
+              <tr key={index} className={props.rowClassName}>
+                {selectedColumns
+                  .filter((column) => column.show !== false)
+                  .map((column, index) => {
+                    const value = column.valueGetter ? (
+                      column.valueGetter(row)
+                    ) : (
+                      <span>
+                        {stringify(row[column.field || ""]) || "- - -"}{" "}
+                      </span>
+                    );
+                    return (
+                      <td
+                        key={index}
+                        className={column.className}
+                        style={column.style}
+                      >
+                        {value}
+                      </td>
+                    );
+                  })}
+                {!props.hideAction && (
+                  <td>{props.action && props.action(row)}</td>
+                )}
+              </tr>
+            ))}
+          {!props.error && !props.loading && props.rows.length === 0 && (
+            <tr>
+              <td
+                colSpan={
+                  selectedColumns.filter((column) => column.show !== false)
+                    .length + 1
+                }
+              >
+                {props.noData || (
+                  <div className="flex flex-col items-center py-4 gap-4">
+                    <img
+                      src="/data-grid-nodata.svg"
+                      className="w-1/2 min-h-[20rem] h-[50vh]"
+                    />
+                    <div className="text-center">
+                      <b>No data found</b>
+                    </div>
+                  </div>
+                )}
               </td>
             </tr>
           )}
