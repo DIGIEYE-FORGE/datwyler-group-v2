@@ -4,7 +4,6 @@ import { PrismaService } from './prisma.service';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { join } from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -22,6 +21,7 @@ async function bootstrap() {
     .setVersion('1.0')
     .addTag('devices')
     .build();
+
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/v1/docs', app, document);

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BsAlarm, BsCpu, BsDoorClosedFill } from "react-icons/bs";
 import { TbBellRinging } from "react-icons/tb";
 import { GiLeak } from "react-icons/gi";
@@ -11,10 +11,12 @@ import For from "../../../../components/for";
 
 import Card from "../../../../components/card";
 import { GiSmokeBomb } from "react-icons/gi";
-import { useProvider } from "../../../../components/provider";
+import Provider, { useProvider } from "../../../../components/provider";
 import { AppContext } from "../../../../App";
-import { Group } from "../../../../utils";
+import { DashboardData, Group, strTake } from "../../../../utils";
 import GeographicalMap from "./goegraphical-map";
+import { toast } from "react-toastify";
+import { format } from "date-fns";
 
 interface IconButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   tooltip?: string;
@@ -47,12 +49,16 @@ export function IconButton({ children, className, ...props }: IconButtonProps) {
 }
 
 function Metrics() {
+  const dashboardData = useProvider<DashboardData | null>();
   return (
     <div className="w-full flex gap-6 flex-wrap">
       <Card className="metric-card ">
         <div className="title rounded bg-primary/10  p-2">Online devices</div>
         <div className="flex-1 flex justify-between items-center p-2 ">
-          <span className="text-3xl">178</span>
+          <span className="text-3xl">
+            {dashboardData?.devices?.online ?? 0} /
+            {dashboardData?.devices?.total ?? 0}
+          </span>
           <span className="w-[2.75rem] aspect-square flex-center bg-primary/20 rounded-full">
             <BsCpu className="text-primary" fontSize={24} />
           </span>
@@ -61,7 +67,7 @@ function Metrics() {
       <Card className="metric-card ">
         <div className="title rounded bg-primary/10 p-2"> Critical Alarms</div>
         <div className="flex-1 flex justify-between items-center p-2 ">
-          <span className="text-3xl">178</span>
+          <span className="text-3xl">{dashboardData?.criticalAlarms ?? 0}</span>
           <span className="w-[2.75rem] aspect-square flex-center bg-accent/20 rounded-full">
             <BsAlarm className="text-accent" fontSize={24} />
           </span>
@@ -70,7 +76,7 @@ function Metrics() {
       <Card className="metric-card ">
         <div className="title rounded bg-primary/10 p-2">Door Status</div>
         <div className="flex-1 flex justify-between items-center p-2 ">
-          <span className="text-3xl">178</span>
+          <span className="text-3xl">{dashboardData?.doorAlarms ?? 0}</span>
           <span className="w-[2.75rem] aspect-square flex-center bg-[#F86F28]/20 rounded-full">
             <BsDoorClosedFill color="#F86F28" fontSize={24} />
           </span>
@@ -79,7 +85,9 @@ function Metrics() {
       <Card className="metric-card ">
         <div className="title rounded bg-primary/10 p-2">Water leakage</div>
         <div className="flex-1 flex justify-between items-center p-2 ">
-          <span className="text-3xl">178</span>
+          <span className="text-3xl">
+            {dashboardData?.waterLeakAlarms ?? 0}
+          </span>
           <span className="w-[2.75rem] aspect-square flex-center bg-blue-500/20 rounded-full">
             <GiLeak className="text-blue-500" fontSize={24} />
           </span>
@@ -88,7 +96,7 @@ function Metrics() {
       <Card className="metric-card ">
         <div className="title rounded bg-primary/10 p-2">Smoke</div>
         <div className="flex-1 flex justify-between items-center p-2 ">
-          <span className="text-3xl">178</span>
+          <span className="text-3xl">{dashboardData?.smokeAlarms ?? 0}</span>
           <span className="w-[2.75rem] aspect-square flex-center bg-gray-500/20 rounded-full">
             <GiSmokeBomb className="text-gray-600" fontSize={24} />
           </span>
@@ -194,31 +202,34 @@ const alerts = [
   },
 ];
 function RecentAlarms() {
+  const dashboardData = useProvider<DashboardData | null>();
+  const alarms = dashboardData?.upsAlarms ?? [];
   return (
     <Chart title="UPS" className="flex h-full ">
       <div className="flex gap-3  h-[calc(100%-3rem)] p-3">
-        <div className="flex-1 flex justify-center items-center h-full">
+        <div className="flex-[3] flex justify-center items-center h-full">
           <div className=" h-1/2 max-h-full aspect-square rounded-full  outline outline-8 outline-primary   relative">
             <div className="absolute-center flex flex-col items-center">
               <div className="text-5xl text-black dark:text-white">
-                {alerts.length}
+                {alarms.length}
               </div>
               <div className="font-xl text-[#00323C]">Alarm</div>
             </div>
           </div>
         </div>
-        <div className="flex-1 flex flex-col gap-2  overflow-auto">
-          <For each={alerts}>
-            {(alert) => (
+        <div className="flex-[4] flex flex-col gap-2  overflow-auto ">
+          <For each={alarms}>
+            {(alarm) => (
               <div className="flex items-center gap-2 p-2 shadow-inner">
                 <div className="w-[2.75rem] aspect-square flex-center bg-[#F86F28]/20 rounded-full">
                   <TbBellRinging color="#F86F28" fontSize={24} />
                 </div>
                 <div className="w-[100%] p-1">
-                  <span className="text-xl"> {alert.name}</span>
-                  <div className="flex justify-between">
-                    <span>{alert.data}</span>
-                    <span>{alert.time}</span>
+                  <div className="flex [&>*]:flex-1 ">
+                    <span>{strTake(alarm.type, 20)}</span>
+                    <span>
+                      {format(new Date(alarm.createdAt), "dd/MM/yy HH:mm")}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -231,106 +242,39 @@ function RecentAlarms() {
 }
 
 function WaterFlow() {
+  const dashboardData = useProvider<DashboardData | null>();
+  const alarms = dashboardData?.coolingUnitAlarms ?? [];
   return (
-    <Chart title="COOLING">
-      <div className="card-body  overflow-auto flex flex-col mt-2 px-2 ">
-        <div className="h-[10%] ml-auto">
-          <input
-            type="date"
-            name="data"
-            id="data"
-            className="w-[20rem] border-2 border-primary"
-          />
+    <Chart title="COOLING UNIT" className="flex h-full ">
+      <div className="flex gap-3  h-[calc(100%-3rem)] p-3">
+        <div className="flex-[3] flex justify-center items-center h-full">
+          <div className=" h-1/2 max-h-full aspect-square rounded-full  outline outline-8 outline-primary   relative">
+            <div className="absolute-center flex flex-col items-center">
+              <div className="text-5xl text-black dark:text-white">
+                {alarms.length}
+              </div>
+              <div className="font-xl text-[#00323C]">Alarm</div>
+            </div>
+          </div>
         </div>
-        <div className="flex-1 flex">
-          <div className="w-[70%] flex justify-center items-center">
-            <ReactApexChart
-              width={"90%"}
-              // height={"100%"}
-              max
-              type="donut"
-              options={{
-                chart: {
-                  type: "donut",
-                  id: "donut-basic",
-                },
-                legend: {
-                  show: false,
-                },
-                colors: ["#0091AE", "#a1a5a5", "#97deed", "#e7ebeb"],
-                plotOptions: {
-                  pie: {
-                    donut: {
-                      size: "60%",
-                      labels: {
-                        show: true,
-                        name: {
-                          show: true,
-                          fontSize: "22px",
-                          fontFamily: "Helvetica, Arial, sans-serif",
-                          fontWeight: 600,
-                          color: "#373d3f",
-                          offsetY: -10,
-                        },
-                        value: {
-                          show: false,
-                        },
-                      },
-                    },
-                  },
-                },
-              }}
-              series={[20, 20, 10, 2]}
-              labels={["A", "B", "C"]}
-              datalabels={{
-                enabled: true,
-                formatter: function (val: any) {
-                  return val + "";
-                },
-                style: {
-                  colors: ["#ba2323"],
-                },
-              }}
-            />
-          </div>
-          <div className="flex-1 flex flex-col p-5 gap-4 w-[30%]">
-            <div className="flex gap-2">
-              <span
-                className={`w-[4px] rounded-sm h-[3rem] bg-[#0091AE]`}
-              ></span>
-              <div className="flex flex-1 flex-col">
-                <div className="font-bold">20</div>
-                <div className="font-normal">Leak detected</div>
+        <div className="flex-[4] flex flex-col gap-2  overflow-auto ">
+          <For each={alarms}>
+            {(alarm) => (
+              <div className="flex items-center gap-2 p-2 shadow-inner">
+                <div className="w-[2.75rem] aspect-square flex-center bg-[#F86F28]/20 rounded-full">
+                  <TbBellRinging color="#F86F28" fontSize={24} />
+                </div>
+                <div className="w-[100%] p-1">
+                  <div className="flex [&>*]:flex-1 ">
+                    <span>{strTake(alarm.type, 20)}</span>
+                    <span>
+                      {format(new Date(alarm.createdAt), "dd/MM/yy HH:mm")}
+                    </span>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="flex gap-2">
-              <span
-                className={`w-[4px] rounded-sm h-[3rem] bg-[#a1a5a5]`}
-              ></span>
-              <div className="flex flex-1 flex-col">
-                <div className="font-bold">20</div>
-                <div className="font-normal">Continuous flow</div>
-              </div>
-            </div>
-            <div className="flex gap-2">
-              <span
-                className={`w-[4px] rounded-sm h-[3rem] bg-[#97deed]`}
-              ></span>
-              <div className="flex flex-1 flex-col">
-                <div className="font-bold">10</div>
-                <div className="font-normal">Backflow</div>
-              </div>
-            </div>
-            <div className="flex gap-2">
-              <span
-                className={`w-[4px] rounded-sm h-[3rem] bg-[#e7ebeb]`}
-              ></span>
-              <div className="flex flex-1 flex-col">
-                <div className="font-bold">2</div>
-                <div className="font-normal">No recent flow</div>
-              </div>
-            </div>
-          </div>
+            )}
+          </For>
         </div>
       </div>
     </Chart>
@@ -435,16 +379,37 @@ function Overview() {
 }
 
 function DashboardTab() {
+  const context = useProvider<AppContext>();
+  const { backendApi, tenantId } = context;
+  const [data, setData] = useState<DashboardData | {}>({});
+  useEffect(() => {
+    backendApi
+      .getDashboardData()
+      .then((data) => {
+        setData(data);
+      })
+      .catch((err) => {
+        toast.error("Error while fetching dashboard data");
+        console.log(err);
+      });
+  }, [tenantId]);
   return (
-    <div className="container items-center w-full min-h-full flex flex-col gap-6 overflow-x-hidden p-6 ">
-      <Metrics />
-      <div className="w-full h-full  grid xl:grid-cols-3 gap-4 auto-rows-fr">
-        <RecentAlarms />
-        <GeographicalMap />
-        <WaterFlow />
-        <Overview />
+    <Provider
+      value={{
+        ...context,
+        ...data,
+      }}
+    >
+      <div className="container items-center w-full min-h-full flex flex-col gap-6 overflow-x-hidden p-6 ">
+        <Metrics />
+        <div className="w-full h-full  grid xl:grid-cols-3 gap-4 auto-rows-fr">
+          <RecentAlarms />
+          <GeographicalMap />
+          <WaterFlow />
+          <Overview />
+        </div>
       </div>
-    </div>
+    </Provider>
   );
 }
 

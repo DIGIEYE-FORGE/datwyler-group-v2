@@ -2,6 +2,7 @@ import { env } from "../../utils/env";
 import axios from "axios";
 import {
   Alert,
+  DashboardData,
   Device,
   Group,
   ManyResponse,
@@ -102,6 +103,10 @@ export default class BackendApi {
       },
       acknowledgedBy: id,
     });
+    return res.data;
+  }
+  async getDashboardData(): Promise<DashboardData> {
+    const res = await this.api.get("/dashboard");
     return res.data;
   }
 }

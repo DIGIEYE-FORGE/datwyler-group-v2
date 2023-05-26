@@ -39,6 +39,7 @@ import { MultitenancyModule } from './multitenancy/multitenancy.module';
 import { LicenseService } from './license/license.service';
 import { json, urlencoded } from 'express';
 import { FileModule } from './file/file.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -68,6 +69,7 @@ import { FileModule } from './file/file.module';
       dest: './uploads',
     }),
     FileModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [PrismaService, AuthService, MultitenancyService, LicenseService],
@@ -105,6 +107,10 @@ export class AppModule implements NestModule {
       },
       {
         path: '/report',
+        method: RequestMethod.ALL,
+      },
+      {
+        path: '/dashboard',
         method: RequestMethod.ALL,
       },
     );

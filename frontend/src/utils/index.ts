@@ -111,6 +111,31 @@ export type Device = {
   alerts?: Alert[];
 };
 
+// devices: {
+//   total: totalDevices,
+//     online: onlineDevices,
+//       },
+// criticalAlarms,
+//   waterLeakAlarms,
+//   doorAlarms,
+//   smokeAlarms,
+//   upsAlarms,
+//   coolingUnitAlarms,
+
+export type DashboardData = {
+  devices: {
+    total: number;
+    online: number;
+  };
+  criticalAlarms: number;
+  waterLeakAlarms: number;
+  doorAlarms: number;
+  smokeAlarms: number;
+  upsAlarms: Alert[];
+  coolingUnitAlarms: Alert[];
+  [key: string]: any;
+};
+
 export type LoginState = "idle" | "loading" | "error";
 
 export type Tenant = {
