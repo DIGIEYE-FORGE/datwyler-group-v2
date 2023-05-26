@@ -2,10 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { FindAllOptions, HandleRequestErrors } from 'src/utils';
 import { CreateGroupDto, UpdateGroupDto } from './entities';
+import { LicenseService } from 'src/license/license.service';
+import { Type } from 'src/license/license.interface';
 
 @Injectable()
 export class GroupService {
-  constructor(private prisma: PrismaService) { }
+  constructor(
+    private prisma: PrismaService,
+    private licenseService: LicenseService,
+  ) {}
 
   @FindAllOptions({})
   @HandleRequestErrors()
@@ -24,7 +29,17 @@ export class GroupService {
 
   @HandleRequestErrors()
   async create(data: CreateGroupDto) {
-    return await this.prisma.group.create({ data });
+    const res = await this.prisma.group.create({ data });
+    // if (res) {
+    //   const dt = this.licenseService
+    //     .AffectType({
+    //       tenantId: data.tenantId,
+    //       typeId: res.id,
+    //       type: Type.DATACENTER,
+    //     })
+    //     .toPromise();
+    //   console.log('-----------------------------------', dt);
+    // }
   }
 
   @HandleRequestErrors()

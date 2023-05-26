@@ -2,6 +2,22 @@ import express from "express";
 import httpStatus from "http-status";
 import { createLicenseService, getLicenseService, getallLicenseService, updatedLicenseService } from "../services/license.service";
 
+type JsonValue = string | number | boolean | JsonObject | JsonArray | null;
+export type JsonObject = { [Key in string]?: JsonValue };
+export interface JsonArray extends Array<JsonValue> { }
+
+
+export type Params = {
+  pagination: {
+    page: number;
+    perPage: number;
+  };
+  where?: Record<string, any>;
+  orderBy?: JsonObject;
+  include?: JsonObject;
+
+};
+
 const createlicenseController = async (req: any, res: any) => {
   try {
     const license = await createLicenseService(req.body);

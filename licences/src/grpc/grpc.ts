@@ -23,7 +23,7 @@ const licensePackage = grpcObject.licensePackage;
 export default function main() {
 	const server = new grpc.Server();
 	server.bindAsync(
-		`0.0.0.0:${env.GRPC_PORT}`,
+		`0.0.0.0:2001`,
 		grpc.ServerCredentials.createInsecure(),
 		(err, port) => {
 			if (err) {
@@ -66,73 +66,77 @@ function getServers(server: grpc.Server) {
 		GetLicensePermission: async (req:any, res:any) => {
 		},
 		AffectType: async (req:any, res:any) => {
-			try{
-				const {type,tenantId,typeId} = req.request;
-				if (type == "USERS"){
-					const license = await prisma.license.findFirst({
-						where:{
-							tenantId: tenantId,
-							numberOfUsers:{
-								gte: 1
-							},
-							expiredAt:{
-								gte: new Date()
-							}
-						}
-					})
-					if (license){
-						await prisma.license.update({
-							where:{
-								id: license.id
-							},
-							data:{
-								numberOfUsers: license.numberOfUsers - 1,
-								users:{
-									push: typeId
-								}
-							}
-						});
-						res(null, {result: true});
-					}
-					else res(null, {result: false});
+			console.log(req.request);
+			return res(null, {result: true});
+			
+			// try{
+			// 	const {type,tenantId,typeId} = req.request;
+			// 	if (type == "USERS"){
+			// 		const license = await prisma.license.findFirst({
+			// 			where:{
+			// 				tenantId: tenantId,
+			// 				numberOfUsers:{
+			// 					gte: 1
+			// 				},
+			// 				expiredAt:{
+			// 					gte: new Date()
+			// 				}
+			// 			}
+			// 		})
+			// 		if (license){
+			// 			await prisma.license.update({
+			// 				where:{
+			// 					id: license.id
+			// 				},
+			// 				data:{
+			// 					numberOfUsers: license.numberOfUsers - 1,
+			// 					users:{
+			// 						push: typeId
+			// 					}
+			// 				}
+			// 			});
+			// 			res(null, {result: true});
+			// 		}
+			// 		else res(null, {result: false});
 
 
-				}
-				else if (type == "DATACENTER"){
-					const license = await prisma.license.findFirst({
-						where:{
-							tenantId: tenantId,
-							numberOfDataCenters:{
-								gte: 1
-							},
-							expiredAt:{
-								gte: new Date()
-							}
-						}
-					})
-					if (license){
-						await prisma.license.update({
-							where:{
-								id: license.id
-							},
-							data:{
-								numberOfDataCenters: license.numberOfDataCenters - 1,
-								dataCenters:{
-									push: typeId
-								}
-							}
-						});
-						res(null, {result: true});
-					}
-					else res(null, {result: false});
-				}
-			}
-			catch(err){
-				res({
-					code: grpc.status.INTERNAL,
-					message: JSON.stringify(err),
-				  });
-			}
+			// 	}
+			// 	else if (type == "DATACENTER"){
+			// 	// 	const license = await prisma.license.findFirst({
+			// 	// 		where:{
+			// 	// 			tenantId: tenantId,
+			// 	// 			numberOfDataCenters:{
+			// 	// 				gte: 1
+			// 	// 			},
+			// 	// 			expiredAt:{
+			// 	// 				gte: new Date()
+			// 	// 			}
+			// 	// 		}
+			// 	// 	})
+			// 	// 	if (license){
+			// 	// 		await prisma.license.update({
+			// 	// 			where:{
+			// 	// 				id: license.id
+			// 	// 			},
+			// 	// 			data:{
+			// 	// 				numberOfDataCenters: license.numberOfDataCenters - 1,
+			// 	// 				dataCenters:{
+			// 	// 					push: typeId
+			// 	// 				}
+			// 	// 			}
+			// 	// 		});
+			// 	// 		res(null, {result: true});
+			// 	// 	}
+			// 	// 	else res(null, {result: false});
+			// 	res(null, {result: true});
+			// 	}
+			// }
+			// catch(err){
+			// 	res({
+			// 		code: grpc.status.INTERNAL,
+			// 		message: JSON.stringify(err),
+			// 	  });
+			// }
 		},
 		DeleteAffictation: async (req:any, res:any) => {
 			try{

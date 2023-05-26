@@ -3,8 +3,16 @@ import { ClientOptions, Transport } from '@nestjs/microservices';
 export const microservicesOption: ClientOptions = {
   transport: Transport.GRPC,
   options: {
-    url: process.env.GRPC_LICENCE_SERVICE,
+    url: 'license:2001',
     package: 'licensePackage',
-    protoPath: 'src/licenceGrpc/license.proto',
+    protoPath: 'src/licenseGrpc/license.proto',
+    loader: {
+      arrays: true,
+      keepCase: true,
+      longs: String,
+      enums: String,
+      defaults: true,
+      oneofs: true,
+    },
   },
 };

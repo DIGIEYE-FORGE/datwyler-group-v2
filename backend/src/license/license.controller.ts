@@ -6,9 +6,4 @@ import { LicenseService } from './license.service';
 @Controller('license')
 export class LicenseController {
   constructor(private readonly licenseService: LicenseService) {}
-
-  @Post()
-  async checkToken(@Body() data: any) {
-    return await this.licenseService.checkData(data).toPromise();
-  }
 }
