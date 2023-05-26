@@ -371,16 +371,22 @@ function DashboardTab() {
   const context = useProvider<AppContext>();
   const { backendApi, tenantId } = context;
   const [data, setData] = useState<DashboardData | {}>({});
+
+  async function fetchDashboardData() {
+    try {
+      const data = await backendApi.getDashboardData();
+      setData(data);
+    } catch (err) {
+      toast.error("Error while fetching dashboard data");
+      console.log(err);
+    }
+  }
+
   useEffect(() => {
-    backendApi
-      .getDashboardData()
-      .then((data) => {
-        setData(data);
-      })
-      .catch((err) => {
-        toast.error("Error while fetching dashboard data");
-        console.log(err);
-      });
+    const interval = setInterval(() => {
+      fetchDashboardData();
+    }, 5000);
+    return () => clearInterval(interval);
   }, [tenantId]);
   return (
     <Provider
