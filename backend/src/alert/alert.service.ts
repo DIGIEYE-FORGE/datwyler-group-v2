@@ -5,7 +5,7 @@ import { CreateAlertDto, UpdateAlertDto } from './entities';
 
 @Injectable()
 export class AlertService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   @FindAllOptions({})
   @HandleRequestErrors()
