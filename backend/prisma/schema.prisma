@@ -42,16 +42,19 @@ model Group {
 }
 
 model Alert {
-  id       Int     @id @default(autoincrement())
-  deviceId Int
-  device   Device  @relation(fields: [deviceId], references: [id], onDelete: Cascade)
-  type     String?
-  message  String?
-  level    String?
-  createdAt      DateTime @default(now()) @map("created_at")
-  updatedAt      DateTime @updatedAt @map("updated_at")
-  attributes     Json     @default("{}") @map("attributes") @db.Json
-  acknowledgedBy Int?     @map("acknowledged_by")
+  id             Int       @id @default(autoincrement())
+  deviceId       Int
+  device         Device    @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  type           String?
+  message        String?
+  level          String?
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+  attributes     Json      @default("{}") @map("attributes") @db.Json
+  acknowledgedBy Int?      @map("acknowledged_by")
+  deviceName     String?   @map("device_name")
+  startTime      DateTime? @map("start_times")
+  endTime        DateTime? @map("end_times")
 
   @@map("alert")
 }
