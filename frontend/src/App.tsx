@@ -4,7 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import HomePage from "./pages/home";
 import LoginPage from "./pages/login2";
 import NotFoundPage from "./pages/notfound";
-import { LoginState, Tab, Tenant, User } from "./utils";
+import { Alert, Group, LoginState, Params, Tab, Tenant, User } from "./utils";
 import useLocalStorage from "./hooks/use-local-storage";
 import { useNavigate, useLocation } from "react-router-dom";
 import AuthApi from "./api/auth";
@@ -27,6 +27,7 @@ type ConfirmData = {
   cancelText?: string;
 };
 
+type Theme = "light" | "dark" | "hybrid";
 export type AppContext = {
   tabs: Tab[];
   selectedTabs: number[];
@@ -52,8 +53,43 @@ export type AppContext = {
   backendApi: BackendApi;
   multiTenancyApi: MultiTenancyApi;
   confirm: (data?: ConfirmData) => void;
+  groups: Group[];
 };
-type Theme = "light" | "dark" | "hybrid";
+
+const defaulParams: Params = {
+  pagination: {
+    page: 1,
+    perPage: 100,
+  },
+  include: {
+    devices: {
+      include: {
+        lastTelemetries: true,
+        alerts: {
+          include: {
+            device: {
+              select: {
+                serial: true,
+                name: true,
+              },
+            },
+          },
+          where: {
+            acknowledgedBy: null,
+          },
+        },
+      },
+    },
+  },
+  where: {
+    lat: {
+      not: null,
+    },
+    lng: {
+      not: null,
+    },
+  },
+};
 
 function App() {
   const [selectedTabs, setSelectedTabs] = useLocalStorage<number[]>(
@@ -71,6 +107,24 @@ function App() {
     "tenantId",
     undefined
   );
+  const [groups, setGroups] = useState<Group[]>([]);
+
+  const filterdGroups = useMemo(() => {
+    return groups.map((g) => ({
+      ...g,
+      alerts:
+        g.devices?.reduce(
+          (acc: Alert[], device) => [...acc, ...(device.alerts || [])],
+          []
+        ) || [],
+    }));
+  }, [groups]);
+
+  useEffect(() => {
+    backendApi.getGroups(defaulParams).then((res) => {
+      setGroups(res.results);
+    });
+  }, [tenantId]);
 
   const [user, setUser] = useState<User | null>({
     id: 1,
@@ -203,6 +257,7 @@ function App() {
         backendApi,
         confirm,
         multiTenancyApi,
+        groups: filterdGroups,
       }}
     >
       <div className={theme}>
