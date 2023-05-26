@@ -41,6 +41,7 @@ export type Alert = {
   id: number;
   deviceId: number;
   device?: Device;
+  deviceName?: string;
   type?: string;
   message?: string;
   level?: AlarmLevel;

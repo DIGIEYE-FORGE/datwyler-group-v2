@@ -71,14 +71,9 @@ function Group({ groupId }: { groupId?: number | null }) {
   const [tabIndex, setTabIndex] = React.useState(0);
   const columns: Column[] = [
     {
-      label: "System",
-      header: "System",
-      valueGetter: (row: Alert) => row.device?.name,
-    },
-    {
       label: "syteme",
       header: "Systeme",
-      valueGetter: (row: Alert) => row.device?.name,
+      valueGetter: (row: Alert) => row.deviceName || row.device?.name,
     },
     {
       label: "type",
