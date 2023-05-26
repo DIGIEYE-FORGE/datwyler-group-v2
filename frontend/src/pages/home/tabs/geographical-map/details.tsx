@@ -76,15 +76,15 @@ function Group({ groupId }: { groupId?: number | null }) {
       valueGetter: (row: Alert) => row.device?.name,
     },
     {
-      label: "deviceID",
-      header: "Device ID",
-      valueGetter: (row: Alert) => row.device?.serial,
+      label: "syteme",
+      header: "Systeme",
+      valueGetter: (row: Alert) => row.device?.name,
     },
     {
       label: "type",
       header: "Alert Type",
       valueGetter(row: Alert) {
-        return alertsComponentMap[row.type as AlertType];
+        return row.type;
       },
     },
     {
