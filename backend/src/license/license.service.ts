@@ -19,15 +19,18 @@ export class LicenseService implements OnModuleInit {
     return this.lisenceService.GetLicensePermission(data);
   }
 
-  affectUser(data: {
-    licenseRequest: { tenantId: number; type: Type };
-    licenseId?: number;
-    injectedId?: number;
-  }): Observable<{
-    result: boolean;
-  }> {
-    return this.lisenceService.AffectUser(data);
-  }
+  // affectUser(data: {
+  //   licenseRequest: { tenantId: number; type: Type };
+  //   licenseId?: number;
+  //   injectedId?: number;
+  // }): Observable<{
+  //   result: boolean;
+  // }> {
+  //   return {
+  //     result: true,
+  //   }
+  //   // return this.lisenceService.AffectUser(data);
+  // }
 
   deleteAffictaion(data: DeleteAffictaion) {
     return this.lisenceService.DeleteAffictaion(data);
