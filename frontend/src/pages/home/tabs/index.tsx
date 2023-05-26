@@ -11,6 +11,7 @@ import { ReactComponent as SupportIcon } from "../../../assets/icons/support.svg
 import DashboardTab from "./dashboard";
 import SupportTab from "./support";
 import ReportsTab from "./reports";
+import LicenseTab from "./license";
 import AlertsTab from "./alertes";
 import GeographicalMapTab from "./geographical-map";
 import { MdDeveloperMode } from "react-icons/md";
@@ -54,6 +55,11 @@ const tabs: Tab[] = [
   //   component: <div className="w-full h-full">Library</div>,
   // },
   {
+    name: "License",
+    icon: <SettingsIcon />,
+    component: <LicenseTab />,
+  },
+  {
     name: "support",
     icon: <SupportIcon />,
     component: <SupportTab />,
@@ -62,7 +68,7 @@ const tabs: Tab[] = [
     name: "Settings",
     icon: <SettingsIcon />,
     component: <SettingsTab />,
-  },
+  }
   // {
   //   name: "dev",
   //   icon: <MdDeveloperMode />,

@@ -1,9 +1,7 @@
 import { Observable } from 'rxjs';
 
 export interface LicenseInterface {
-  GetLicensePermission(data: LicenseRequest): Observable<LicenseResponse>;
-  // AffectType(data: AffectUserRequest): Observable<ResultRequestAffectation>;
-  DeleteAffictaion(data: DeleteAffictaion);
+  AffectType(data: LicenseRequest): Observable<ResultRequestAffectation>;
 }
 export enum Type {
   USERS,
@@ -13,6 +11,7 @@ export enum Type {
 export interface LicenseRequest {
   tenantId: number;
   type: Type;
+  typeId: number;
 }
 
 export interface LicenseResponse {

@@ -89,12 +89,21 @@ const getLicenseService = async (id: number) => {
 
 const getallLicenseService = async (tenantId?:number) => {
 	try{
+	const count = await prisma.license.count({
+		where: {
+			tenantId: tenantId || undefined
+		}
+	});
 	const license = await prisma.license.findMany({
 		where: {
 			tenantId: tenantId || undefined
 		}
 	});
-	return license;
+	return {
+		totalResult: count,
+		results: license
+	};
+	
 	}
 	catch(err)
 	{

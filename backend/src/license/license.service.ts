@@ -15,10 +15,17 @@ export class LicenseService implements OnModuleInit {
       this.client.getService<LicenseInterface>('LicenseService');
   }
 
-  checkData(data: { tenantId: number; type: Type }): Observable<any> {
-    return this.lisenceService.GetLicensePermission(data);
-  }
+  // checkData(data: { tenantId: number; type: Type }): Observable<any> {
+  //   return this.lisenceService.GetLicensePermission(data);
+  // }
 
+  AffectType(data: {
+    type: Type;
+    tenantId: number;
+    typeId: number;
+  }): Observable<any> {
+    return this.lisenceService.AffectType(data);
+  }
   // affectUser(data: {
   //   licenseRequest: { tenantId: number; type: Type };
   //   licenseId?: number;
@@ -32,7 +39,7 @@ export class LicenseService implements OnModuleInit {
   //   // return this.lisenceService.AffectUser(data);
   // }
 
-  deleteAffictaion(data: DeleteAffictaion) {
-    return this.lisenceService.DeleteAffictaion(data);
-  }
+  // deleteAffictaion(data: DeleteAffictaion) {
+  //   return this.lisenceService.DeleteAffictaion(data);
+  // }
 }

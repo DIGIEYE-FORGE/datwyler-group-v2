@@ -17,7 +17,7 @@ import { FindAllQuery, FindOneQuery } from 'src/utils';
 @ApiTags('group')
 @Controller('group')
 export class GroupController {
-  constructor(private readonly groupService: GroupService) { }
+  constructor(private readonly groupService: GroupService) {}
 
   @ApiOkResponse({ type: [Group] })
   @Get()

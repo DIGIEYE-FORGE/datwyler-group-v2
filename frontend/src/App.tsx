@@ -17,6 +17,7 @@ import BackendApi from "./api/backend";
 import Button from "./components/button";
 import Modal from "./components/modal";
 import MultiTenancyApi from "./api/multitenancy";
+import LicenseApi from "./api/license";
 
 type ConfirmData = {
   title?: React.ReactNode;
@@ -46,6 +47,7 @@ export type AppContext = {
   loginState: LoginState;
   setLoginState: React.Dispatch<React.SetStateAction<LoginState>>;
   authApi: AuthApi;
+  licenseApi: LicenseApi;
   theme: Theme;
   setTheme: React.Dispatch<React.SetStateAction<Theme>>;
   tenantId: number | undefined;
@@ -144,6 +146,13 @@ function App() {
         refreshToken,
       }),
     []
+  );
+  const licenseApi = useMemo(
+    () =>
+      new LicenseApi({
+        tenantId,
+      }),
+    [tenantId]
   );
   const backendApi = useMemo(
     () =>
@@ -255,6 +264,7 @@ function App() {
         tenantId,
         setTenantId,
         backendApi,
+        licenseApi,
         confirm,
         multiTenancyApi,
         groups: filterdGroups,

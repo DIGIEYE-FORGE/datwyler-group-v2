@@ -38,6 +38,7 @@ services:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/digi-forge?schema=public
       GRPC_AUTH_SERVICE: "auth:5001"
       GRPC_MULTI_SERVICE: "multitenancy:4001"
+      GRPC_LICENCE_SERVICE: "license:2001"
     volumes:
       - ./backend/src:/usr/src/app/src
       - ./backend/prisma:/usr/src/app/prisma

@@ -22,7 +22,6 @@ async function bootstrap() {
     .addTag('devices')
     .build();
 
-
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/v1/docs', app, document);
   await app.listen(3000);

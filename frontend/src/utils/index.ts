@@ -95,6 +95,25 @@ export type LastTelemetry = {
   [key: string]: any;
 };
 
+
+
+
+export type License = {
+  id: number;
+  name?: string;
+  description?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  tenantId?: number;
+  parentId?: number;
+  startDate?: string;
+  expiredAt?: string;
+  numberOfUsers?: number;
+  numberOfDataCenters?: number;
+  users?: number[];
+  dataCenters?: number[];
+
+}
 export type Device = {
   id: string;
   name: System;
@@ -167,6 +186,7 @@ export type Params = {
   where?: Record<string, any>;
   orderBy?: JsonObject;
   include?: JsonObject;
+
 };
 
 export function convertParams(params: Params) {
