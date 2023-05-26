@@ -53,10 +53,10 @@ class TenantService {
     tenantId: number,
     user: AddUserDto
   ): Promise<Tenant | undefined> {
-    const data: LicenseRequest = {
-      tenantId: tenantId,
-      type: user.role,
-    };
+    // const data: LicenseRequest = {
+    //   tenantId: tenantId,
+    //   type: user.role,
+    // };
     // const res = await licenseClient.getPermission(data);
     // if (res?.permission) {
     //   await licenseClient.AffectLicense({
