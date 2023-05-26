@@ -7,6 +7,10 @@ export class DashboardController {
 
   @Get()
   findAll(@Query() query: { where?: string }) {
+    console.clear();
+    console.log(query);
+
     return this.dashboardService.findAll(query);
+
   }
 }
