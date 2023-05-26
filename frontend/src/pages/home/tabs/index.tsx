@@ -55,21 +55,20 @@ const tabs: Tab[] = [
   //   component: <div className="w-full h-full">Library</div>,
   // },
   {
-    name: "support",
-    icon: <SupportIcon />,
-    component: <SupportTab />,
-  },
-  {
     name: "License",
     icon: <SettingsIcon />,
     component: <LicenseTab />,
+  },
+  {
+    name: "support",
+    icon: <SupportIcon />,
+    component: <SupportTab />,
   },
   {
     name: "Settings",
     icon: <SettingsIcon />,
     component: <SettingsTab />,
   }
-  
   // {
   //   name: "dev",
   //   icon: <MdDeveloperMode />,

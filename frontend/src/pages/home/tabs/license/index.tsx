@@ -56,6 +56,7 @@ function LicenseTab() {
   const [params, setParams] = useReducer(paramsReducer, defaultParams);
   const [total, setTotal] = useState(100);
   const [rows, setRows] = useState<License[]>([]);
+  const [backUpRows, setBackUpRows] = useState<License[]>([]);
   const { theme, backendApi, tenantId, licenseApi } = useProvider<AppContext>();
 //   const action = (row: any) => {
 //     if (row.format === "pdf")
@@ -142,15 +143,10 @@ function LicenseTab() {
       filter: {
         type: "text",
         onChange: (e) => {
-          setParams({
-            type:'where',
-            payload:{
-              name:{
-                contains:e,
-                mode:'insensitive'
-              }
-            }
-          })
+            if (e != "")
+            setRows(backUpRows.filter((row:any) => row?.name?.includes(e) || undefined));
+            else
+            setRows(backUpRows);
         },
       },
     },
@@ -183,48 +179,22 @@ function LicenseTab() {
         onChange: (e:string) => {
           if (e === "lasthour")
           {
-            setParams({
-              type: "where",
-              payload: {
-                createdAt: {
-                  gte: addHours(new Date(), -1).toISOString(),
-                },
-              },
-            });
+            setRows(backUpRows.filter((row:any) => new Date(row.createdAt) >= addHours(new Date(), -1)));
           }
           else if (e === "last4hours")
           {
-            setParams({
-              type: "where",
-              payload: {
-                createdAt: {
-                  gte: addHours(new Date(), -4).toISOString(),
-                },
-              },
-            });
+            setRows(backUpRows.filter((row:any) => new Date(row.createdAt) >= addHours(new Date(), -4)));
           }
           else if (e === "last12hours")
           {
-            setParams({
-              type: "where",
-              payload: {
-                createdAt: {
-                  gte: addHours(new Date(), -12).toISOString(),
-                },
-              },
-            });
+            setRows(backUpRows.filter((row:any) => new Date(row.createdAt) >= addHours(new Date(), -12)));
           }
           else if (e === "lastday")
           {
-            setParams({
-              type:"where",
-              payload:{
-                createdAt:{
-                  gte: addHours(new Date(),(-24 * 1)).toISOString(),
-                }
-              }
-            })
+            setRows(backUpRows.filter((row:any) => new Date(row.createdAt) >= addDays(new Date(), -1)));
           }
+          else
+            setRows(backUpRows);
         },
       },
     },
@@ -257,51 +227,25 @@ function LicenseTab() {
           onChange: (e:string) => {
             if (e === "lasthour")
             {
-              setParams({
-                type: "where",
-                payload: {
-                  createdAt: {
-                    gte: addHours(new Date(), -1).toISOString(),
-                  },
-                },
-              });
+                setRows(backUpRows.filter((row:any) => new Date(row.expiredAt) >= addHours(new Date(), -1)));
             }
             else if (e === "last4hours")
             {
-              setParams({
-                type: "where",
-                payload: {
-                  createdAt: {
-                    gte: addHours(new Date(), -4).toISOString(),
-                  },
-                },
-              });
+                setRows(backUpRows.filter((row:any) => new Date(row.expiredAt) >= addHours(new Date(), -4)));
             }
             else if (e === "last12hours")
             {
-              setParams({
-                type: "where",
-                payload: {
-                  createdAt: {
-                    gte: addHours(new Date(), -12).toISOString(),
-                  },
-                },
-              });
+                setRows(backUpRows.filter((row:any) => new Date(row.expiredAt) >= addHours(new Date(), -12)));
             }
             else if (e === "lastday")
             {
-              setParams({
-                type:"where",
-                payload:{
-                  createdAt:{
-                    gte: addHours(new Date(),(-24 * 1)).toISOString(),
-                  }
-                }
-              })
+                setRows(backUpRows.filter((row:any) => new Date(row.expiredAt) >= addDays(new Date(), -1)));
             }
-          },
+            else
+                setRows(backUpRows);
         },
       },
+    },
     {
       label: "Total users",
       header: "Total users",
@@ -309,12 +253,10 @@ function LicenseTab() {
       filter: {
         type: "text",
         onChange: (e) => {
-          setParams({
-            type:'where',
-            payload:{
-            numberOfUsers : +e
-            }
-          })
+            if (e != "")
+            setRows(backUpRows.filter((row:any) => row?.numberOfUsers?.toString().includes(e) || undefined));
+            else
+            setRows(backUpRows);
         },
       },
     },
@@ -325,12 +267,10 @@ function LicenseTab() {
         filter: {
           type: "text",
           onChange: (e) => {
-            setParams({
-              type:'where',
-              payload:{
-                numberOfDataCenters: +e
-              }
-            })
+            if (e != "")
+            setRows(backUpRows.filter((row:any) => row?.numberOfDataCenters?.toString().includes(e) || undefined));
+            else
+                setRows(backUpRows);
           },
         },
       },
@@ -341,6 +281,10 @@ function LicenseTab() {
         filter: {
             type: "text",
             onChange: (e) => {
+                if (e != "")
+                setRows(backUpRows.filter((row:any) => row?.users?.length?.toString().includes(e) || undefined));
+                else
+                    setRows(backUpRows);
             },
         },
     },
@@ -351,25 +295,32 @@ function LicenseTab() {
         filter: {
             type: "text",
             onChange: (e) => {
+                if (e != "")
+                setRows(backUpRows.filter((row:any) => row?.dataCenters?.length?.toString().includes(e) || undefined));
+                else
+                setRows(backUpRows);
             },
         },
     }
   ];
-
+  const [state, setState] = useState<"idle" | "loading" | "error">("loading");
   const [open, setOpen] = useState(false);
   const [DevicesData, setDevicesData] = useState<Device[]>([]);
   const [checkUpdate, setCheckUpdate] = useState(false);
-  useEffect(() => {
-    
-  }, []);
 
-  useEffect(()=> {
+  useEffect(()=>{
     getLicense().then((res:any) => {
-        console.log("data",res); 
+      setState("loading");
      setRows(res?.results);
-    setTotal(res?.totalResult || 0);
-    });
-  },[tenantId,params])
+      setTotal(res?.totalResult || 0);
+      setBackUpRows(res?.results);
+      setState("idle");
+    }).catch((err)=>{
+      setState("error");
+    }).finally(()=>{
+      setState("idle");
+    })
+  },[tenantId])
   return (
     <div className="flex flex-col  gap-6 p-6">
       <div className="flex gap-4 items-center flex-wrap justify-end ">
@@ -490,7 +441,7 @@ function LicenseTab() {
               id="numberOfUsers"
               className="h-11"
               onChange={(e) => {
-                
+                setCreateLicese({ ...createLicese, numberOfUsers: +e.target.value });
               }}
             />
           </div>
@@ -508,7 +459,8 @@ function LicenseTab() {
               id="numberOfUsers"
               className="h-11"
               onChange={(e) => {
-                setCreateReport({ ...createReport, name: e.target.value });
+
+                  setCreateLicese({ ...createLicese, numberOfDataCenters: +e.target.value });
               }}
             />
           </div>
@@ -525,17 +477,6 @@ function LicenseTab() {
           <Button
             className="flex items-center gap-2 py-3 px-4"
             onClick={() => {
-              console.log(createReport);
-              backendApi
-                .generateFile(createReport)
-                .then((res) => {
-                  toast.success("Report generated successfully");
-                  setCheckUpdate(!checkUpdate);
-                })
-                .catch((err) => {
-                  toast.error(err);
-                });
-              setOpen(false);
             }}
           >
             <span>Genarate</span>
