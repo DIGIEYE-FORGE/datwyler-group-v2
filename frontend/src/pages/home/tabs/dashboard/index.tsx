@@ -5,15 +5,13 @@ import { GiLeak } from "react-icons/gi";
 import { BsFullscreen, BsFullscreenExit } from "react-icons/bs";
 import { FiSettings } from "react-icons/fi";
 import Tooltip from "../../../../components/tooltip";
-
 import ReactApexChart from "react-apexcharts";
 import For from "../../../../components/for";
-
 import Card from "../../../../components/card";
 import { GiSmokeBomb } from "react-icons/gi";
 import Provider, { useProvider } from "../../../../components/provider";
 import { AppContext } from "../../../../App";
-import { DashboardData, Group, strTake } from "../../../../utils";
+import { DashboardData, strTake } from "../../../../utils";
 import GeographicalMap from "./goegraphical-map";
 import { toast } from "react-toastify";
 import { format } from "date-fns";
@@ -74,7 +72,7 @@ function Metrics() {
         </div>
       </Card>
       <Card className="metric-card ">
-        <div className="title rounded bg-primary/10 p-2">Door Status</div>
+        <div className="title rounded bg-primary/10 p-2">Door Alarms</div>
         <div className="flex-1 flex justify-between items-center p-2 ">
           <span className="text-3xl">{dashboardData?.doorAlarms ?? 0}</span>
           <span className="w-[2.75rem] aspect-square flex-center bg-[#F86F28]/20 rounded-full">
@@ -285,16 +283,17 @@ function Overview() {
   const { theme } = useProvider<AppContext>();
   return (
     <Chart title="Tempurature And Humidity" className="xl:col-span-2">
-      <div className="card-body  overflow-auto p-3">
-        <div className="h-[15%] flex justify-between p-3">
-          <div></div>
-          <input
-            type="date"
-            name="data"
-            id="data"
-            className="w-[20rem] border-2 border-primary"
-          />
-        </div>
+      <div className="card-body  overflow-auto p-3 h-full flex flex-col  gap-4">
+        <select
+          className="ml-auto w-[20rem] border-2 border-primary [&>*]:capitalize"
+          placeholder="Select range of time"
+        >
+          <option value="">all</option>
+          <option value="last hour"> last hour</option>
+          <option value="last 4 hour"> last 4 hour</option>
+          <option value="last 24 hours"> last 24 hours</option>
+          <option value="last 7 days"> last 7 days</option>
+        </select>
         <ReactApexChart
           width={"100%"}
           height={"80%"}
@@ -309,20 +308,10 @@ function Overview() {
                 show: false,
               },
             },
-            legend: {
-              position: "top",
-              horizontalAlign: "left",
-              offsetY: -25,
-              offsetX: -5,
-              fontSize: "20px",
-              labels: {
-                colors: theme === "dark" ? "#fff" : "#373d3f",
-              },
-            },
             stroke: {
-              width: [5, 6],
+              width: [3, 3],
               curve: "smooth",
-              dashArray: [0, 8],
+              // dashArray: [0, 2],
             },
             tooltip: {
               enabled: false,

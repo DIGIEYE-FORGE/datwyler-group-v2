@@ -9,29 +9,37 @@ import { AppContext } from "../../../../App";
 
 function DevicesTab() {
   const { tenantId, refreshToken, backendApi } = useProvider<AppContext>();
-  const [total, setTotal] = useState(100);
+  const [total, setTotal] = useState(0);
   const [params, setParams] = useState<Params>({
     pagination: {
       page: 1,
-      perPage: 6,
+      perPage: 5,
     },
     include: {
       group: true,
       _count: true,
     },
   });
+  const [state, setState] = useState<"idle" | "loading" | "error">("loading");
 
   const [rows, setRows] = useState<Device[]>([]);
 
-  useEffect(() => {
+  async function getDevices() {
     try {
-      backendApi.getDevices(params).then((res) => {
-        setRows(res.results);
-        setTotal(res.totalResult);
-      });
+      setState("loading");
+      const res = await backendApi.getDevices(params);
+      setRows(res.results);
+      setTotal(res.totalResult);
+
+      setState("idle");
     } catch (err) {
       console.log(err);
+      setState("error");
     }
+  }
+
+  useEffect(() => {
+    getDevices();
   }, [tenantId, params]);
 
   const columns: Column[] = [
@@ -82,12 +90,14 @@ function DevicesTab() {
           onChange={(v) => setParams({ ...params, pagination: v })}
           total={total}
         />
-        <Button className="flex items-center gap-2">
+        {/* <Button className="flex items-center gap-2">
           export
           <BiExport className="text-lg" />
-        </Button>
+        </Button> */}
       </div>
       <DataGrid
+        error={state === "error"}
+        loading={state === "loading"}
         className="table-fixed  w-full  text-left "
         headClassName="h-[5.5rem] bg-dark/5 dark:bg-light/5 text-[#697681] [&>*]:px-2 "
         rowClassName="h-[4rem] [&>*]:px-2 even:bg-dark/5 dark:even:bg-light/5 hover:bg-dark/10 dark:hover:bg-light/10"

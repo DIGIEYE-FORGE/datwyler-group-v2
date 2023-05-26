@@ -16,6 +16,7 @@ import { z } from "zod";
 import { RegisterUser } from "../../../../api/auth";
 import { toast } from "react-toastify";
 import AddUser from "./add-user";
+import { set } from "date-fns";
 
 const defaultParams: Params = {
   pagination: {
@@ -36,12 +37,19 @@ function AdminTab() {
   const [users, setUsers] = useState<User[]>([]);
   const { tenantId, multiTenancyApi } = useProvider<AppContext>();
   const [open, setOpen] = useState<boolean>(false);
-
+  const [state, setState] = useState<"idle" | "loading" | "error">("loading");
   const [params, setParams] = useState<Params>(defaultParams);
 
   const getUsers = useCallback(async () => {
-    const res = await multiTenancyApi.getUsers({ tenantId });
-    setUsers(res);
+    try {
+      setState("loading");
+      const res = await multiTenancyApi.getUsers({ tenantId });
+      setUsers(res);
+      setState("idle");
+    } catch (err) {
+      console.log(err);
+      setState("error");
+    }
   }, [tenantId]);
 
   useEffect(() => {
@@ -126,6 +134,8 @@ function AdminTab() {
         </Button>
       </div>
       <DataGrid
+        error={state === "error"}
+        loading={state === "loading"}
         className="table-fixed  w-full  text-left "
         headClassName="h-[5.5rem] bg-dark/5 dark:bg-light/5 text-[#697681] [&>*]:px-2 "
         rowClassName="h-[4rem] [&>*]:px-2 even:bg-dark/5 dark:even:bg-light/5 hover:bg-dark/10 dark:hover:bg-light/10"

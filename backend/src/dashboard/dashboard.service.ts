@@ -4,32 +4,69 @@ import { PrismaService } from 'src/prisma.service';
 @Injectable()
 export class DashboardService {
   constructor(private prisma: PrismaService) { }
-  async findAll() {
-    const totalDevices = await this.prisma.device.count();
+  async findAll(query: { where?: string }) {
+    const where = query?.where ? JSON.parse(query.where) : {};
+    console.log(where);
+    const totalDevices = await this.prisma.device.count({
+      where: {
+        ...where,
+      },
+    });
     const onlineDevices = await this.prisma.device.count({
       where: {
         updatedAt: {
           gte: new Date(Date.now() - 60 * 1000),
         },
+        ...where,
       },
     });
     const criticalAlarms = await this.prisma.alert.count({
-      where: { level: 'Critical', acknowledgedBy: null },
+      where: {
+        level: 'Critical',
+        acknowledgedBy: null,
+        device: {
+          ...where,
+        },
+      },
     });
     const waterLeakAlarms = await this.prisma.alert.count({
-      where: { type: 'Water Leakage', acknowledgedBy: null },
+      where: {
+        type: 'Water Leakage',
+        acknowledgedBy: null,
+        device: {
+          ...where,
+        },
+      },
     });
     const doorAlarms = await this.prisma.alert.count({
-      where: { type: 'Door', acknowledgedBy: null },
+      where: {
+        type: 'Door',
+        acknowledgedBy: null,
+        device: {
+          ...where,
+        },
+      },
     });
     const smokeAlarms = await this.prisma.alert.count({
-      where: { type: 'Smoke', acknowledgedBy: null },
+      where: {
+        type: 'Smoke',
+        acknowledgedBy: null,
+        device: {
+          ...where,
+        },
+      },
     });
     const upsAlarms = await this.prisma.alert.findMany({
-      where: { device: { name: 'UPS' }, acknowledgedBy: null },
+      where: {
+        device: { name: 'UPS', ...where },
+        acknowledgedBy: null,
+      },
     });
     const coolingUnitAlarms = await this.prisma.alert.findMany({
-      where: { device: { name: 'COOLING UNIT' }, acknowledgedBy: null },
+      where: {
+        device: { name: 'COOLING UNIT', ...where },
+        acknowledgedBy: null,
+      },
     });
 
     return {

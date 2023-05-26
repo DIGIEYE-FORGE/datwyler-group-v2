@@ -229,3 +229,8 @@ export function toFixed<T>(
   if (!number) return defaulValue;
   return Number(number.toFixed(precision));
 }
+
+
+export async function throttle(ms: number) {
+  await new Promise((resolve) => setTimeout(resolve, ms));
+}

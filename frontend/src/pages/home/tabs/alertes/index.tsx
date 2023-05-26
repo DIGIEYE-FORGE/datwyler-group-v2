@@ -170,11 +170,13 @@ const paramsReducer = (
 function AlertsTab() {
   const { backendApi, tenantId, confirm, user } = useProvider<AppContext>();
   const [params, dispatch] = useReducer(paramsReducer, defaultParams);
-  const [total, setTotal] = useState(100);
+  const [total, setTotal] = useState(0);
   const [rows, setRows] = useState<Alert[]>([]);
+  const [state, setState] = useState<"idle" | "loading" | "error">("loading");
 
   const getAlerts = useCallback(async () => {
     try {
+      setState("loading");
       const alerts = await backendApi.getAlerts({
         ...params,
         where: {
@@ -185,9 +187,11 @@ function AlertsTab() {
           },
         },
       });
+      setState("idle");
       setRows(alerts.results);
       setTotal(alerts.totalResult);
     } catch (e) {
+      setState("error");
       console.log("error getting alerts", e);
     }
   }, [params, tenantId]);
@@ -386,12 +390,14 @@ function AlertsTab() {
           onChange={(v) => dispatch({ type: "pagination", payload: v })}
           total={total}
         />
-        <Button className="flex items-center gap-2">
+        {/* <Button className="flex items-center gap-2">
           export
           <BiExport className="text-lg" />
-        </Button>
+        </Button> */}
       </div>
       <DataGrid
+        loading={state === "loading"}
+        error={state === "error"}
         className="table-fixed  w-full  text-left "
         headClassName="h-[5.5rem] bg-dark/5 dark:bg-light/5 text-[#697681] [&>*]:px-2 "
         rowClassName="h-[4rem] [&>*]:px-2 even:bg-dark/5 dark:even:bg-light/5 hover:bg-dark/10 dark:hover:bg-light/10"
