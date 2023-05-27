@@ -319,7 +319,6 @@ function LicenseTab() {
   const [DevicesData, setDevicesData] = useState<Device[]>([]);
   const [checkUpdate, setCheckUpdate] = useState(false);
 
-  const clear
   useEffect(()=>{
 
     setCreateLicese((prev)=>({...prev,tenantId:tenantId,

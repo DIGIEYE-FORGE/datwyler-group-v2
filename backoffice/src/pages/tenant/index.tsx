@@ -323,7 +323,6 @@ function TenantPage() {
               </>
             )}
           </div>
-          <div>{JSON.stringify(selectedTenant)}</div>
           <div className="flex items-center justify-between p-6">
             <Button
               onClick={() => {
