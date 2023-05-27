@@ -8,6 +8,7 @@ import { ReactComponent as OpenedbookIcon } from "../../../assets/icons/opened-b
 import { ReactComponent as AdminIcon } from "../../../assets/icons/admin.svg";
 import { ReactComponent as SettingsIcon } from "../../../assets/icons/setting.svg";
 import { ReactComponent as SupportIcon } from "../../../assets/icons/support.svg";
+import { ReactComponent as KeyIcon } from "../../../assets/key.svg";
 import DashboardTab from "./dashboard";
 import SupportTab from "./support";
 import ReportsTab from "./reports";
@@ -56,7 +57,7 @@ const tabs: Tab[] = [
   // },
   {
     name: "License",
-    icon: <SettingsIcon />,
+    icon: <KeyIcon />,
     component: <LicenseTab />,
   },
   {
