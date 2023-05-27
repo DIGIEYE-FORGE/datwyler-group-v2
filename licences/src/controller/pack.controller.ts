@@ -42,7 +42,6 @@ const getPacksController = async (req: any, res: any) => {
     }
 };
 
-
 const updatePackController = async (req: any, res: any) => {
     try {
         const { id } = req.params;
@@ -53,6 +52,7 @@ const updatePackController = async (req: any, res: any) => {
         return res.status(400).json(err);
     }
 };
+
 const deletePackController = async (req: any, res: any) => {
     try {
         const { id } = req.params;
@@ -63,6 +63,7 @@ const deletePackController = async (req: any, res: any) => {
         return res.status(400).json(err)
     }
 }
+
 export {
     createPackServiceController,
     getPackController,
