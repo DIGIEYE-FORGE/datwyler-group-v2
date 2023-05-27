@@ -5,6 +5,7 @@ import type { MethodDefinition } from '@grpc/proto-loader'
 import type { AffectTypeRequest as _licensePackage_AffectTypeRequest, AffectTypeRequest__Output as _licensePackage_AffectTypeRequest__Output } from '../licensePackage/AffectTypeRequest';
 import type { AuthPermissionRequest as _licensePackage_AuthPermissionRequest, AuthPermissionRequest__Output as _licensePackage_AuthPermissionRequest__Output } from '../licensePackage/AuthPermissionRequest';
 import type { AuthPermissionResponse as _licensePackage_AuthPermissionResponse, AuthPermissionResponse__Output as _licensePackage_AuthPermissionResponse__Output } from '../licensePackage/AuthPermissionResponse';
+import type { DeleteAffictationRequest as _licensePackage_DeleteAffictationRequest, DeleteAffictationRequest__Output as _licensePackage_DeleteAffictationRequest__Output } from '../licensePackage/DeleteAffictationRequest';
 import type { ResultRequestAffectation as _licensePackage_ResultRequestAffectation, ResultRequestAffectation__Output as _licensePackage_ResultRequestAffectation__Output } from '../licensePackage/ResultRequestAffectation';
 
 export interface LicenseServiceClient extends grpc.Client {
@@ -26,14 +27,14 @@ export interface LicenseServiceClient extends grpc.Client {
   authPermission(argument: _licensePackage_AuthPermissionRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_licensePackage_AuthPermissionResponse__Output>): grpc.ClientUnaryCall;
   authPermission(argument: _licensePackage_AuthPermissionRequest, callback: grpc.requestCallback<_licensePackage_AuthPermissionResponse__Output>): grpc.ClientUnaryCall;
   
-  DeleteAffictation(argument: _licensePackage_AffectTypeRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_licensePackage_ResultRequestAffectation__Output>): grpc.ClientUnaryCall;
-  DeleteAffictation(argument: _licensePackage_AffectTypeRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_licensePackage_ResultRequestAffectation__Output>): grpc.ClientUnaryCall;
-  DeleteAffictation(argument: _licensePackage_AffectTypeRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_licensePackage_ResultRequestAffectation__Output>): grpc.ClientUnaryCall;
-  DeleteAffictation(argument: _licensePackage_AffectTypeRequest, callback: grpc.requestCallback<_licensePackage_ResultRequestAffectation__Output>): grpc.ClientUnaryCall;
-  deleteAffictation(argument: _licensePackage_AffectTypeRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_licensePackage_ResultRequestAffectation__Output>): grpc.ClientUnaryCall;
-  deleteAffictation(argument: _licensePackage_AffectTypeRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_licensePackage_ResultRequestAffectation__Output>): grpc.ClientUnaryCall;
-  deleteAffictation(argument: _licensePackage_AffectTypeRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_licensePackage_ResultRequestAffectation__Output>): grpc.ClientUnaryCall;
-  deleteAffictation(argument: _licensePackage_AffectTypeRequest, callback: grpc.requestCallback<_licensePackage_ResultRequestAffectation__Output>): grpc.ClientUnaryCall;
+  DeleteAffictation(argument: _licensePackage_DeleteAffictationRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_licensePackage_ResultRequestAffectation__Output>): grpc.ClientUnaryCall;
+  DeleteAffictation(argument: _licensePackage_DeleteAffictationRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_licensePackage_ResultRequestAffectation__Output>): grpc.ClientUnaryCall;
+  DeleteAffictation(argument: _licensePackage_DeleteAffictationRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_licensePackage_ResultRequestAffectation__Output>): grpc.ClientUnaryCall;
+  DeleteAffictation(argument: _licensePackage_DeleteAffictationRequest, callback: grpc.requestCallback<_licensePackage_ResultRequestAffectation__Output>): grpc.ClientUnaryCall;
+  deleteAffictation(argument: _licensePackage_DeleteAffictationRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_licensePackage_ResultRequestAffectation__Output>): grpc.ClientUnaryCall;
+  deleteAffictation(argument: _licensePackage_DeleteAffictationRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_licensePackage_ResultRequestAffectation__Output>): grpc.ClientUnaryCall;
+  deleteAffictation(argument: _licensePackage_DeleteAffictationRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_licensePackage_ResultRequestAffectation__Output>): grpc.ClientUnaryCall;
+  deleteAffictation(argument: _licensePackage_DeleteAffictationRequest, callback: grpc.requestCallback<_licensePackage_ResultRequestAffectation__Output>): grpc.ClientUnaryCall;
   
 }
 
@@ -42,12 +43,12 @@ export interface LicenseServiceHandlers extends grpc.UntypedServiceImplementatio
   
   AuthPermission: grpc.handleUnaryCall<_licensePackage_AuthPermissionRequest__Output, _licensePackage_AuthPermissionResponse>;
   
-  DeleteAffictation: grpc.handleUnaryCall<_licensePackage_AffectTypeRequest__Output, _licensePackage_ResultRequestAffectation>;
+  DeleteAffictation: grpc.handleUnaryCall<_licensePackage_DeleteAffictationRequest__Output, _licensePackage_ResultRequestAffectation>;
   
 }
 
 export interface LicenseServiceDefinition extends grpc.ServiceDefinition {
   AffectType: MethodDefinition<_licensePackage_AffectTypeRequest, _licensePackage_ResultRequestAffectation, _licensePackage_AffectTypeRequest__Output, _licensePackage_ResultRequestAffectation__Output>
   AuthPermission: MethodDefinition<_licensePackage_AuthPermissionRequest, _licensePackage_AuthPermissionResponse, _licensePackage_AuthPermissionRequest__Output, _licensePackage_AuthPermissionResponse__Output>
-  DeleteAffictation: MethodDefinition<_licensePackage_AffectTypeRequest, _licensePackage_ResultRequestAffectation, _licensePackage_AffectTypeRequest__Output, _licensePackage_ResultRequestAffectation__Output>
+  DeleteAffictation: MethodDefinition<_licensePackage_DeleteAffictationRequest, _licensePackage_ResultRequestAffectation, _licensePackage_DeleteAffictationRequest__Output, _licensePackage_ResultRequestAffectation__Output>
 }

@@ -3,10 +3,18 @@ syntax="proto3";
 
 package licensePackage;
 service LicenseService {
-		rpc GetLicensePermission (LicenseRequest) returns (LicenseResponse) {}
 		rpc AffectType(AffectTypeRequest) returns (ResultRequestAffectation) {}
-		rpc DeleteAffictation(AffectTypeRequest)returns (ResultRequestAffectation){}
+		rpc DeleteAffictation(DeleteAffictationRequest)returns (ResultRequestAffectation){}
 		rpc AuthPermission(AuthPermissionRequest) returns (AuthPermissionResponse) {}
+}
+
+message DeleteAffictationRequest {
+		enum Type{
+			USERS = 0;
+			DATACENTER = 1;
+		}
+		Type type = 1;
+		int32 typeId = 2;
 }
 
 message AffectTypeRequest {
@@ -18,14 +26,7 @@ message AffectTypeRequest {
 		int32 tenantId = 2;
 		int32 typeId = 3;
 }
-message DeleteAffictaionRequest {
-	LicenseRequest licenseRequest = 1;
-	int32 deletedId = 2;
-}
 
-message DeleteAffictaionResponse{
-	string message= 0;
-}
 //////////auth //////////////
 message AuthPermissionRequest {
 		int32 userId = 1;
@@ -36,17 +37,4 @@ message AuthPermissionResponse {
 ////////////////////////////////
 message ResultRequestAffectation {
 		bool result = 1;
-}
-message LicenseRequest {
-		int32 tenantId = 1;
-		enum Type{
-			USERS = 0;
-			DATACENTER = 2;
-		}
-		Type type = 2;
-}
-message Empty {}
-message LicenseResponse {
-		bool permission = 1;
-		int32 licenseId = 2;
 }

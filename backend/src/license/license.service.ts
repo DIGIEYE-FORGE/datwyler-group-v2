@@ -3,7 +3,7 @@ import { Client, ClientGrpc } from '@nestjs/microservices';
 import { microservicesOption } from './grpc.options';
 import { Observable } from 'rxjs';
 
-import { DeleteAffictaion, LicenseInterface, Type } from './license.interface';
+import { LicenseInterface, Type } from './license.interface';
 @Injectable()
 export class LicenseService implements OnModuleInit {
   @Client(microservicesOption)
@@ -15,10 +15,6 @@ export class LicenseService implements OnModuleInit {
       this.client.getService<LicenseInterface>('LicenseService');
   }
 
-  // checkData(data: { tenantId: number; type: Type }): Observable<any> {
-  //   return this.lisenceService.GetLicensePermission(data);
-  // }
-
   AffectType(data: {
     type: Type;
     tenantId: number;
@@ -26,20 +22,8 @@ export class LicenseService implements OnModuleInit {
   }): Observable<any> {
     return this.lisenceService.AffectType(data);
   }
-  // affectUser(data: {
-  //   licenseRequest: { tenantId: number; type: Type };
-  //   licenseId?: number;
-  //   injectedId?: number;
-  // }): Observable<{
-  //   result: boolean;
-  // }> {
-  //   return {
-  //     result: true,
-  //   }
-  //   // return this.lisenceService.AffectUser(data);
-  // }
 
-  // deleteAffictaion(data: DeleteAffictaion) {
-  //   return this.lisenceService.DeleteAffictaion(data);
-  // }
+  DeleteAffictation(data: { type: Type; typeId: number }): Observable<any> {
+    return this.lisenceService.DeleteAffictation(data);
+  }
 }

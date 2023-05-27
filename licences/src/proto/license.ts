@@ -12,6 +12,7 @@ export interface ProtoGrpcType {
     AffectTypeRequest: MessageTypeDefinition
     AuthPermissionRequest: MessageTypeDefinition
     AuthPermissionResponse: MessageTypeDefinition
+    DeleteAffictationRequest: MessageTypeDefinition
     LicenseService: SubtypeConstructor<typeof grpc.Client, _licensePackage_LicenseServiceClient> & { service: _licensePackage_LicenseServiceDefinition }
     ResultRequestAffectation: MessageTypeDefinition
   }

@@ -6,10 +6,8 @@ const api = axios.create({
 });
 
 const multiTenancyApi = axios.create({
-	baseURL: import.meta.env.VITE_MULTI_TENANCY_API,
+	baseURL: `http://${window.location.hostname}:4000`
 });
-
-
 
 
 api.interceptors.response.use(

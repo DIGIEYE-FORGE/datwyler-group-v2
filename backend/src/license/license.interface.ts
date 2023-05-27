@@ -2,15 +2,22 @@ import { Observable } from 'rxjs';
 
 export interface LicenseInterface {
   AffectType(data: LicenseRequest): Observable<ResultRequestAffectation>;
+  DeleteAffictation(
+    data: DeleteAffictationRequest,
+  ): Observable<ResultRequestAffectation>;
 }
 export enum Type {
   USERS,
   DATACENTER,
 }
 
-export interface LicenseRequest {
-  tenantId: number;
+export interface DeleteAffictationRequest {
   type: Type;
+  typeId: number;
+}
+export interface LicenseRequest {
+  type: Type;
+  tenantId: number;
   typeId: number;
 }
 

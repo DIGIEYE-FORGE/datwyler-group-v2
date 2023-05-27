@@ -57,7 +57,7 @@ function LicenseTab() {
   const [total, setTotal] = useState(100);
   const [rows, setRows] = useState<License[]>([]);
   const [backUpRows, setBackUpRows] = useState<License[]>([]);
-  const { theme, backendApi, tenantId, licenseApi } = useProvider<AppContext>();
+  const { theme, user, tenantId, licenseApi} = useProvider<AppContext>();
 //   const action = (row: any) => {
 //     if (row.format === "pdf")
 //       return (
@@ -118,6 +118,13 @@ function LicenseTab() {
     return res;
   };
 
+//   const getTenant = async (id:number) => {
+//     const res = await .getTenant({
+//         id: id,
+//     });
+//     return res;
+//     };
+
 
   const [createLicese, setCreateLicese] = useState<{
     name: string;
@@ -126,9 +133,13 @@ function LicenseTab() {
     numberOfDataCenters: number;
     startDate: string;
     expiredAt: string;
+    tenantId?: number;
+    parentId?: number;
   }>({
     name:"",
     description:"",
+    tenantId:tenantId|| undefined,
+    parentId:user?.tenants?.filter((tenant) => tenant.id === tenantId && tenant.parentId)[0]?.parentId || undefined,
     numberOfUsers:100,
     numberOfDataCenters:100,
     startDate:new Date().toISOString(),
@@ -309,6 +320,10 @@ function LicenseTab() {
   const [checkUpdate, setCheckUpdate] = useState(false);
 
   useEffect(()=>{
+
+    setCreateLicese((prev)=>({...prev,tenantId:tenantId,
+      parentId:user?.tenants?.filter((tenant) => tenant.id === tenantId && tenant.parentId)[0]?.parentId || undefined,
+  }));
     getLicense().then((res:any) => {
       setState("loading");
      setRows(res?.results);
@@ -406,7 +421,7 @@ function LicenseTab() {
               id="startDate"
               className="h-11"
               onChange={(e) => {
-                setCreateLicese({ ...createLicese, startDate: e.target.value });
+                setCreateLicese({ ...createLicese, startDate: new Date(e.target.value).toISOString() });
               }}
             />
           </div>
@@ -423,7 +438,7 @@ function LicenseTab() {
               id="expiredAt"
               className="h-11"
               onChange={(e) => {
-                setCreateLicese({ ...createLicese, expiredAt: e.target.value });
+                setCreateLicese({ ...createLicese, expiredAt: new Date(e.target.value).toISOString() });
               }}
             />
           </div>
@@ -477,6 +492,14 @@ function LicenseTab() {
           <Button
             className="flex items-center gap-2 py-3 px-4"
             onClick={() => {
+             licenseApi.addLicense(createLicese).then((res:any) => {
+              setRows((prev) => [...prev, res]);
+                setOpen(false);
+              }
+              ).catch((err) => {
+                console.log(err);
+              }
+              )
             }}
           >
             <span>Genarate</span>

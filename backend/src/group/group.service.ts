@@ -30,16 +30,20 @@ export class GroupService {
   @HandleRequestErrors()
   async create(data: CreateGroupDto) {
     const res = await this.prisma.group.create({ data });
-    // if (res) {
-    //   const dt = this.licenseService
-    //     .AffectType({
-    //       tenantId: data.tenantId,
-    //       typeId: res.id,
-    //       type: Type.DATACENTER,
-    //     })
-    //     .toPromise();
-    //   console.log('-----------------------------------', dt);
-    // }
+    if (res) {
+      const dt = await this.licenseService
+        .AffectType({
+          tenantId: data.tenantId,
+          typeId: res.id,
+          type: Type.DATACENTER,
+        })
+        .toPromise();
+      if (dt.result == false) {
+        await this.prisma.group.delete({ where: { id: res.id } });
+        throw new Error(dt.message);
+      }
+    }
+    return res;
   }
 
   @HandleRequestErrors()
@@ -49,6 +53,9 @@ export class GroupService {
 
   @HandleRequestErrors()
   async remove(id: number) {
+    const res = await this.licenseService
+      .DeleteAffictation({ type: Type.DATACENTER, typeId: id })
+      .toPromise();
     return await this.prisma.group.delete({ where: { id } });
   }
 }

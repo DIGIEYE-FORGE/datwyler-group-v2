@@ -52,4 +52,20 @@ export default class LicenseApi {
     });
     return res.data;
   }
+
+
+  async addLicense(props: {
+  name?: string;
+  description?: string;
+  tenantId?: number;
+  parentId?: number;
+  startDate?: string;
+  expiredAt?: string;
+  numberOfUsers?: number;
+  numberOfDataCenters?: number;
+
+  }): Promise<ManyResponse<Report[]>> {
+    const res = await this.api.post("/license",props );
+    return res.data;
+  }
 }

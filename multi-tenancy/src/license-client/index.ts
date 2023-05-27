@@ -4,14 +4,11 @@ import * as protoLoader from "@grpc/proto-loader";
 import { ProtoGrpcType } from "../proto/tenant-liscence";
 import env from "../commun/env";
 import { LicenseServiceClient } from "../proto/licensePackage/LicenseService";
-import { LicenseRequest } from "../proto/licensePackage/LicenseRequest";
-import { AffectUserRequest } from "../proto/licensePackage/AffectUserRequest";
-import { LicenseResponse__Output } from "../proto/licensePackage/LicenseResponse";
+
 import { ResultRequestAffectation__Output } from "../proto/licensePackage/ResultRequestAffectation";
 import logger from "../commun/logger";
-import { DeleteAffictaionRequest } from "../proto/licensePackage/DeleteAffictaionRequest";
-import { DeleteAffictaionResponse__Output } from "../proto/licensePackage/DeleteAffictaionResponse";
-
+import { AffectTypeRequest } from "../proto/licensePackage/AffectTypeRequest";
+import { DeleteAffictationRequest } from "../proto/licensePackage/DeleteAffictationRequest";
 const PROTO_FILE = path.resolve(__dirname, "..", "..", "tenant-liscence.proto");
 
 const packageDefinition = protoLoader.loadSync(
@@ -54,24 +51,12 @@ class GrpcClient {
     }, 1000);
   }
 
-  public getPermission(
-    data: LicenseRequest
-  ): Promise<LicenseResponse__Output | undefined> {
-    return new Promise((resolve, reject) => {
-      this.client.GetLicensePermission(data, (err, res) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(res);
-      });
-    });
-  }
 
   public AffectLicense(
-    data: AffectUserRequest
+    data: AffectTypeRequest
   ): Promise<ResultRequestAffectation__Output | undefined> {
     return new Promise((resolve, reject) => {
-      this.client.AffectUser(data, (err, res) => {
+      this.client.affectType(data, (err, res) => {
         if (err) {
           reject(err);
         }
@@ -80,20 +65,22 @@ class GrpcClient {
     });
   }
 
-  public RemoveAffectation(
-    data: DeleteAffictaionRequest
-  ): Promise<DeleteAffictaionResponse__Output | undefined> {
+  public DeleteAffictation(
+    data: DeleteAffictationRequest): Promise<ResultRequestAffectation__Output | undefined> {
     return new Promise((resolve, reject) => {
-      this.client.DeleteAffictation(data, (err, res) => {
+      this.client.deleteAffictation(data, (err, res) => {
         if (err) {
           reject(err);
         }
-
         resolve(res);
       });
     });
   }
 }
+
+
+
+
 
 const licenseClient = new GrpcClient();
 licenseClient.start();

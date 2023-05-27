@@ -66,85 +66,80 @@ function getServers(server: grpc.Server) {
 		GetLicensePermission: async (req:any, res:any) => {
 		},
 		AffectType: async (req:any, res:any) => {
-			console.log(req.request);
-			return res(null, {result: true});
-			
-			// try{
-			// 	const {type,tenantId,typeId} = req.request;
-			// 	if (type == "USERS"){
-			// 		const license = await prisma.license.findFirst({
-			// 			where:{
-			// 				tenantId: tenantId,
-			// 				numberOfUsers:{
-			// 					gte: 1
-			// 				},
-			// 				expiredAt:{
-			// 					gte: new Date()
-			// 				}
-			// 			}
-			// 		})
-			// 		if (license){
-			// 			await prisma.license.update({
-			// 				where:{
-			// 					id: license.id
-			// 				},
-			// 				data:{
-			// 					numberOfUsers: license.numberOfUsers - 1,
-			// 					users:{
-			// 						push: typeId
-			// 					}
-			// 				}
-			// 			});
-			// 			res(null, {result: true});
-			// 		}
-			// 		else res(null, {result: false});
-
-
-			// 	}
-			// 	else if (type == "DATACENTER"){
-			// 	// 	const license = await prisma.license.findFirst({
-			// 	// 		where:{
-			// 	// 			tenantId: tenantId,
-			// 	// 			numberOfDataCenters:{
-			// 	// 				gte: 1
-			// 	// 			},
-			// 	// 			expiredAt:{
-			// 	// 				gte: new Date()
-			// 	// 			}
-			// 	// 		}
-			// 	// 	})
-			// 	// 	if (license){
-			// 	// 		await prisma.license.update({
-			// 	// 			where:{
-			// 	// 				id: license.id
-			// 	// 			},
-			// 	// 			data:{
-			// 	// 				numberOfDataCenters: license.numberOfDataCenters - 1,
-			// 	// 				dataCenters:{
-			// 	// 					push: typeId
-			// 	// 				}
-			// 	// 			}
-			// 	// 		});
-			// 	// 		res(null, {result: true});
-			// 	// 	}
-			// 	// 	else res(null, {result: false});
-			// 	res(null, {result: true});
-			// 	}
-			// }
-			// catch(err){
-			// 	res({
-			// 		code: grpc.status.INTERNAL,
-			// 		message: JSON.stringify(err),
-			// 	  });
-			// }
+			try{
+				const {type,tenantId,typeId} = req.request;
+				if (type == 1){
+					const license = await prisma.license.findFirst({
+						where:{
+							tenantId: tenantId,
+							numberOfDataCenters:{
+								gte: 1
+							},
+							expiredAt:{
+								gte: new Date()
+							}
+						}
+					})
+					if (license){
+						const upt = await prisma.license.update({
+							where:{
+								id: license.id
+							},
+							data:{
+								numberOfDataCenters: license.numberOfDataCenters - 1,
+								dataCenters:{
+									push: typeId
+								}
+							}
+						})
+						if (upt)
+						return res(null, {result: true});
+					}
+					return res(null, {result: false});
+				}
+				if (type == 0){
+					const license = await prisma.license.findFirst({
+						where:{
+							tenantId: tenantId,
+							numberOfUsers:{
+								gte: 1
+							},
+							expiredAt:{
+								gte: new Date()
+							}
+						}
+					})
+					if (license){
+						const upt =  await prisma.license.update({
+							where:{
+								id: license.id
+							},
+							data:{
+								numberOfUsers: license.numberOfUsers - 1,
+								users:{
+									push: typeId
+								}
+							}
+						})
+						if (upt)
+						return res(null, {result: true});
+					}
+						return res(null, {result: false});
+				}
+			}
+			catch(err){
+				res({
+					code: grpc.status.INTERNAL,
+					message: JSON.stringify(err),
+				  });
+			}
 		},
 		DeleteAffictation: async (req:any, res:any) => {
 			try{
-				const {type,tenantId,typeId} = req.request;
-				if (type == "USERS"){
+				const {type,typeId} = req.request;
+				if (type == 0){
 					const licenses = await prisma.license.findMany({
 						where:{
-							tenantId: tenantId,
 							users:{
 								has: typeId
 							},
@@ -153,6 +148,7 @@ function getServers(server: grpc.Server) {
 							}
 						}
 					})
+					console.log("license:", licenses);
 					if (licenses.length > 0)
 					{
 						for (let i = 0; i < licenses.length; i++){
@@ -167,12 +163,11 @@ function getServers(server: grpc.Server) {
 							});
 						}
 					}
-					res(null, {result: true});
+					return res(null, {result: true});
 				}
-				else if (type == "DATACENTER"){
+				else if (type == 1){					
 					const licenses = await prisma.license.findMany({
 						where:{
-							tenantId: tenantId,
 							dataCenters:{
 								has: typeId
 							},
@@ -181,6 +176,7 @@ function getServers(server: grpc.Server) {
 							}
 						}
 					})
+					console.log("license:", licenses);
 					if (licenses.length > 0)
 					{
 						for (let i = 0; i < licenses.length; i++){
@@ -195,20 +191,17 @@ function getServers(server: grpc.Server) {
 							});
 						}
 					}
-					res(null, {result: true});
+					return res(null, {result: true});
 				}
 			}
 			catch(err){
 				res({
 					code: grpc.status.INTERNAL,
 					message: JSON.stringify(err),
-				  });
+				});
 			}
 		}
 
 	} as LicenseServiceHandlers);
 	return server;
 }
-
-// main();
-

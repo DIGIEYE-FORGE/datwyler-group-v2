@@ -4,8 +4,17 @@ syntax="proto3";
 package licensePackage;
 service LicenseService {
 		rpc AffectType(AffectTypeRequest) returns (ResultRequestAffectation) {}
-		rpc DeleteAffictation(AffectTypeRequest)returns (ResultRequestAffectation){}
+		rpc DeleteAffictation(DeleteAffictationRequest)returns (ResultRequestAffectation){}
 		rpc AuthPermission(AuthPermissionRequest) returns (AuthPermissionResponse) {}
+}
+
+message DeleteAffictationRequest {
+		enum Type{
+			USERS = 0;
+			DATACENTER = 1;
+		}
+		Type type = 1;
+		int32 typeId = 2;
 }
 
 message AffectTypeRequest {
