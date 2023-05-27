@@ -56,11 +56,7 @@ const createLicenseService = async (data: LicenseType) => {
 	}
 	else
 	{
-		const license = await prisma.license.create({
-			data: {
-				...data,
-			}
-		});
+		const license = await prisma.license.create({data});
 		return license;
 	}
 	}

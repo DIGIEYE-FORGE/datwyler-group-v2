@@ -1,0 +1,15 @@
+http:
+  routers:
+    api:
+      entryPoints: ["api"]
+      service: "api@internal"
+      rule: "PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
+      middlewares:
+        - "basic-auth-api@file"
+    frontend:
+       entryPoints: ["websecure"]
+       rule: "Host(`ms-workflows-dev2.dmp.devcorp.fr`)"
+       service: "digieye@file"
+       tls:
+         certResolver: "production"
+         options: "tlsv12@file"

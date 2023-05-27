@@ -1,0 +1,14 @@
+http:
+  services:
+    digieye-cluster:
+      loadbalancer:
+        servers:
+          - url: "https://192.168.10.26:443"
+          - url: "https://192.168.10.27:443"
+          - url: "https://192.168.10.28:443"
+          - url: "https://192.168.10.31:443"
+    devcorp-cluster:
+      loadbalancer:
+        servers:
+          - url: "https://192.168.10.51:443"
+          - url: "https://192.168.10.54:443"

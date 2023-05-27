@@ -1,0 +1,4 @@
+tls:
+  options:
+    tlsv12:
+      minVersion: VersionTLS12
