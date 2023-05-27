@@ -8,6 +8,7 @@ import Select from "../../components/select";
 import { createGroup } from "../../api/group";
 import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
+import { UserContext } from "../../App";
 
 const AddIcon = () => (
   <svg
@@ -159,10 +160,12 @@ const defaultGroup: Group = {
 };
 
 const Add = () => {
-  const context = useProvider<Context>();
+  const context = useProvider<Context & UserContext>();
   const [numberAttribute, setNumberAttribute] = React.useState([1]);
   const [open, setOpen] = context.open;
   const updatePage = context.updatePage;
+  const [user,] = context.user;
+  const [tenantSelected,]= context.tenantSelected; 
   const [save, setSave] = context.save;
   const [dataAttribute, setDataAttribute] = React.useState<Attributes>({});
 
@@ -175,6 +178,8 @@ const Add = () => {
       setSave((curr) => !curr);
       clearData();
     },
+    onError: (error) => {
+      toast.error("permission denied for create data center");
   });
 
   const saveGroup = async () => {
@@ -185,6 +190,7 @@ const Add = () => {
       lat: deviceData.lat,
       lng: deviceData.lng,
       ip: deviceData.ip,
+      tenantParentId:user.tenants.filter((e:any)=>e.id===tenantSelected)[0].parentId || undefined,
       attributes: objectAttributs(dataAttribute, numberAttribute),
       parentId: deviceData.parentId,
       subgroups: {
@@ -193,6 +199,7 @@ const Add = () => {
     };
     postGroupMutation.mutate(res);
   };
+
   const clearData = () => {
     setDeviceData(defaultGroup);
     setDataAttribute({});

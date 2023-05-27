@@ -148,7 +148,6 @@ function getServers(server: grpc.Server) {
 							}
 						}
 					})
-					console.log("license:", licenses);
 					if (licenses.length > 0)
 					{
 						for (let i = 0; i < licenses.length; i++){

@@ -43,15 +43,13 @@ export default class MultiTenancyApi {
   }
 
 
-  public async removeUserFromTenant({ userId, tenantId }: { userId: number, tenantId: number }) {
-    try {
+  public async removeUserFromTenant({ userId, tenantId }: { userId: number | undefined, tenantId: number | undefined}) {
+
+      if (!userId || !tenantId)
+          throw new Error("userId or tenantId is undefined");
       await this.api.patch(`/tenant/${tenantId}/remove-user`, {
         userId,
       });
     }
-    catch (err) {
-      throw err;
-    }
-  }
 
 }

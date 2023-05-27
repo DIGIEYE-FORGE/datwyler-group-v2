@@ -35,7 +35,10 @@ function GeneraleState() {
       description: "Are you sure you want to Acknowledge this alert?",
       onConfirm: () => {
         authApi.deleteAccount(user?.id+"").then((res) => {
-          multiTenancyApi.removeUserFromTenant(user?.id+"",tenantId+"").then((res)=>{
+          multiTenancyApi.removeUserFromTenant({
+            userId: user?.id,
+            tenantId: tenantId,
+          }).then((res)=>{
             toast.success("Account Deleted");
             localStorage.removeItem("accessToken");
             localStorage.removeItem("refreshToken");

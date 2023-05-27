@@ -29,18 +29,25 @@ export class GroupService {
 
   @HandleRequestErrors()
   async create(data: CreateGroupDto) {
-    const res = await this.prisma.group.create({ data });
-    if (res) {
-      const dt = await this.licenseService
-        .AffectType({
-          tenantId: data.tenantId,
-          typeId: res.id,
-          type: Type.DATACENTER,
-        })
-        .toPromise();
-      if (dt.result == false) {
-        await this.prisma.group.delete({ where: { id: res.id } });
-        throw new Error(dt.message);
+    const { tenantParentId, ...rest } = data;
+    const res = await this.prisma.group.create({
+      data: {
+        ...rest,
+      },
+    });
+    if (tenantParentId) {
+      if (res) {
+        const dt = await this.licenseService
+          .AffectType({
+            tenantId: data.tenantId,
+            typeId: res.id,
+            type: Type.DATACENTER,
+          })
+          .toPromise();
+        if (dt.result == false) {
+          await this.prisma.group.delete({ where: { id: res.id } });
+          throw new Error(dt.message);
+        }
       }
     }
     return res;

@@ -63,6 +63,10 @@ export class CreateGroupDto {
   @IsInt()
   @IsOptional()
   tenantId: number;
+  @ApiProperty({ required: false })
+  @IsInt()
+  @IsOptional()
+  tenantParentId: number;
 }
 
 export class UpdateGroupDto {

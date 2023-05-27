@@ -29,7 +29,7 @@ exports.createlicenseController = createlicenseController;
 const getlicenseController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const license = yield (0, license_service_1.getLicenseService)(id);
+        const license = yield (0, license_service_1.getLicenseService)(+id);
         return res.status(http_status_1.default.OK).json(license);
     }
     catch (err) {
@@ -39,7 +39,8 @@ const getlicenseController = (req, res) => __awaiter(void 0, void 0, void 0, fun
 exports.getlicenseController = getlicenseController;
 const getAlllicenseController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const license = yield (0, license_service_1.getallLicenseService)();
+        const tenantId = req.query.tenantId;
+        const license = yield (0, license_service_1.getallLicenseService)(tenantId ? +tenantId : undefined);
         return res.status(http_status_1.default.OK).json(license);
     }
     catch (err) {
@@ -50,7 +51,7 @@ exports.getAlllicenseController = getAlllicenseController;
 const updatedlicenseController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
-        const license = yield (0, license_service_1.updatedLicenseService)(id, req.body);
+        const license = yield (0, license_service_1.updatedLicenseService)(+id, req.body);
         return res.status(http_status_1.default.OK).json(license);
     }
     catch (err) {

@@ -11,43 +11,54 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
-const arrauLicense = [
-    {
-        description: "Licence1",
-        tenantId: 1,
-        startDate: new Date(),
-        expiredAt: new Date(new Date().setDate(new Date().getDate() + 5)),
-        numberUser: 10,
-        numberAdmin: 2,
-        numberDataCenter: 1,
-    },
-    {
-        description: "Licence2",
-        tenantId: 1,
-        startDate: new Date(),
-        expiredAt: new Date(new Date().setDate(new Date().getDate() + 8)),
-        numberUser: 10,
-        numberAdmin: 7,
-        numberDataCenter: 10,
-    },
-    {
-        description: "Licence3",
-        tenantId: 1,
-        startDate: new Date(),
-        expiredAt: new Date(new Date().setDate(new Date().getDate() + 1)),
-        numberUser: 100,
-        numberAdmin: 10,
-        numberDataCenter: 10,
-    },
-];
-const seedLicense = (data) => __awaiter(void 0, void 0, void 0, function* () {
-    yield prisma.license.create({
-        data: Object.assign({}, data)
-    });
-});
+// type License= {
+//     description?: string;
+//     tenantId: number;
+//     startDate: Date;
+//     expiredAt: Date;
+//     numberUser: number;
+//     numberAdmin: number;
+//     numberDataCenter: number;
+// };
+// const arrauLicense: License[] = [
+//     {
+//         description: "Licence1",
+//         tenantId: 1,
+//         startDate: new Date(),
+//         expiredAt: new Date(new Date().setDate(new Date().getDate() + 5)),
+//         numberUser: 10,
+//         numberAdmin: 2,
+//         numberDataCenter: 1,
+//     },
+//     {
+//         description: "Licence2",
+//         tenantId: 1,
+//         startDate: new Date(),
+//         expiredAt: new Date(new Date().setDate(new Date().getDate() + 8)),
+//         numberUser: 10,
+//         numberAdmin: 7,
+//         numberDataCenter: 10,
+//     },
+//     {
+//         description: "Licence3",
+//         tenantId: 1,
+//         startDate: new Date(),
+//         expiredAt: new Date(new Date().setDate(new Date().getDate() + 1)),
+//         numberUser: 100,
+//         numberAdmin: 10,
+//         numberDataCenter: 10,
+//     },
+// ];
+// const seedLicense = async (data: License): Promise<void> => {
+//     await prisma.license.create({
+//         data: {
+//             ...data,
+//         }
+//     });
+// }
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
-    for (const license of arrauLicense) {
-        yield seedLicense(license);
-    }
+    // for (const license of arrauLicense) {
+    //     await seedLicense(license);
+    // }
 });
 main();

@@ -66,7 +66,12 @@ class TenantService {
       else if (tenant.parentId) {
         const res = await licenseClient.AffectLicense(data);
         if (!res) throw new Error("Permission denied");
+        else
+         if (res.result == false){
+           throw new Error("Permission denied");
+         }
       }
+
       return await prisma.tenant.update({
         where: { id: tenantId },
         data: {
@@ -98,6 +103,9 @@ class TenantService {
     else if (tenant.parentId) {
       const res = await licenseClient.DeleteAffictation(data);
       if (!res) throw new Error("Permission denied");
+      if (res.result == false) {
+        throw new Error("Permission denied");
+      }
     }
     return await prisma.user.delete({
       where: { id: userId },
