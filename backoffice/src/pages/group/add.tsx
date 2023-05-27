@@ -180,6 +180,7 @@ const Add = () => {
     },
     onError: (error) => {
       toast.error("permission denied for create data center");
+  },
   });
 
   const saveGroup = async () => {
