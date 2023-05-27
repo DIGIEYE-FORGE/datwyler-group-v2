@@ -11,6 +11,1935 @@ const authClient = new AuthClient();
 const backendClient = new BackendClient();
 const multitenancyClient = new MultitenancyClient();
 
+type Configuration = {
+  host: string;
+  port: number;
+  oid: string;
+  frequency: number;
+  devices: {
+    serial: string;
+    label: string;
+    [key: string]: any;
+  }[]
+}
+
+const config: Configuration[] = [
+  {
+    "host": "192.168.0.16",
+    "port": 4700,
+    "oid": "1.3.6.1.4.1.93451.1",
+    "frequency": 20,
+    "devices": [
+      {
+        "serial": "345437620945326",
+        "label": "ups",
+        "keys": [
+          {
+            "oid": "1.3.6.1.4.1.93451.1.3.1.0",
+            "key": "Input Voltage",
+            "type": "number",
+            "isShowed": true,
+            "unite": "V"
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.3.2.0",
+            "key": "I/P Fault Voltage",
+            "type": "number",
+            "isShowed": true,
+            "unite": "V"
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.3.3.0",
+            "key": "Output Voltage",
+            "type": "number",
+            "isShowed": true,
+            "unite": "V"
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.3.4.0",
+            "key": "Load",
+            "type": "number",
+            "isShowed": true,
+            "unite": "%"
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.3.5.0",
+            "key": "Input Frequency",
+            "type": "number",
+            "isShowed": true,
+            "unite": "Hz"
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.3.7.0",
+            "key": "Temperature",
+            "type": "number",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.3.8.0",
+            "key": "Utility State",
+            "type": "bool",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.3.9.0",
+            "key": "Battery Low Voltage",
+            "type": "bool",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.3.11.0",
+            "key": "Fault State",
+            "type": "bool",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.3.13.0",
+            "key": "Testing",
+            "type": "bool",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.3.14.0",
+            "key": "Shutdown Active",
+            "type": "bool",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.3.15.0",
+            "key": "Buzzer",
+            "type": "bool",
+            "isShowed": true,
+            "unite": ""
+          }
+        ],
+        "alerts": [
+          "1.3.6.1.4.1.93450.3.93451.1.8.10001",
+          "1.3.6.1.4.1.93450.3.93451.1.10.3",
+          "1.3.6.1.4.1.93450.3.93451.1.10.4",
+          "1.3.6.1.4.1.93450.3.93451.1.10.5",
+          "1.3.6.1.4.1.93450.3.93451.1.10.6",
+          "1.3.6.1.4.1.93450.3.93451.1.10.10001",
+          "1.3.6.1.4.1.93450.3.93451.1.16.3",
+          "1.3.6.1.4.1.93450.3.93451.1.16.4",
+          "1.3.6.1.4.1.93450.3.93451.1.16.5",
+          "1.3.6.1.4.1.93450.3.93451.1.16.6",
+          "1.3.6.1.4.1.93450.3.93451.1.16.10001",
+          "1.3.6.1.4.1.93450.3.93451.1.11.3",
+          "1.3.6.1.4.1.93450.3.93451.1.18.10001",
+          "1.3.6.1.4.1.93450.3.93451.1.11.10001",
+          "1.3.6.1.4.1.93450.3.93451.1.13.10001",
+          "1.3.6.1.4.1.93450.3.93451.1.3.10001",
+          "1.3.6.1.4.1.93450.3.93451.1.17.10001"
+        ]
+      },
+      {
+        "serial": "345437620945327",
+        "label": "Main Meter",
+        "keys": [
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.1.0",
+            "key": "Phase A voltage",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.2.0",
+            "key": "Line voltage  Uca",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.3.0",
+            "key": "Phase A current ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.4.0",
+            "key": "Phase A active power ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.5.0",
+            "key": "Phase A power factor ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.6.0",
+            "key": "Phase A reactive power ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.7.0",
+            "key": "Phase A apparent power ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.8.0",
+            "key": "Phase B voltage",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.9.0",
+            "key": "Line voltage  Uab",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.10.0",
+            "key": "Phase B current ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.11.0",
+            "key": "Phase B active power ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.12.0",
+            "key": "Phase B power factor ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.13.0",
+            "key": "Phase B reactive power ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.14.0",
+            "key": "Phase B apparent power",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.15.0",
+            "key": "Phase C voltage",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.16.0",
+            "key": "Line voltage  Ubc",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.17.0",
+            "key": "Phase C current ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.18.0",
+            "key": "Phase C active power ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.19.0",
+            "key": "Phase C power factor ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.20.0",
+            "key": "Phase C reactive power",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.21.0",
+            "key": "Phase C apparent power",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.22.0",
+            "key": "Zero-sequence current ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.23.0",
+            "key": "Average phase voltage ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.24.0",
+            "key": "Average phase current ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.25.0",
+            "key": "Frequency ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.26.0",
+            "key": "Total active power",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.27.0",
+            "key": "Total power factor ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.28.0",
+            "key": "Total reactive power ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.29.0",
+            "key": "Total apparent power ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.30.0",
+            "key": "Import active energy",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.31.0",
+            "key": "Export active energy",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.32.0",
+            "key": "Import reactive energy",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.33.0",
+            "key": "Export reactive energy",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.34.0",
+            "key": "PT",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.35.0",
+            "key": "CT",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.10001.0",
+            "key": "Communication state",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          }
+        ],
+        "alerts": []
+      },
+      {
+        "serial": "345437620945328",
+        "label": "Environment",
+        "keys": [
+          {
+            "oid": "1.3.6.1.4.1.93451.1.11.1.0",
+            "key": "Smoke",
+            "type": "bool",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.11.2.0",
+            "key": "Water Leakage",
+            "type": "bool",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.11.3.0",
+            "key": "Door",
+            "type": "state",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.10.1.0",
+            "key": "Temperature #1",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.10.2.0",
+            "key": "Humidity #1",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.16.1.0",
+            "key": "Temperature #2",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.16.2.0",
+            "key": "Humidity #2",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          }
+        ],
+        "alerts": []
+      },
+      {
+        "serial": "345437620945329",
+        "label": "Aircon",
+        "keys": [
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.1.0",
+            "key": "Return temp sensor fault",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.2.0",
+            "key": "Reserved1",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.3.0",
+            "key": "Reserved2",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.4.0",
+            "key": "Evaporator tube temp sensor fault",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.5.0",
+            "key": "Condenser tube temp sensor fault",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.6.0",
+            "key": "Reserved5",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.7.0",
+            "key": "Return high temp alarm",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.8.0",
+            "key": "Return low temp alarm",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.9.0",
+            "key": "Condenser high temp alarm",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.10.0",
+            "key": "Reserved9",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.11.0",
+            "key": "Reserved10",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.12.0",
+            "key": "Evaporator anti frozen alarm",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.13.0",
+            "key": "Filter screen dirty",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.14.0",
+            "key": "Reserved13",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.15.0",
+            "key": "Reserved14",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.16.0",
+            "key": "Reserved15",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.17.0",
+            "key": "Heater overload",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.18.0",
+            "key": "Smoke/water leakage",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.19.0",
+            "key": "Reserved16",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.20.0",
+            "key": "Reserved17",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.21.0",
+            "key": "Compressor state",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.22.0",
+            "key": "Heater state",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.23.0",
+            "key": "External Fan state",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.24.0",
+            "key": "Fault state",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.25.0",
+            "key": "Blower state",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.26.0",
+            "key": "ON/OFF",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.27.0",
+            "key": "Fault reset",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.28.0",
+            "key": "Manual/Auto",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.29.0",
+            "key": "Address",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.30.0",
+            "key": "Cooling start temp",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.31.0",
+            "key": "Cooling threshold",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.32.0",
+            "key": "Heating start temp",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.33.0",
+            "key": "High temp alarm value",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.34.0",
+            "key": "High temp threshold",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.35.0",
+            "key": "Low temp alarm value",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.36.0",
+            "key": "Low temp threshold",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.37.0",
+            "key": "Evaporator anti frozen temp",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.38.0",
+            "key": "Heater",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.39.0",
+            "key": "Evaporator anti frozen temp threshold",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.40.0",
+            "key": "Condenser protected temp",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.41.0",
+            "key": "Condenser protected temp threshold",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.42.0",
+            "key": "Heater temp threshold",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.43.0",
+            "key": "Power on start",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.44.0",
+            "key": "Return temp correction",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.45.0",
+            "key": "Evaporator tube temp correction",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.46.0",
+            "key": "Condenser tube temp correction",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.47.0",
+            "key": "Restore factory settings",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.48.0",
+            "key": "Starting delay time",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.49.0",
+            "key": "Evaporator anti frozen duration time",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.50.0",
+            "key": "Compressor MIN stop time",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.51.0",
+            "key": "Compressor MIN run time",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.52.0",
+            "key": "Power off delay time",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.53.0",
+            "key": "Power on start delay time",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.54.0",
+            "key": "Condenser power off delay time",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.55.0",
+            "key": "Compressor run time for sensor fault",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.56.0",
+            "key": "Compressor stop time for sensor fault",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.57.0",
+            "key": "Filter screen maintenance period",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.58.0",
+            "key": "Condenser high temp duration time",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.59.0",
+            "key": "Heater overload switch",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.60.0",
+            "key": "Smoke/water leakage switch",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.61.0",
+            "key": "Evaporator temp ",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.62.0",
+            "key": "Condenser temp",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.63.0",
+            "key": "Filter screen run time",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.64.0",
+            "key": "Compressor runtime",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.65.0",
+            "key": "Heater runtime",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.66.0",
+            "key": "Blower runtime",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.67.0",
+            "key": "External fan runtime",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.68.0",
+            "key": "Running mode",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.71.0",
+            "key": "Unit state",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.76.0",
+            "key": "Debug temp",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.77.0",
+            "key": "Return temp",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.78.0",
+            "key": "Evaporator tube temp",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.79.0",
+            "key": "Condenser tube temp",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.10001.0",
+            "key": "Communication state",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          }
+        ],
+        "alerts": []
+      }
+    ]
+  },
+  {
+    "host": "192.168.0.11",
+    "port": 4700,
+    "oid": "1.3.6.1.4.1.93451.1",
+    "frequency": 20,
+    "devices": [
+      {
+        "serial": "345437620945330",
+        "label": "ups",
+        "keys": [
+          {
+            "oid": "1.3.6.1.4.1.93451.1.3.1.0",
+            "key": "Input Voltage",
+            "type": "number",
+            "isShowed": true,
+            "unite": "V"
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.3.2.0",
+            "key": "I/P Fault Voltage",
+            "type": "number",
+            "isShowed": true,
+            "unite": "V"
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.3.3.0",
+            "key": "Output Voltage",
+            "type": "number",
+            "isShowed": true,
+            "unite": "V"
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.3.4.0",
+            "key": "Load",
+            "type": "number",
+            "isShowed": true,
+            "unite": "%"
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.3.5.0",
+            "key": "Input Frequency",
+            "type": "number",
+            "isShowed": true,
+            "unite": "Hz"
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.3.7.0",
+            "key": "Temperature",
+            "type": "number",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.3.8.0",
+            "key": "Utility State",
+            "type": "bool",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.3.9.0",
+            "key": "Battery Low Voltage",
+            "type": "bool",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.3.11.0",
+            "key": "Fault State",
+            "type": "bool",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.3.13.0",
+            "key": "Testing",
+            "type": "bool",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.3.14.0",
+            "key": "Shutdown Active",
+            "type": "bool",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.3.15.0",
+            "key": "Buzzer",
+            "type": "bool",
+            "isShowed": true,
+            "unite": ""
+          }
+        ],
+        "alerts": [
+          "1.3.6.1.4.1.93450.3.93451.1.8.10001",
+          "1.3.6.1.4.1.93450.3.93451.1.10.3",
+          "1.3.6.1.4.1.93450.3.93451.1.10.4",
+          "1.3.6.1.4.1.93450.3.93451.1.10.5",
+          "1.3.6.1.4.1.93450.3.93451.1.10.6",
+          "1.3.6.1.4.1.93450.3.93451.1.10.10001",
+          "1.3.6.1.4.1.93450.3.93451.1.16.3",
+          "1.3.6.1.4.1.93450.3.93451.1.16.4",
+          "1.3.6.1.4.1.93450.3.93451.1.16.5",
+          "1.3.6.1.4.1.93450.3.93451.1.16.6",
+          "1.3.6.1.4.1.93450.3.93451.1.16.10001",
+          "1.3.6.1.4.1.93450.3.93451.1.11.3",
+          "1.3.6.1.4.1.93450.3.93451.1.18.10001",
+          "1.3.6.1.4.1.93450.3.93451.1.11.10001",
+          "1.3.6.1.4.1.93450.3.93451.1.13.10001",
+          "1.3.6.1.4.1.93450.3.93451.1.3.10001",
+          "1.3.6.1.4.1.93450.3.93451.1.17.10001"
+        ]
+      },
+      {
+        "serial": "345437620945331",
+        "label": "Main Meter",
+        "keys": [
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.1.0",
+            "key": "Phase A voltage",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.2.0",
+            "key": "Line voltage  Uca",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.3.0",
+            "key": "Phase A current ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.4.0",
+            "key": "Phase A active power ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.5.0",
+            "key": "Phase A power factor ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.6.0",
+            "key": "Phase A reactive power ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.7.0",
+            "key": "Phase A apparent power ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.8.0",
+            "key": "Phase B voltage",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.9.0",
+            "key": "Line voltage  Uab",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.10.0",
+            "key": "Phase B current ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.11.0",
+            "key": "Phase B active power ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.12.0",
+            "key": "Phase B power factor ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.13.0",
+            "key": "Phase B reactive power ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.14.0",
+            "key": "Phase B apparent power",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.15.0",
+            "key": "Phase C voltage",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.16.0",
+            "key": "Line voltage  Ubc",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.17.0",
+            "key": "Phase C current ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.18.0",
+            "key": "Phase C active power ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.19.0",
+            "key": "Phase C power factor ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.20.0",
+            "key": "Phase C reactive power",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.21.0",
+            "key": "Phase C apparent power",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.22.0",
+            "key": "Zero-sequence current ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.23.0",
+            "key": "Average phase voltage ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.24.0",
+            "key": "Average phase current ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.25.0",
+            "key": "Frequency ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.26.0",
+            "key": "Total active power",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.27.0",
+            "key": "Total power factor ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.28.0",
+            "key": "Total reactive power ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.29.0",
+            "key": "Total apparent power ",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.30.0",
+            "key": "Import active energy",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.31.0",
+            "key": "Export active energy",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.32.0",
+            "key": "Import reactive energy",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.33.0",
+            "key": "Export reactive energy",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.34.0",
+            "key": "PT",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.35.0",
+            "key": "CT",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.8.10001.0",
+            "key": "Communication state",
+            "type": "",
+            "isShow": true,
+            "unite": ""
+          }
+        ],
+        "alerts": []
+      },
+      {
+        "serial": "345437620945332",
+        "label": "Environment",
+        "keys": [
+          {
+            "oid": "1.3.6.1.4.1.93451.1.11.1.0",
+            "key": "Smoke",
+            "type": "bool",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.11.2.0",
+            "key": "Water Leakage",
+            "type": "bool",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.11.3.0",
+            "key": "Door",
+            "type": "state",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.10.1.0",
+            "key": "Temperature #1",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.10.2.0",
+            "key": "Humidity #1",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.16.1.0",
+            "key": "Temperature #2",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.16.2.0",
+            "key": "Humidity #2",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          }
+        ],
+        "alerts": []
+      },
+      {
+        "serial": "345437620945333",
+        "label": "Aircon",
+        "keys": [
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.1.0",
+            "key": "Return temp sensor fault",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.2.0",
+            "key": "Reserved1",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.3.0",
+            "key": "Reserved2",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.4.0",
+            "key": "Evaporator tube temp sensor fault",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.5.0",
+            "key": "Condenser tube temp sensor fault",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.6.0",
+            "key": "Reserved5",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.7.0",
+            "key": "Return high temp alarm",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.8.0",
+            "key": "Return low temp alarm",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.9.0",
+            "key": "Condenser high temp alarm",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.10.0",
+            "key": "Reserved9",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.11.0",
+            "key": "Reserved10",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.12.0",
+            "key": "Evaporator anti frozen alarm",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.13.0",
+            "key": "Filter screen dirty",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.14.0",
+            "key": "Reserved13",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.15.0",
+            "key": "Reserved14",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.16.0",
+            "key": "Reserved15",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.17.0",
+            "key": "Heater overload",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.18.0",
+            "key": "Smoke/water leakage",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.19.0",
+            "key": "Reserved16",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.20.0",
+            "key": "Reserved17",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.21.0",
+            "key": "Compressor state",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.22.0",
+            "key": "Heater state",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.23.0",
+            "key": "External Fan state",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.24.0",
+            "key": "Fault state",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.25.0",
+            "key": "Blower state",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.26.0",
+            "key": "ON/OFF",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.27.0",
+            "key": "Fault reset",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.28.0",
+            "key": "Manual/Auto",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.29.0",
+            "key": "Address",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.30.0",
+            "key": "Cooling start temp",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.31.0",
+            "key": "Cooling threshold",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.32.0",
+            "key": "Heating start temp",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.33.0",
+            "key": "High temp alarm value",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.34.0",
+            "key": "High temp threshold",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.35.0",
+            "key": "Low temp alarm value",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.36.0",
+            "key": "Low temp threshold",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.37.0",
+            "key": "Evaporator anti frozen temp",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.38.0",
+            "key": "Heater",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.39.0",
+            "key": "Evaporator anti frozen temp threshold",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.40.0",
+            "key": "Condenser protected temp",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.41.0",
+            "key": "Condenser protected temp threshold",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.42.0",
+            "key": "Heater temp threshold",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.43.0",
+            "key": "Power on start",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.44.0",
+            "key": "Return temp correction",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.45.0",
+            "key": "Evaporator tube temp correction",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.46.0",
+            "key": "Condenser tube temp correction",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.47.0",
+            "key": "Restore factory settings",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.48.0",
+            "key": "Starting delay time",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.49.0",
+            "key": "Evaporator anti frozen duration time",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.50.0",
+            "key": "Compressor MIN stop time",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.51.0",
+            "key": "Compressor MIN run time",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.52.0",
+            "key": "Power off delay time",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.53.0",
+            "key": "Power on start delay time",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.54.0",
+            "key": "Condenser power off delay time",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.55.0",
+            "key": "Compressor run time for sensor fault",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.56.0",
+            "key": "Compressor stop time for sensor fault",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.57.0",
+            "key": "Filter screen maintenance period",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.58.0",
+            "key": "Condenser high temp duration time",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.59.0",
+            "key": "Heater overload switch",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.60.0",
+            "key": "Smoke/water leakage switch",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.61.0",
+            "key": "Evaporator temp ",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.62.0",
+            "key": "Condenser temp",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.63.0",
+            "key": "Filter screen run time",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.64.0",
+            "key": "Compressor runtime",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.65.0",
+            "key": "Heater runtime",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.66.0",
+            "key": "Blower runtime",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.67.0",
+            "key": "External fan runtime",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.68.0",
+            "key": "Running mode",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.71.0",
+            "key": "Unit state",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.76.0",
+            "key": "Debug temp",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.77.0",
+            "key": "Return temp",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.78.0",
+            "key": "Evaporator tube temp",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.79.0",
+            "key": "Condenser tube temp",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          },
+          {
+            "oid": "1.3.6.1.4.1.93451.1.13.10001.0",
+            "key": "Communication state",
+            "type": "",
+            "isShowed": true,
+            "unite": ""
+          }
+        ],
+        "alerts": []
+      }
+    ]
+  }
+]
+
 type CreateUser = {
   id?: number;
   email: string;
@@ -49,7 +1978,7 @@ const defaulUser: CreateUser = {
 };
 
 const defaulTenant: CreateTenant = {
-  name: "dig-forge",
+  name: "datwyler",
 };
 
 const descriptions = [
@@ -178,20 +2107,6 @@ async function seedSites(tenantId: number) {
 }
 
 
-async function createAlert({ serial, data }) {
-  return await backendClient.alert.create({
-    data: {
-      device: {
-        connect: {
-          serial,
-        },
-      },
-      level: data.level,
-      type: data.type,
-      message: data.message,
-    },
-  });
-}
 
 async function freshStart() {
   await authClient.user.deleteMany({});
@@ -209,6 +2124,59 @@ async function freshStart() {
     groupIds: sites.map((site) => site.id),
   });
   console.log({ user, tenant, sites, devices });
+  await backendClient.group.deleteMany({
+    where: {
+      OR: [
+        { name: "MICRO DC" },
+        { name: "Mini  DC" },
+      ]
+    }
+  })
+  const site1 = await backendClient.group.create({
+    include: { _count: true },
+    data: {
+      name: "MICRO DC",
+      location: "Dubai",
+      lat: 25.2048,
+      lng: 55.2708,
+      tenantId: tenant?.id,
+      ip: 'cmsdatwyler.no-ip.org/',
+      devices: {
+        createMany: {
+          data: config[0].devices.map((device) => ({
+            name: device.label,
+            serial: device.serial,
+            tenantId: tenant?.id,
+          })),
+          skipDuplicates: true,
+        }
+      }
+    }
+  })
+  const site2 = await backendClient.group.create({
+    include: { _count: true },
+    data: {
+      name: "Mini  DC",
+      location: "Dubai",
+      lat: 27.2048,
+      lng: 55.2708,
+      ip: 'cmsdatwyler.no-ip.org:81',
+      tenantId: tenant?.id,
+      devices: {
+        createMany: {
+          data: config[1].devices.map((device) => ({
+            tenantId: tenant?.id,
+            name: device.label,
+            serial: device.serial,
+          })),
+          skipDuplicates: true,
+        }
+      }
+    }
+  })
+
+  console.log({ site1, site2 });
+
 }
 
 async function main() {

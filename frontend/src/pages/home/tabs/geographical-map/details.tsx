@@ -71,20 +71,15 @@ function Group({ groupId }: { groupId?: number | null }) {
   const [tabIndex, setTabIndex] = React.useState(0);
   const columns: Column[] = [
     {
-      label: "System",
-      header: "System",
-      valueGetter: (row: Alert) => row.device?.name,
-    },
-    {
-      label: "deviceID",
-      header: "Device ID",
-      valueGetter: (row: Alert) => row.device?.serial,
+      label: "syteme",
+      header: "Systeme",
+      valueGetter: (row: Alert) => row.deviceName || row.device?.name,
     },
     {
       label: "type",
       header: "Alert Type",
       valueGetter(row: Alert) {
-        return alertsComponentMap[row.type as AlertType];
+        return row.type;
       },
     },
     {

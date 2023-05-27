@@ -14,8 +14,12 @@ export class DashboardService {
     });
     const onlineDevices = await this.prisma.device.count({
       where: {
-        updatedAt: {
-          gte: new Date(Date.now() - 60 * 1000),
+        lastTelemetries: {
+          some: {
+            updatedAt: {
+              gte: new Date(Date.now() - 60 * 1000),
+            },
+          },
         },
         ...where,
       },
