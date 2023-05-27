@@ -319,6 +319,7 @@ function LicenseTab() {
   const [DevicesData, setDevicesData] = useState<Device[]>([]);
   const [checkUpdate, setCheckUpdate] = useState(false);
 
+  const clear
   useEffect(()=>{
 
     setCreateLicese((prev)=>({...prev,tenantId:tenantId,
@@ -495,9 +496,18 @@ function LicenseTab() {
              licenseApi.addLicense(createLicese).then((res:any) => {
               setRows((prev) => [...prev, res]);
                 setOpen(false);
+                setCreateLicese({
+                  name: "",
+                  description: "",
+                  startDate: "",
+                  expiredAt: "",
+                  numberOfUsers: 0,
+                  numberOfDataCenters: 0,
+                });
+                toast.success("License created successfully")
               }
               ).catch((err) => {
-                console.log(err);
+                toast.error(err?.response?.data?.message || "Something went wrong")
               }
               )
             }}
