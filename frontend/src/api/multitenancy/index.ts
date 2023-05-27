@@ -43,7 +43,7 @@ export default class MultiTenancyApi {
   }
 
 
-  public async removeUserFromTenant(userId: string, tenantId: string) {
+  public async removeUserFromTenant({ userId, tenantId }: { userId: number, tenantId: number }) {
     try {
       await this.api.patch(`/tenant/${tenantId}/remove-user`, {
         userId,

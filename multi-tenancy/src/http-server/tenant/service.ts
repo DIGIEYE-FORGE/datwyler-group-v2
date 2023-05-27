@@ -54,14 +54,19 @@ class TenantService {
     tenantId: number,
     user: AddUserDto
   ): Promise<Tenant | undefined> {
-    const data : AffectTypeRequest = {
+    const data: AffectTypeRequest = {
       tenantId,
       typeId: user.id,
       type: 0,
     };
-    try{
-    const res = await licenseClient.AffectLicense(data);
-    if (res){
+    try {
+      const tenant = await prisma.tenant.findUnique({ where: { id: tenantId }, include: { parent: true } });
+      if (!tenant)
+        throw new Error("Tenant not found");
+      else if (tenant.parentId) {
+        const res = await licenseClient.AffectLicense(data);
+        if (!res) throw new Error("Permission denied");
+      }
       return await prisma.tenant.update({
         where: { id: tenantId },
         data: {
@@ -74,9 +79,7 @@ class TenantService {
         }
       });
     }
-    else throw new Error("Permission denied");
-    }
-    catch(err){
+    catch (err) {
       throw new Error("error in license service");
     }
   }
@@ -84,29 +87,22 @@ class TenantService {
   public async removeUser(
     tenantId: number,
     userId: number
-  ): Promise<Tenant | null> {
-    const data : DeleteAffictationRequest = {
+  ): Promise<any | undefined> {
+    const data: DeleteAffictationRequest = {
       type: 0,
       typeId: userId,
     };
-    try{
-    const res = await licenseClient.DeleteAffictation(data);
-    if (res)
-    {
-    return await prisma.tenant.update({
-      where: { id: tenantId },
-      data: {
-        users: {
-          disconnect: { id: userId },
-        }
-      }
+    const tenant = await prisma.tenant.findUnique({ where: { id: tenantId }, include: { parent: true } });
+    if (!tenant)
+      throw new Error("Tenant not found");
+    else if (tenant.parentId) {
+      const res = await licenseClient.DeleteAffictation(data);
+      if (!res) throw new Error("Permission denied");
+    }
+    return await prisma.user.delete({
+      where: { id: userId },
     });
-    }
-    else throw new Error("Permission denied");
-  }
-    catch(err){
-      throw new Error("error in license service");
-    }
+
   }
 
   public async getRecTenantUsers(tenantId: number): Promise<{

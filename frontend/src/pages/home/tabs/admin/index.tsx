@@ -35,10 +35,38 @@ const defaultUser: RegisterUser = {
 
 function AdminTab() {
   const [users, setUsers] = useState<User[]>([]);
-  const { tenantId, multiTenancyApi } = useProvider<AppContext>();
+  const { tenantId, multiTenancyApi, authApi, confirm } =
+    useProvider<AppContext>();
   const [open, setOpen] = useState<boolean>(false);
   const [state, setState] = useState<"idle" | "loading" | "error">("loading");
   const [params, setParams] = useState<Params>(defaultParams);
+
+  const handleDelete = useCallback(
+    (userId: number) => {
+      confirm({
+        title: "Delete User",
+        description: "Are you sure you want to delete this user?",
+        onConfirm: async () => {
+          try {
+            if (!tenantId) return;
+            const res = await multiTenancyApi.removeUserFromTenant({
+              userId,
+              tenantId,
+            });
+            console.log({ user: res });
+
+            await authApi.removeUser(userId);
+            toast.success("User deleted successfully");
+            getUsers();
+          } catch (err) {
+            toast.error("Failed to delete user");
+            console.error(err);
+          }
+        },
+      });
+    },
+    [tenantId]
+  );
 
   const getUsers = useCallback(async () => {
     try {
@@ -154,7 +182,10 @@ function AdminTab() {
                 <span>Edit</span>
                 <FaUserEdit className="text-xl" />
               </button>
-              <button className="flex w-[6rem] items-center justify-between p-2 hover:text-danger">
+              <button
+                onClick={() => handleDelete(row.id as number)}
+                className="flex w-[6rem] items-center justify-between p-2 hover:text-danger"
+              >
                 <span>Delete</span>
                 <AiOutlineUserDelete className="text-xl" />
               </button>

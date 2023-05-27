@@ -66,9 +66,9 @@ export const updateSchema = z.object({
       message: "Phone number must be 10 digits",
     })
     .optional(),
-    avatar:z.any().optional(),
-    attributes: z.record(z.string()).optional(),
-   
+  avatar: z.any().optional(),
+  attributes: z.record(z.string()).optional(),
+
 });
 
 export type UpdateUser = z.infer<typeof updateSchema>;
@@ -121,10 +121,10 @@ export default class AuthApi {
   }
 
 
-  async deleteAccount(id:string): Promise<void> {
-    try{
-    await this.api.delete(`users/${id}`);
-    }catch(err){
+  async deleteAccount(id: string): Promise<void> {
+    try {
+      await this.api.delete(`users/${id}`);
+    } catch (err) {
       throw err;
     }
   }
@@ -166,10 +166,10 @@ export default class AuthApi {
     return res.data;
   }
 
-  async update(user: any,id:number): Promise<User> {
-    console.log("-----",user);
+  async update(user: any, id: number): Promise<User> {
+    console.log("-----", user);
     const formData = new FormData();
-   
+
     for (const key in user) {
       if (key === "attributes") {
         formData.append(key, JSON.stringify(user[key]));
@@ -183,9 +183,13 @@ export default class AuthApi {
     const res = await this.api.patch(`/update/${id}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
-        },
-        }
-      );
+      },
+    }
+    );
     return res.data;
+  }
+
+  async removeUser(id: number): Promise<void> {
+    await this.api.delete(`/users/${id}`);
   }
 }
