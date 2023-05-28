@@ -52,7 +52,7 @@ const createLicenseService = async (data: LicenseType) => {
 			}
 		}	
 		else
-			throw new Error("data is not valid for create license");
+			throw new Error("access denied for create license");
 	}
 	else
 	{
@@ -168,7 +168,7 @@ const updatedLicenseService = async (tenantId: number, data: UpdateType) => {
 			}
 			else
 			{
-				throw new Error("data is not valid for update license");
+				throw new Error("access denied for update license");
 			}
 		}
 		else
