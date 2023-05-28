@@ -52,8 +52,8 @@ function UpBar() {
     }
   };
   return (
-    <div className="up-bar">
-      <span className="mx-4">{t("title")}</span>
+    <div className="up-bar ">
+      {/* <span className="mx-4">{t("title")}</span> */}
       <select
         className="bg-transparent min-w-[10rem]"
         onChange={(e) => {
@@ -66,7 +66,7 @@ function UpBar() {
           {(tenant) => (
             <option
               value={tenant.id}
-              className="bg-white  dark:bg-primary-dark text-dark dark:text-light "
+              className="bg-white dark:bg-primary-dark text-dark dark:text-light "
             >
               {tenant.name}
             </option>
@@ -74,7 +74,7 @@ function UpBar() {
         </For>
       </select>
       <div
-        className="toggle-full-screen"
+        className="toggle-full-screen hidden md:flex"
         onClick={() => {
           setIsFullScreen(!isFullScreen);
           toggleFullScreen();
@@ -82,7 +82,7 @@ function UpBar() {
       >
         {isFullScreen ? <BsFullscreenExit /> : <BsFullscreen />}
       </div>
-      <Tooltip>
+      <Tooltip className="flex">
         <div className="h-[2rem] flex items-center">
           {theme === "hybrid" && <CgDarkMode className="h-[2rem] w-[1.5rem]" />}
           {theme === "light" && <RxSun className="h-[2rem] w-[1.5rem] " />}
@@ -118,7 +118,7 @@ function UpBar() {
           </div>
         </div>
       </Tooltip>
-      <Tooltip>
+      <Tooltip className="flex">
         <div className="h-[2rem] flex items-center">
           {i18n.language === "en" && (
             <UsaIcon className="h-[2rem] w-[1.5rem] " />
@@ -156,16 +156,16 @@ function UpBar() {
           </div> */}
         </div>
       </Tooltip>
-      <div className="notifacations">
+      <div className="notifacations hidden md:flex">
         <BellIcon
           className={theme === "light" ? "fill-primary" : "fill-white"}
         />
       </div>
 
-      <Tooltip>
+      <Tooltip className="flex">
         <div className="user flex items-center gap-2">
           <Avatar user={user} className="w-[2rem] text-light" />
-          <div className="full-name">{`${user?.firstName} ${user?.lastName}`}</div>
+          <div className="full-name hidden sm:flex">{`${user?.firstName} ${user?.lastName}`}</div>
           <ArrowDownIcon />
         </div>
         <div className="card !shadow-lg p-2 mt-5 flex flex-col gap-2 text-dark">
