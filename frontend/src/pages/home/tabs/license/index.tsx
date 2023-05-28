@@ -1,7 +1,14 @@
 import { useEffect, useReducer, useState } from "react";
 import DataGrid, { Column } from "../../../../components/data-grid";
 import Pagination from "../../../../components/pagination";
-import { Device, Group, License, Params, Report, ReportDevice } from "../../../../utils";
+import {
+  Device,
+  Group,
+  License,
+  Params,
+  Report,
+  ReportDevice,
+} from "../../../../utils";
 import { ReactComponent as CsvIcon } from "../../../../assets/icons/csv.svg";
 import { ReactComponent as PdfIcon } from "../../../../assets/icons/pdf.svg";
 import Tooltip from "../../../../components/tooltip";
@@ -23,7 +30,6 @@ const defaultParams: Params = {
     page: 1,
     perPage: 10,
   },
-
 };
 
 const paramsReducer = (
@@ -44,87 +50,85 @@ const paramsReducer = (
         where: {
           ...state.where,
           ...action.payload,
-        }
+        },
       };
     default:
       return state;
   }
 };
 
-
 function LicenseTab() {
   const [params, setParams] = useReducer(paramsReducer, defaultParams);
   const [total, setTotal] = useState(100);
   const [rows, setRows] = useState<License[]>([]);
   const [backUpRows, setBackUpRows] = useState<License[]>([]);
-  const { theme, user, tenantId, licenseApi} = useProvider<AppContext>();
-//   const action = (row: any) => {
-//     if (row.format === "pdf")
-//       return (
-//         <div className="w-full h-full flex-center z-10">
-//           <Tooltip>
-//             <button
-//               className="w-[2.5rem] aspect-square rounded-full flex-center  hover:bg-dark/5 active:bg-dark/10 transition-colors"
-//               onClick={() => {
-//                 backendApi
-//                   .downloadFile({
-//                     name: row.url,
-//                     type: row.type,
-//                   })
-//                   .then((res) => {})
-//                   .catch((err) => {
-//                     toast.error(err.message);
-//                   });
-//               }}
-//             >
-//               <PdfIcon />
-//             </button>
-//             <div className="bg-dark/50  text-light rounded-full px-2 py-1 whitespace-nowrap mr-[4rem]">
-//               export as pdf
-//             </div>
-//           </Tooltip>
-//         </div>
-//       );
-//     return (
-//       <div className="w-full h-full flex-center">
-//         <Tooltip>
-//           <button
-//             onClick={() => {
-//               backendApi
-//                 .downloadFile({
-//                   name: row.url,
-//                   type: row.type,
-//                 })
-//                 .then((res) => {})
-//                 .catch((err) => {
-//                   toast.error(err.message);
-//                 });
-//             }}
-//             className="w-[2.5rem] aspect-square rounded-full flex-center  hover:bg-dark/5 active:bg-dark/10 transition-colors"
-//           >
-//             <CsvIcon />
-//           </button>
-//           <div className="bg-dark/50 text-light rounded-full px-2 py-1 whitespace-nowrap mr-[4rem]">
-//             export as csv
-//           </div>
-//         </Tooltip>
-//       </div>
-//     );
-//   };
+  const { theme, user, tenantId, licenseApi } = useProvider<AppContext>();
+  //   const action = (row: any) => {
+  //     if (row.format === "pdf")
+  //       return (
+  //         <div className="w-full h-full flex-center z-10">
+  //           <Tooltip>
+  //             <button
+  //               className="w-[2.5rem] aspect-square rounded-full flex-center  hover:bg-dark/5 active:bg-dark/10 transition-colors"
+  //               onClick={() => {
+  //                 backendApi
+  //                   .downloadFile({
+  //                     name: row.url,
+  //                     type: row.type,
+  //                   })
+  //                   .then((res) => {})
+  //                   .catch((err) => {
+  //                     toast.error(err.message);
+  //                   });
+  //               }}
+  //             >
+  //               <PdfIcon />
+  //             </button>
+  //             <div className="bg-dark/50  text-light rounded-full px-2 py-1 whitespace-nowrap mr-[4rem]">
+  //               export as pdf
+  //             </div>
+  //           </Tooltip>
+  //         </div>
+  //       );
+  //     return (
+  //       <div className="w-full h-full flex-center">
+  //         <Tooltip>
+  //           <button
+  //             onClick={() => {
+  //               backendApi
+  //                 .downloadFile({
+  //                   name: row.url,
+  //                   type: row.type,
+  //                 })
+  //                 .then((res) => {})
+  //                 .catch((err) => {
+  //                   toast.error(err.message);
+  //                 });
+  //             }}
+  //             className="w-[2.5rem] aspect-square rounded-full flex-center  hover:bg-dark/5 active:bg-dark/10 transition-colors"
+  //           >
+  //             <CsvIcon />
+  //           </button>
+  //           <div className="bg-dark/50 text-light rounded-full px-2 py-1 whitespace-nowrap mr-[4rem]">
+  //             export as csv
+  //           </div>
+  //         </Tooltip>
+  //       </div>
+  //     );
+  //   };
   const getLicense = async () => {
     const res = await licenseApi.getLicense({
-        tenantId: tenantId,
+      tenantId: tenantId,
     });
     return res;
   };
 
-//   const getTenant = async (id:number) => {
-//     const res = await .getTenant({
-//         id: id,
-//     });
-//     return res;
-//     };
-
+  //   const getTenant = async (id:number) => {
+  //     const res = await .getTenant({
+  //         id: id,
+  //     });
+  //     return res;
+  //     };
 
   const [createLicese, setCreateLicese] = useState<{
     name: string;
@@ -136,14 +140,17 @@ function LicenseTab() {
     tenantId?: number;
     parentId?: number;
   }>({
-    name:"",
-    description:"",
-    tenantId:tenantId|| undefined,
-    parentId:user?.tenants?.filter((tenant) => tenant.id === tenantId && tenant.parentId)[0]?.parentId || undefined,
-    numberOfUsers:100,
-    numberOfDataCenters:100,
-    startDate:new Date().toISOString(),
-    expiredAt:new Date().toISOString(),
+    name: "",
+    description: "",
+    tenantId: tenantId || undefined,
+    parentId:
+      user?.tenants?.filter(
+        (tenant) => tenant.id === tenantId && tenant.parentId
+      )[0]?.parentId || undefined,
+    numberOfUsers: 100,
+    numberOfDataCenters: 100,
+    startDate: new Date().toISOString(),
+    expiredAt: new Date().toISOString(),
   });
 
   const columns: Column[] = [
@@ -154,77 +161,32 @@ function LicenseTab() {
       filter: {
         type: "text",
         onChange: (e) => {
-            if (e != "")
-            setRows(backUpRows.filter((row:any) => row?.name?.includes(e) || undefined));
-            else
-            setRows(backUpRows);
+          if (e != "")
+            setRows(
+              backUpRows.filter(
+                (row: any) => row?.name?.includes(e) || undefined
+              )
+            );
+          else setRows(backUpRows);
         },
       },
     },
     {
       label: "date",
       header: "created at",
-      
+
       valueGetter: (row) => format(new Date(row.createdAt), "dd/MM/yyyy HH:mm"),
       filter: {
         type: "select",
-        options: [{
-          value: "lasthour",
-          label: "last hour",
-        },
-        {
-          value: "last4hours",
-          label: "last 4 hours",
-        }
-        ,
-        {
-          value: "last12hours",
-          label: "last 12 hours",
-        },
-        {
-          value: "lastday",
-          label: "last day",
-
-        }
-      ],
-        onChange: (e:string) => {
-          if (e === "lasthour")
+        options: [
           {
-            setRows(backUpRows.filter((row:any) => new Date(row.createdAt) >= addHours(new Date(), -1)));
-          }
-          else if (e === "last4hours")
-          {
-            setRows(backUpRows.filter((row:any) => new Date(row.createdAt) >= addHours(new Date(), -4)));
-          }
-          else if (e === "last12hours")
-          {
-            setRows(backUpRows.filter((row:any) => new Date(row.createdAt) >= addHours(new Date(), -12)));
-          }
-          else if (e === "lastday")
-          {
-            setRows(backUpRows.filter((row:any) => new Date(row.createdAt) >= addDays(new Date(), -1)));
-          }
-          else
-            setRows(backUpRows);
-        },
-      },
-    },
-    {
-        label: "expired",
-        header: "expired",
-        
-        valueGetter: (row) => format(new Date(row.expiredAt ), "dd/MM/yyyy HH:mm"),
-        filter: {
-          type: "select",
-          options: [{
             value: "lasthour",
             label: "last hour",
           },
           {
             value: "last4hours",
             label: "last 4 hours",
-          }
-          ,
+          },
           {
             value: "last12hours",
             label: "last 12 hours",
@@ -232,28 +194,94 @@ function LicenseTab() {
           {
             value: "lastday",
             label: "last day",
-  
-          }
+          },
         ],
-          onChange: (e:string) => {
-            if (e === "lasthour")
-            {
-                setRows(backUpRows.filter((row:any) => new Date(row.expiredAt) >= addHours(new Date(), -1)));
-            }
-            else if (e === "last4hours")
-            {
-                setRows(backUpRows.filter((row:any) => new Date(row.expiredAt) >= addHours(new Date(), -4)));
-            }
-            else if (e === "last12hours")
-            {
-                setRows(backUpRows.filter((row:any) => new Date(row.expiredAt) >= addHours(new Date(), -12)));
-            }
-            else if (e === "lastday")
-            {
-                setRows(backUpRows.filter((row:any) => new Date(row.expiredAt) >= addDays(new Date(), -1)));
-            }
-            else
-                setRows(backUpRows);
+        onChange: (e: string) => {
+          if (e === "lasthour") {
+            setRows(
+              backUpRows.filter(
+                (row: any) =>
+                  new Date(row.createdAt) >= addHours(new Date(), -1)
+              )
+            );
+          } else if (e === "last4hours") {
+            setRows(
+              backUpRows.filter(
+                (row: any) =>
+                  new Date(row.createdAt) >= addHours(new Date(), -4)
+              )
+            );
+          } else if (e === "last12hours") {
+            setRows(
+              backUpRows.filter(
+                (row: any) =>
+                  new Date(row.createdAt) >= addHours(new Date(), -12)
+              )
+            );
+          } else if (e === "lastday") {
+            setRows(
+              backUpRows.filter(
+                (row: any) => new Date(row.createdAt) >= addDays(new Date(), -1)
+              )
+            );
+          } else setRows(backUpRows);
+        },
+      },
+    },
+    {
+      label: "expired",
+      header: "expired",
+
+      valueGetter: (row) => format(new Date(row.expiredAt), "dd/MM/yyyy HH:mm"),
+      filter: {
+        type: "select",
+        options: [
+          {
+            value: "lasthour",
+            label: "last hour",
+          },
+          {
+            value: "last4hours",
+            label: "last 4 hours",
+          },
+          {
+            value: "last12hours",
+            label: "last 12 hours",
+          },
+          {
+            value: "lastday",
+            label: "last day",
+          },
+        ],
+        onChange: (e: string) => {
+          if (e === "lasthour") {
+            setRows(
+              backUpRows.filter(
+                (row: any) =>
+                  new Date(row.expiredAt) >= addHours(new Date(), -1)
+              )
+            );
+          } else if (e === "last4hours") {
+            setRows(
+              backUpRows.filter(
+                (row: any) =>
+                  new Date(row.expiredAt) >= addHours(new Date(), -4)
+              )
+            );
+          } else if (e === "last12hours") {
+            setRows(
+              backUpRows.filter(
+                (row: any) =>
+                  new Date(row.expiredAt) >= addHours(new Date(), -12)
+              )
+            );
+          } else if (e === "lastday") {
+            setRows(
+              backUpRows.filter(
+                (row: any) => new Date(row.expiredAt) >= addDays(new Date(), -1)
+              )
+            );
+          } else setRows(backUpRows);
         },
       },
     },
@@ -264,80 +292,103 @@ function LicenseTab() {
       filter: {
         type: "text",
         onChange: (e) => {
-            if (e != "")
-            setRows(backUpRows.filter((row:any) => row?.numberOfUsers?.toString().includes(e) || undefined));
-            else
-            setRows(backUpRows);
+          if (e != "")
+            setRows(
+              backUpRows.filter(
+                (row: any) =>
+                  row?.numberOfUsers?.toString().includes(e) || undefined
+              )
+            );
+          else setRows(backUpRows);
         },
       },
     },
     {
-        label: "Total centers",
-        header: "Total data centers",
-        field: "numberOfDataCenters",
-        filter: {
-          type: "text",
-          onChange: (e) => {
-            if (e != "")
-            setRows(backUpRows.filter((row:any) => row?.numberOfDataCenters?.toString().includes(e) || undefined));
-            else
-                setRows(backUpRows);
-          },
+      label: "Total centers",
+      header: "Total data centers",
+      field: "numberOfDataCenters",
+      filter: {
+        type: "text",
+        onChange: (e) => {
+          if (e != "")
+            setRows(
+              backUpRows.filter(
+                (row: any) =>
+                  row?.numberOfDataCenters?.toString().includes(e) || undefined
+              )
+            );
+          else setRows(backUpRows);
         },
       },
-    {
-        label: "users connected",
-        header: "users connected",
-        valueGetter: (row) => row.users.length,
-        filter: {
-            type: "text",
-            onChange: (e) => {
-                if (e != "")
-                setRows(backUpRows.filter((row:any) => row?.users?.length?.toString().includes(e) || undefined));
-                else
-                    setRows(backUpRows);
-            },
-        },
     },
     {
-        label: "centers connected",
-        header: "data centers connected",
-        valueGetter: (row) => row.dataCenters.length,
-        filter: {
-            type: "text",
-            onChange: (e) => {
-                if (e != "")
-                setRows(backUpRows.filter((row:any) => row?.dataCenters?.length?.toString().includes(e) || undefined));
-                else
-                setRows(backUpRows);
-            },
+      label: "users connected",
+      header: "users connected",
+      valueGetter: (row) => row.users.length,
+      filter: {
+        type: "text",
+        onChange: (e) => {
+          if (e != "")
+            setRows(
+              backUpRows.filter(
+                (row: any) =>
+                  row?.users?.length?.toString().includes(e) || undefined
+              )
+            );
+          else setRows(backUpRows);
         },
-    }
+      },
+    },
+    {
+      label: "centers connected",
+      header: "data centers connected",
+      valueGetter: (row) => row.dataCenters.length,
+      filter: {
+        type: "text",
+        onChange: (e) => {
+          if (e != "")
+            setRows(
+              backUpRows.filter(
+                (row: any) =>
+                  row?.dataCenters?.length?.toString().includes(e) || undefined
+              )
+            );
+          else setRows(backUpRows);
+        },
+      },
+    },
   ];
   const [state, setState] = useState<"idle" | "loading" | "error">("loading");
   const [open, setOpen] = useState(false);
   const [DevicesData, setDevicesData] = useState<Device[]>([]);
   const [checkUpdate, setCheckUpdate] = useState(false);
 
-  useEffect(()=>{
-
-    setCreateLicese((prev)=>({...prev,tenantId:tenantId,
-      parentId:user?.tenants?.filter((tenant) => tenant.id === tenantId && tenant.parentId)[0]?.parentId || undefined,
-  }));
-    getLicense().then((res:any) => {
-      setState("loading");
-     setRows(res?.results);
-      setTotal(res?.totalResult || 0);
-      setBackUpRows(res?.results);
-      setState("idle");
-    }).catch((err)=>{
-      setState("error");
-    }).finally(()=>{
-      setState("idle");
-    })
-  },[tenantId])
+  useEffect(() => {
+    setCreateLicese((prev) => ({
+      ...prev,
+      tenantId: tenantId,
+      parentId:
+        user?.tenants?.filter(
+          (tenant) => tenant.id === tenantId && tenant.parentId
+        )[0]?.parentId || undefined,
+    }));
+    getLicense()
+      .then((res: any) => {
+        setState("loading");
+        setRows(res?.results);
+        setTotal(res?.totalResult || 0);
+        setBackUpRows(res?.results);
+        setState("idle");
+      })
+      .catch((err) => {
+        setState("error");
+      })
+      .finally(() => {
+        setState("idle");
+      });
+  }, [tenantId]);
   return (
-    <div className="flex flex-col  gap-6 p-6">
+    <div className="flex flex-col  gap-6 p-6 min-w-[80rem]">
       <div className="flex gap-4 items-center flex-wrap justify-end ">
         <Pagination
           value={params.pagination}
@@ -361,7 +412,7 @@ function LicenseTab() {
           (params.pagination.page - 1) * params.pagination.perPage,
           params.pagination.page * params.pagination.perPage
         )}
-        action={(row:any)=><div></div>}
+        action={(row: any) => <div></div>}
       ></DataGrid>
       <Modal
         open={open}
@@ -394,7 +445,7 @@ function LicenseTab() {
               }}
             />
           </div>
-        
+
           <div>
             <label
               className="w-fit"
@@ -407,7 +458,10 @@ function LicenseTab() {
               id="description"
               className="h-11"
               onChange={(e) => {
-                setCreateLicese({ ...createLicese, description: e.target.value });
+                setCreateLicese({
+                  ...createLicese,
+                  description: e.target.value,
+                });
               }}
             />
           </div>
@@ -420,11 +474,14 @@ function LicenseTab() {
               startDate
             </label>
             <input
-            type="date"
+              type="date"
               id="startDate"
               className="h-11"
               onChange={(e) => {
-                setCreateLicese({ ...createLicese, startDate: new Date(e.target.value).toISOString() });
+                setCreateLicese({
+                  ...createLicese,
+                  startDate: new Date(e.target.value).toISOString(),
+                });
               }}
             />
           </div>
@@ -437,11 +494,14 @@ function LicenseTab() {
               expiredAt
             </label>
             <input
-             type="date"
+              type="date"
               id="expiredAt"
               className="h-11"
               onChange={(e) => {
-                setCreateLicese({ ...createLicese, expiredAt: new Date(e.target.value).toISOString() });
+                setCreateLicese({
+                  ...createLicese,
+                  expiredAt: new Date(e.target.value).toISOString(),
+                });
               }}
             />
           </div>
@@ -459,7 +519,10 @@ function LicenseTab() {
               id="numberOfUsers"
               className="h-11"
               onChange={(e) => {
-                setCreateLicese({ ...createLicese, numberOfUsers: +e.target.value });
+                setCreateLicese({
+                  ...createLicese,
+                  numberOfUsers: +e.target.value,
+                });
               }}
             />
           </div>
@@ -477,8 +540,10 @@ function LicenseTab() {
               id="numberOfUsers"
               className="h-11"
               onChange={(e) => {
-
-                  setCreateLicese({ ...createLicese, numberOfDataCenters: +e.target.value });
+                setCreateLicese({
+                  ...createLicese,
+                  numberOfDataCenters: +e.target.value,
+                });
               }}
             />
           </div>
@@ -495,23 +560,26 @@ function LicenseTab() {
           <Button
             className="flex items-center gap-2 py-3 px-4"
             onClick={() => {
-             licenseApi.addLicense(createLicese).then((res:any) => {
-              setRows((prev) => [...prev, res]);
-                setOpen(false);
-                setCreateLicese({
-                  name: "",
-                  description: "",
-                  startDate: "",
-                  expiredAt: "",
-                  numberOfUsers: 0,
-                  numberOfDataCenters: 0,
+              licenseApi
+                .addLicense(createLicese)
+                .then((res: any) => {
+                  setRows((prev) => [...prev, res]);
+                  setOpen(false);
+                  setCreateLicese({
+                    name: "",
+                    description: "",
+                    startDate: "",
+                    expiredAt: "",
+                    numberOfUsers: 0,
+                    numberOfDataCenters: 0,
+                  });
+                  toast.success("License created successfully");
+                })
+                .catch((err) => {
+                  toast.error(
+                    err?.response?.data?.message || "Something went wrong"
+                  );
                 });
-                toast.success("License created successfully")
-              }
-              ).catch((err) => {
-                toast.error(err?.response?.data?.message || "Something went wrong")
-              }
-              )
             }}
           >
             <span>Genarate</span>

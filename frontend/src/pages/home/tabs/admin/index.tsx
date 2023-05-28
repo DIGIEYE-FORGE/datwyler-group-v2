@@ -140,7 +140,7 @@ function AdminTab() {
     },
   ];
   return (
-    <div className="flex flex-col gap-6 p-6">
+    <div className="flex flex-col gap-6 p-6 min-w-[50rem]">
       <div className="flex gap-4">
         <span className="text-xl font-semibold">Users</span>
         <Pagination

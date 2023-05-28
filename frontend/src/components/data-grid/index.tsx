@@ -263,7 +263,7 @@ const DataGrid = (props: DataGridProps) => {
               <td
                 colSpan={
                   selectedColumns.filter((column) => column.show !== false)
-                    .length + 1
+                    .length + (props.hideAction ? 0 : 1)
                 }
               >
                 {props.noData || (

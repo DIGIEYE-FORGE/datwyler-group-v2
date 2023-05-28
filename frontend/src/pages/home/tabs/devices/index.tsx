@@ -83,7 +83,7 @@ function DevicesTab() {
     },
   ];
   return (
-    <div className="flex flex-col  w-full gap-6 p-6">
+    <div className="flex flex-col  w-full gap-6 p-6 min-w-[40rem]">
       <div className="flex gap-4 items-center flex-wrap justify-end">
         <Pagination
           value={params.pagination}

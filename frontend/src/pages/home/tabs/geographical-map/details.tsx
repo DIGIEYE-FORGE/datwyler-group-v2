@@ -121,7 +121,7 @@ function Group({ groupId }: { groupId?: number | null }) {
           />
         </div>
         <SwipeableTabs index={tabIndex} className=" flex-1 w-full">
-          <div className="h-full overflow-y-auto p-4 flex flex-col ">
+          <div className="h-full overflow-y-auto p-4 flex flex-col">
             <div className="grid grid-cols-5 my-1">
               <div className="col-span-2 text-slate-600 dark:text-slate-300 capitalize">
                 location:

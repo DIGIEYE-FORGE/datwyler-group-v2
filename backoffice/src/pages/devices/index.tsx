@@ -344,14 +344,13 @@ const DevicesPage = () => {
                 rowStyle={{
                   fontSize: "14px",
                 }}
-                // state={
-                //   deviceQuery.isLoading
-                //     ? "loading"
-                //     : deviceQuery.isError
-                //     ? "error"
-                //     : "success"
-                // }
-                state="error"
+                state={
+                  deviceQuery.isLoading
+                    ? "loading"
+                    : deviceQuery.isError
+                    ? "error"
+                    : "success"
+                }
                 rows={deviceQuery?.data?.results || []}
                 filtersReducer={dispatch}
                 noData={<NoData />}

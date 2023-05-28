@@ -22,7 +22,6 @@ const defaultParams: Params = {
     page: 1,
     perPage: 10,
   },
-
 };
 
 const paramsReducer = (
@@ -43,13 +42,12 @@ const paramsReducer = (
         where: {
           ...state.where,
           ...action.payload,
-        }
+        },
       };
     default:
       return state;
   }
 };
-
 
 function ReportsTab() {
   const [params, setParams] = useReducer(paramsReducer, defaultParams);
@@ -142,46 +140,44 @@ function ReportsTab() {
         type: "text",
         onChange: (e) => {
           setParams({
-            type:'where',
-            payload:{
-              name:{
-                contains:e,
-                mode:'insensitive'
-              }
-            }
-          })
+            type: "where",
+            payload: {
+              name: {
+                contains: e,
+                mode: "insensitive",
+              },
+            },
+          });
         },
       },
     },
     {
       label: "date",
       header: "Report date ",
-      
+
       valueGetter: (row) => format(new Date(row.createdAt), "dd/MM/yyyy HH:mm"),
       filter: {
         type: "select",
-        options: [{
-          value: "lasthour",
-          label: "last hour",
-        },
-        {
-          value: "last4hours",
-          label: "last 4 hours",
-        }
-        ,
-        {
-          value: "last12hours",
-          label: "last 12 hours",
-        },
-        {
-          value: "lastday",
-          label: "last day",
-
-        }
-      ],
-        onChange: (e:string) => {
-          if (e === "lasthour")
+        options: [
           {
+            value: "lasthour",
+            label: "last hour",
+          },
+          {
+            value: "last4hours",
+            label: "last 4 hours",
+          },
+          {
+            value: "last12hours",
+            label: "last 12 hours",
+          },
+          {
+            value: "lastday",
+            label: "last day",
+          },
+        ],
+        onChange: (e: string) => {
+          if (e === "lasthour") {
             setParams({
               type: "where",
               payload: {
@@ -190,9 +186,7 @@ function ReportsTab() {
                 },
               },
             });
-          }
-          else if (e === "last4hours")
-          {
+          } else if (e === "last4hours") {
             setParams({
               type: "where",
               payload: {
@@ -201,9 +195,7 @@ function ReportsTab() {
                 },
               },
             });
-          }
-          else if (e === "last12hours")
-          {
+          } else if (e === "last12hours") {
             setParams({
               type: "where",
               payload: {
@@ -212,17 +204,15 @@ function ReportsTab() {
                 },
               },
             });
-          }
-          else if (e === "lastday")
-          {
+          } else if (e === "lastday") {
             setParams({
-              type:"where",
-              payload:{
-                createdAt:{
-                  gte: addHours(new Date(),(-24 * 1)).toISOString(),
-                }
-              }
-            })
+              type: "where",
+              payload: {
+                createdAt: {
+                  gte: addHours(new Date(), -24 * 1).toISOString(),
+                },
+              },
+            });
           }
         },
       },
@@ -256,10 +246,10 @@ function ReportsTab() {
             payload: {
               type: {
                 equals: e,
-              }
+              },
             },
           });
-        }
+        },
       },
     },
   ];
@@ -282,7 +272,6 @@ function ReportsTab() {
         tenantId: {
           eq: tenantId,
         },
-
       },
     }).then((res) => {
       console.log(res);
@@ -318,7 +307,7 @@ function ReportsTab() {
     }
   }, [createReport.groups]);
   return (
-    <div className="flex flex-col  gap-6 p-6">
+    <div className="flex flex-col  gap-6 p-6 min-w-[40rem]">
       <div className="flex gap-4 items-center flex-wrap justify-end ">
         <Pagination
           value={params.pagination}
@@ -436,47 +425,41 @@ function ReportsTab() {
             </label>
             <Select
               onChange={(v: any) => {
-                if (v.value === "last hour")
-                {
+                if (v.value === "last hour") {
                   setCreateReport({
                     ...createReport,
                     date: new Date(addHours(new Date(), -1)),
                   });
                 }
-                if (v.value === "last 4 hours")
-                {
+                if (v.value === "last 4 hours") {
                   setCreateReport({
                     ...createReport,
                     date: new Date(addHours(new Date(), -4)),
                   });
                 }
-                if (v.value === "last 12 hours")
-                {
+                if (v.value === "last 12 hours") {
                   setCreateReport({
                     ...createReport,
                     date: new Date(addHours(new Date(), -12)),
                   });
                 }
-                if (v.value === "last day")
-                {
+                if (v.value === "last day") {
                   setCreateReport({
                     ...createReport,
-                    date: new Date(addDays(new Date(), (-24*1))),
+                    date: new Date(addDays(new Date(), -24 * 1)),
                   });
                 }
-                if (v.value === "last 2 days")
-                {
+                if (v.value === "last 2 days") {
                   setCreateReport({
                     ...createReport,
-                    date: new Date(addDays(new Date(), (-24*2))),
+                    date: new Date(addDays(new Date(), -24 * 2)),
                   });
                 }
-                if (v.value === "last week")
-                {
+                if (v.value === "last week") {
                   console.log("i am here");
                   setCreateReport({
                     ...createReport,
-                    date: new Date(addDays(new Date(), (-7*24))),
+                    date: new Date(addDays(new Date(), -7 * 24)),
                   });
                 }
               }}

@@ -60,7 +60,7 @@ const dataVideo = [
 ];
 function SupportTab() {
   return (
-    <div className="support-tab w-full  flex flex-col pt-[2rem] items-center gap-[1rem]">
+    <div className="support-tab w-full  flex flex-col pt-[2rem] items-center gap-[1rem] min-w-[50rem]">
       <div className="font-bold text-[1.7rem]">Welcome! How can we help?</div>
       <div className="relative bg-white dark:bg-primary-dark rounded   flex items-center gap-[0.5rem] w-[25%] h-[3rem] min-w-[20rem]">
         <input
@@ -97,9 +97,7 @@ function SupportTab() {
         <div className="w-[60%]  h-[0.2rem] bg-[#0091AE]/[.3] mt-4"></div>
         <div className="flex flex-col gap-[1rem] items-center mt-4 ">
           <VideoIcons />
-          <div className="font-bold text-[1.7rem]">
-            Video Tutorials
-          </div>
+          <div className="font-bold text-[1.7rem]">Video Tutorials</div>
           <div className="">
             Quick tutorial videos to help you and your team be successful in
             Datwyler.

@@ -68,7 +68,7 @@ function HomePage() {
     <Layout>
       <div className=" flex-center flex-col ">
         <div className="w-full h-full pt-[3rem] ">
-          <div className="flex  items-end overflow-x-auto absolute h-[3rem] w-full top-0 z-10 px-4 hide-scrollbar ">
+          <div className=" flex  items-end overflow-x-auto absolute h-[3rem] w-full top-0 z-10 px-4 hide-scrollbar ">
             {selectedTabs.map((tabIdx) => {
               return (
                 <button

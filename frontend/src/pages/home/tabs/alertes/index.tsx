@@ -383,7 +383,7 @@ function AlertsTab() {
     },
   ];
   return (
-    <div className="flex flex-col  w-full gap-6 p-6">
+    <div className="flex flex-col  w-full gap-6 p-6 min-w-[70rem]">
       <div className="flex gap-4 items-center flex-wrap justify-end">
         <Pagination
           value={params.pagination}
@@ -398,9 +398,9 @@ function AlertsTab() {
       <DataGrid
         loading={state === "loading"}
         error={state === "error"}
-        className="table-fixed  w-full  text-left "
+        className="table-fixed  w-full text-left "
         headClassName="h-[5.5rem] bg-dark/5 dark:bg-light/5 text-[#697681] [&>*]:px-2 "
-        rowClassName="h-[4rem] [&>*]:px-2 even:bg-dark/5 dark:even:bg-light/5 hover:bg-dark/10 dark:hover:bg-light/10"
+        rowClassName="h-[4rem] [&>*]:px-2 even:bg-dark/5 dark:even:bg-light/5 hover:bg-dark/10 dark:hover:bg-light/10  "
         columns={columns}
         rows={rows}
       ></DataGrid>

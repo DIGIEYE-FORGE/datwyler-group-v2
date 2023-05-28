@@ -285,7 +285,7 @@ function Overview() {
     <Chart title="Tempurature And Humidity" className="xl:col-span-2">
       <div className="card-body  overflow-auto p-3 h-full flex flex-col  gap-4">
         <select
-          className="ml-auto w-[20rem] border-2 border-primary [&>*]:capitalize"
+          className="ml-auto  border-2 border-primary [&>*]:capitalize"
           placeholder="Select range of time"
         >
           <option value="">all</option>
