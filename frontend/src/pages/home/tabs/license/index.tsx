@@ -149,7 +149,7 @@ function LicenseTab() {
   const columns: Column[] = [
     {
       label: "name",
-      header: "Report name",
+      header: "license name",
       field: "name",
       filter: {
         type: "text",
@@ -357,7 +357,10 @@ function LicenseTab() {
         headClassName="h-[5.5rem] bg-dark/5 dark:bg-light/5 text-[#697681] [&>*]:px-2 "
         rowClassName="h-[4rem] [&>*]:px-2 even:bg-dark/5 dark:even:bg-light/5 hover:bg-dark/10 dark:hover:bg-light/10"
         columns={columns}
-        rows={rows}
+        rows={rows.slice(
+          (params.pagination.page - 1) * params.pagination.perPage,
+          params.pagination.page * params.pagination.perPage
+        )}
         action={(row:any)=><div></div>}
       ></DataGrid>
       <Modal
