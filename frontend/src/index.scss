@@ -33,11 +33,11 @@ $h: 2rem;
   @apply h-screen w-screen select-none;
 
   .up-bar {
-    @apply fixed  top-0 right-0 w-full z-10 bg-light dark:bg-primary-dark transition-[width] flex items-center justify-end px-[1rem] shadow shadow-black/25 text-primary dark:text-light capitalize gap-[1rem];
+    @apply fixed  top-0 right-0 w-full z-10 bg-light dark:bg-primary-dark transition-[width] flex items-center justify-end  px-2 md:px-4 shadow shadow-black/25 text-primary dark:text-light capitalize gap-1  md:gap-4;
     width: calc(100% - #{$compact-side-bar-width});
     height: $up-bar-height;
     & > * {
-      @apply h-[2.5rem] flex items-center p-2 rounded hover:bg-white/10 active:bg-white/20 transition-colors cursor-pointer;
+      @apply h-[2.5rem]  items-center p-2 rounded hover:bg-white/10 active:bg-white/20 transition-colors cursor-pointer;
     }
   }
   input:checked ~ .up-bar {
@@ -97,7 +97,7 @@ $h: 2rem;
       }
     }
     .toggle {
-      @apply w-[2.5rem] aspect-square flex-center hover:bg-white/10 active:bg-white/20 rounded-full cursor-pointer rotate-180 mb-[0.5rem] transition-[background-color,transform];
+      @apply w-[2.5rem] aspect-square justify-center items-center hover:bg-white/10 active:bg-white/20 rounded-full cursor-pointer rotate-180 mb-[0.5rem] transition-[background-color,transform];
     }
     .water-mark {
       @apply mt-auto mb-4 opacity-0 transition-opacity;
