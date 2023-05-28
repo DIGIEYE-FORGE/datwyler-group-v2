@@ -67,9 +67,10 @@ type Type =
   | "include"
   | "where"
   | "serial"
-  | "isOnline"
+  | "name"
   | "deviceProfileId"
-  | "updatedAt";
+  | "updatedAt"
+  | "groupId";
 
 function paramsReducer(
   state: Params,
@@ -84,6 +85,9 @@ function paramsReducer(
       return { ...state, include: action.payload, page: 1 };
     case "where":
       return { ...state, where: action.payload, page: 1 };
+    case "name":
+      return {...state,where:{...state.where,name:{contains:action.payload,mode:"insensitive"}}}
+
     case "serial":
       return {
         ...state,
@@ -96,15 +100,20 @@ function paramsReducer(
           },
         },
       };
-    case "isOnline":
+    case "groupId":
       return {
         ...state,
         page: 1,
         where: {
           ...state.where,
-          isOnline: parseJSON(action.payload),
-        },
-      };
+          group:{
+            name:{
+              contains:action.payload,
+              mode:"insensitive"
+          }
+        }
+      },
+    };
     case "deviceProfileId":
       return {
         ...state,
@@ -217,7 +226,8 @@ const DevicesPage = () => {
       },
       {
         queryKey: ["deviceProfiles"],
-        queryFn: () => getDeviceProfiles({}),
+        queryFn: () => getDeviceProfiles({
+        }),
         onSuccess(data: any) {
           setDeviceProfiles(data.results);
         },
@@ -234,6 +244,15 @@ const DevicesPage = () => {
 
   const columns: Column[] = [
     {
+      header: "system",
+      field: "name",
+      filter: {
+        type: "text",
+        reducerType: "name",
+      },
+      label: "system",
+    },
+    {
       header: "serial",
       field: "serial",
       filter: {
@@ -243,33 +262,13 @@ const DevicesPage = () => {
       label: "serial",
     },
     {
-      header: "connection status",
-      valueGetter: (row) => (row.isOnline ? <Connected /> : <Disconnected />),
-      filter: {
-        type: "select",
-        options: [
-          { value: true, label: "connected" },
-          { value: false, label: "disconnected" },
-        ],
-        reducerType: "isOnline",
+      header:"group name",
+      valueGetter:(row)=>row.group?.name,
+      filter:{
+        type:"text",
+        reducerType:"groupId"
       },
-      label: "connection status",
-    },
-    {
-      header: "profile name",
-      valueGetter: (row) => row.deviceProfile?.name || "---",
-      filter: {
-        type: "select",
-        options: (deviceProfileQuery?.data?.results || []).map(
-          (item: { id: number; name: string }) => ({
-            value: item.id,
-            label: item.name,
-          })
-        ),
-
-        reducerType: "deviceProfileId",
-      },
-      label: "profile name",
+      label: "group name",
     },
     {
       header: "last updated",
@@ -336,7 +335,6 @@ const DevicesPage = () => {
             </div>
             <div className="flex-1">
               <DataGrid
-                headerClassName="capitalize"
                 rowClassName="capitalize"
                 columns={columns}
                 rowStyle={{

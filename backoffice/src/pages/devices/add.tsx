@@ -59,6 +59,7 @@ const Attribute = ({ text }: { text: string }) => (
   </div>
 );
 
+export const systems = ["UPS", "TEMPERATURE AND HUMIDITY", "COOLING UNIT", "Monitor_IO", "IPDU_A", "IO_Module", "POWER METER"]
 const Add = () => {
   const context = useProvider<Context>();
   const [, setOpen] = context.open;
@@ -224,12 +225,12 @@ const Add = () => {
                 }));
               }}
             >
-              <option value="">none</option>
-              <option value="UPS">UPS</option>
-              <option value="BMS">BMS</option>
-              <option value="PDU">PDU</option>
-              <option value="ATS">ATS</option>
-              <option value="CRAC">CRAC</option>
+              <option value="" disabled>none</option>
+              {
+                systems.map((system) => (
+                  <option value={system}>{system}</option>
+                ))
+              }
             </Select>
           </div>
           <label

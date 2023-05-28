@@ -18,7 +18,7 @@ const RouterView = () => {
       <Route path="/devices" element={<DevicesPage />} />
       <Route path="/device-profile" element={<DeviceProfilePage />} />
       <Route path="/decoder" element={<DecoderPage />} />
-      <Route path="/dev" element={<DevPage />} />
+      {/* <Route path="/dev" element={<DevPage />} /> */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/groups" element={<GroupPage />} />
       <Route path="/signup" element={<SignUpPage />} />

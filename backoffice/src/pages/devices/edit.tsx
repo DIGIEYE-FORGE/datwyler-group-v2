@@ -203,7 +203,7 @@ const Edit = () => {
       <Tabs>
         <Tab label="info">
           <div
-            className="grid-2 "
+            className="flex flex-col"
             style={{ padding: "25px 18px", gap: "15px" }}
           >
             <div className="grid-2" style={{ gap: "15px" }}>
@@ -221,45 +221,15 @@ const Edit = () => {
                   <img src={uploadIcon} alt="up" />
                 </div>
               </SmallCard>
-              <SmallCard>
-                <div>44</div>
-                <div>
-                  <span>text</span>
-                  <img src={uploadIcon} alt="up" />
-                </div>
-              </SmallCard>
-              <SmallCard>
-                <div>44</div>
-                <div>
-                  <span>text</span>
-                  <img src={uploadIcon} alt="up" />
-                </div>
-              </SmallCard>
-              <SmallCard className="col-2">
-                <div>44</div>
-                <div>
-                  <span>text</span>
-                  <img src={uploadIcon} alt="up" />
-                </div>
-              </SmallCard>
             </div>
-            <div className="bg-light rounded">
-              <MapContainer
-                center={[51.505, -0.09]}
-                zoom={8}
-                minZoom={3}
-                maxZoom={14}
-                attributionControl={false}
-                scrollWheelZoom={true}
-                style={{ width: "100%", height: "100%" }}
-              >
-               <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                  url="http://{s}.google.com/vt/lyrs=m&hl=en&gl=ma&x={x}&y={y}&z={z}"
-                  subdomains={['mt0', 'mt1', 'mt2', 'mt3']}
-                />
-                <Marker position={[51.505, -0.09]}></Marker>
-              </MapContainer>
+            <div>
+              <SmallCard>
+                <div className="text-lg">description</div>
+                <div>
+                  <span>{selectedDevice?.description || "---"}</span>
+                  <img src={uploadIcon} alt="up" />
+                </div>
+              </SmallCard>
             </div>
           </div>
           <Details>
@@ -337,19 +307,19 @@ const Edit = () => {
                 </label>
               </CustomInput>
             </div>
-            <div className="row-input">
+            {/* <div className="row-input">
               <span
                 style={{
                   width: "140px",
                 }}
               >
                 Connection status
-              </span>
-              <CustomInput>
-                {/* <div className="connection">CONNECTION</div> */}
+              </span> */}
+              {/* <CustomInput>
+      
                 <div className="deconnection">DECONNECTION</div>
-              </CustomInput>
-            </div>
+              </CustomInput> */}
+            {/* </div> */}
             <div className="row-input">
               <span
                 style={{

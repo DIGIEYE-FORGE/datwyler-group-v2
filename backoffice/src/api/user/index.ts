@@ -38,6 +38,35 @@ api.interceptors.response.use(
 	}
 );
 
+multiTenancyApi.interceptors.response.use(
+	(response) => {
+		return response;
+	},
+	(error) => {
+		if (error.response.status === 401) {
+			const auth = axios.create({
+				baseURL: import.meta.env.VITE_AUTH_AUTH,
+			});
+			auth
+				.post("refresh", {
+					refreshToken: localStorage.getItem("refreshToken"),
+				})
+				.then((response) => {
+					localStorage.setItem("accessToken", response.data.accessToken);
+					localStorage.setItem("refreshToken", response.data.refreshToken);
+					axios.defaults.headers.common["Authorization"] =
+						"Bearer " + response.data.accessToken;
+				}).catch((error) => {
+					localStorage.removeItem("accessToken");
+					localStorage.removeItem("refreshToken");
+					window.location.href = "/login";
+				});
+		}
+		return Promise.reject(error);
+	}
+);
+
+
 interface Params {
 	take?: number;
 	skip?: number;
@@ -50,7 +79,7 @@ export const getUser = async (id: number) => {
 	if (!id) return [];
 	const response = await multiTenancyApi.get(`/tenant/${id}/users`, {
 		headers: {
-			Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+			Authorization: `Bearer ${localStorage.getItem("refreshToken")}`
 		}
 	});
 	return response.data;
@@ -67,7 +96,7 @@ export const getTags = async (params: Params) => {
 
 		},
 		headers: {
-			Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+			Authorization: `Bearer ${localStorage.getItem("refreshToken")}`
 		}
 	});
 	return response.data;
@@ -94,7 +123,7 @@ export const getUsers = async (params: any) => {
 			where: where ? JSON.stringify(where) : undefined,
 		},
 		headers: {
-			Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+			Authorization: `Bearer ${localStorage.getItem("refreshToken")}`
 		}
 	});
 	return response.data;
@@ -139,7 +168,7 @@ export const addUserToTenant = async ({
 		role
 	}, {
 		headers: {
-			Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+			Authorization: `Bearer ${localStorage.getItem("refreshToken")}`
 		}
 
 	});
@@ -158,7 +187,7 @@ export const removeUserFromTenant = async ({
 		userId,
 	}, {
 		headers: {
-			Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+			Authorization: `Bearer ${localStorage.getItem("refreshToken")}`
 		}
 
 	});
@@ -173,7 +202,7 @@ export const signUp = async (data: any, tenantId: number, role: "USER" | "ADMIN"
 
 	const response = await api.post("register", data, {
 		headers: {
-			Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+			Authorization: `Bearer ${localStorage.getItem("refreshToken")}`
 		}
 	});
 	if (tenantId) {
@@ -187,7 +216,7 @@ export const signUp = async (data: any, tenantId: number, role: "USER" | "ADMIN"
 		).catch(async (error) => {
 			await api.delete(`user/${response.data.id}`, {
 				headers: {
-					Authorization: `Bearer ${localStorage.getItem("accessToken")}`
+					Authorization: `Bearer ${localStorage.getItem("refreshToken")}`
 				}
 			});
 			throw error;

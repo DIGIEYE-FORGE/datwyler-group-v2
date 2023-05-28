@@ -6,6 +6,7 @@ import Popover from "../popover";
 import Card from "../card";
 import Button from "../button";
 import LoadingTable from "../loading-table";
+import { he } from "date-fns/locale";
 
 const Edit = styled.div`
   color: #4e5064;
@@ -255,7 +256,7 @@ const DataGrid = ({
         ...style,
       }}
     >
-      {state === "success" ? (
+      {/* {state === "success" ? ( */}
         <DataGridStyled
           style={{
             gap: rowGap,
@@ -418,71 +419,84 @@ const DataGrid = ({
             </tr>
           </thead>
           <tbody className={`${props.bodyClassName}`} style={props.bodyStyle}>
-            {rows.map((row, index) => (
-              <tr
-                key={index}
-                className={`${props.rowClassName}`}
-                style={props.rowStyle}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (props.onRowSelect)
-                    props.onRowSelect({
-                      type: "view",
-                      row,
-                    });
-                }}
-              >
-                {selectedColumns
-                  .filter((column) => column.show !== false)
-                  .map((column, index) => {
-                    const value = column.valueGetter ? (
-                      column.valueGetter(row)
-                    ) : (
-                      <span>{row[column.field || ""] || "- - -"}</span>
-                    );
-                    return (
-                      <td
-                        key={index}
-                        className={column.className}
-                        style={column.style}
-                      >
-                        {value}
-                      </td>
-                    );
-                  })}
-                {actions && (
-                  <td>
-                    <Button variant="none">
-                      <Delete
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (props.onRowSelect)
-                            props.onRowSelect({
-                              type: "delete",
-                              row,
-                            });
-                        }}
-                        className=" p-2 h-2 pointer"
-                      >
-                        <DeleteIcon />
-                      </Delete>
-                    </Button>
-                  </td>
-                )}
-              </tr>
-            ))}
+            {state === "success" && rows.length > 0 ?(
+              <>
+                {rows.map((row, index) => (
+                <tr
+                  key={index}
+                  className={`${props.rowClassName}`}
+                  style={props.rowStyle}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (props.onRowSelect)
+                      props.onRowSelect({
+                        type: "view",
+                        row,
+                      });
+                  }}
+                >
+                  {selectedColumns
+                    .filter((column) => column.show !== false)
+                    .map((column, index) => {
+                      const value = column.valueGetter ? (
+                        column.valueGetter(row)
+                      ) : (
+                        <span>{row[column.field || ""] || "- - -"}</span>
+                      );
+                      return (
+                        <td
+                          key={index}
+                          className={column.className}
+                          style={column.style}
+                        >
+                          {value}
+                        </td>
+                      );
+                    })}
+                  {actions && (
+                    <td>
+                      <Button variant="none">
+                        <Delete
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (props.onRowSelect)
+                              props.onRowSelect({
+                                type: "delete",
+                                row,
+                              });
+                          }}
+                          className=" p-2 h-2 pointer"
+                        >
+                          <DeleteIcon />
+                        </Delete>
+                      </Button>
+                    </td>
+                  )}
+                </tr>
+                ))}
+            </>
+            ):
+          
+            state === "success" && rows.length === 0 ?
+            (
+             <div className="w-full h-full debug flex items-center justify-center">
+                <div className="debug  bg-red-500 flex flex-col gap-6 justify-center align-center  h-full " style={{
+                  width: "100%",
+                  height: "100%"
+                }}>
+                          <span>{props.noData || "No data"}</span>
+                </div>
+              </div>
+            )
+            :
+            state === "loading" && 
+            (<tr className="h-[100rem] w-[100%] debug">
+                <LoadingTable />
+            </tr>)    
+            }
+
           </tbody>
         </DataGridStyled>
-      ) : state === "loading" ? (
-        <LoadingTable />
-      ) : (
-        <></>
-      )}
-      {rows.length === 0 && state != "loading" && (
-        <div className="flex flex-col gap-6 justify-center align-center  h-full w-full">
-          <span>{props.noData || "No data"}</span>
-        </div>
-      )}
     </div>
   );
 };
