@@ -86,7 +86,13 @@ function paramsReducer(
     case "where":
       return { ...state, where: action.payload, page: 1 };
     case "name":
-      return {...state,where:{...state.where,name:{contains:action.payload,mode:"insensitive"}}}
+      return {
+        ...state,
+        where: {
+          ...state.where,
+          name: { contains: action.payload, mode: "insensitive" },
+        },
+      };
 
     case "serial":
       return {
@@ -106,14 +112,14 @@ function paramsReducer(
         page: 1,
         where: {
           ...state.where,
-          group:{
-            name:{
-              contains:action.payload,
-              mode:"insensitive"
-          }
-        }
-      },
-    };
+          group: {
+            name: {
+              contains: action.payload,
+              mode: "insensitive",
+            },
+          },
+        },
+      };
     case "deviceProfileId":
       return {
         ...state,
@@ -218,16 +224,14 @@ const DevicesPage = () => {
         queryFn: () => {
           if (tenantSelected > 0) {
             return getDevices(params);
-          }
-          else {
+          } else {
             return Promise.resolve({ results: [], totalResult: 0 });
           }
-        } 
+        },
       },
       {
         queryKey: ["deviceProfiles"],
-        queryFn: () => getDeviceProfiles({
-        }),
+        queryFn: () => getDeviceProfiles({}),
         onSuccess(data: any) {
           setDeviceProfiles(data.results);
         },
@@ -262,11 +266,11 @@ const DevicesPage = () => {
       label: "serial",
     },
     {
-      header:"group name",
-      valueGetter:(row)=>row.group?.name,
-      filter:{
-        type:"text",
-        reducerType:"groupId"
+      header: "group name",
+      valueGetter: (row) => row.group?.name,
+      filter: {
+        type: "text",
+        reducerType: "groupId",
       },
       label: "group name",
     },
@@ -340,13 +344,14 @@ const DevicesPage = () => {
                 rowStyle={{
                   fontSize: "14px",
                 }}
-                state={
-                  deviceQuery.isLoading
-                    ? "loading"
-                    : deviceQuery.isError
-                    ? "error"
-                    : "success"
-                }
+                // state={
+                //   deviceQuery.isLoading
+                //     ? "loading"
+                //     : deviceQuery.isError
+                //     ? "error"
+                //     : "success"
+                // }
+                state="error"
                 rows={deviceQuery?.data?.results || []}
                 filtersReducer={dispatch}
                 noData={<NoData />}
