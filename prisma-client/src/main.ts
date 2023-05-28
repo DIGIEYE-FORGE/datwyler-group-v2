@@ -2109,71 +2109,71 @@ async function seedSites(tenantId: number) {
 
 
 async function freshStart() {
-  // await authClient.user.deleteMany({});
-  // await multitenancyClient.user.deleteMany({});
-  // await multitenancyClient.tenant.deleteMany({});
-  // await backendClient.alert.deleteMany({});
-  // await backendClient.lastTelemetry.deleteMany({});
-  // await backendClient.device.deleteMany({});
-  // await backendClient.group.deleteMany({});
-  // const user = await initUser();
-  // const tenant = await initTenant(user.id);
-  // const sites = await seedSites(tenant.id);
-  // const devices = await seedDevices({
-  //   tenantId: tenant.id,
-  //   groupIds: sites.map((site) => site.id),
-  // });
-  // console.log({ user, tenant, sites, devices });
-  // await backendClient.group.deleteMany({
-  //   where: {
-  //     OR: [
-  //       { name: "MICRO DC" },
-  //       { name: "Mini  DC" },
-  //     ]
-  //   }
-  // })
-  // const site1 = await backendClient.group.create({
-  //   include: { _count: true },
-  //   data: {
-  //     name: "MICRO DC",
-  //     location: "Dubai",
-  //     lat: 25.2048,
-  //     lng: 55.2708,
-  //     tenantId: tenant?.id,
-  //     ip: 'cmsdatwyler.no-ip.org/',
-  //     devices: {
-  //       createMany: {
-  //         data: config[0].devices.map((device) => ({
-  //           name: device.label,
-  //           serial: device.serial,
-  //           tenantId: tenant?.id,
-  //         })),
-  //         skipDuplicates: true,
-  //       }
-  //     }
-  //   }
-  // })
-  // const site2 = await backendClient.group.create({
-  //   include: { _count: true },
-  //   data: {
-  //     name: "Mini  DC",
-  //     location: "Dubai",
-  //     lat: 27.2048,
-  //     lng: 55.2708,
-  //     ip: 'cmsdatwyler.no-ip.org:81',
-  //     tenantId: tenant?.id,
-  //     devices: {
-  //       createMany: {
-  //         data: config[1].devices.map((device) => ({
-  //           tenantId: tenant?.id,
-  //           name: device.label,
-  //           serial: device.serial,
-  //         })),
-  //         skipDuplicates: true,
-  //       }
-  //     }
-  //   }
-  // })
+  await authClient.user.deleteMany({});
+  await multitenancyClient.user.deleteMany({});
+  await multitenancyClient.tenant.deleteMany({});
+  await backendClient.alert.deleteMany({});
+  await backendClient.lastTelemetry.deleteMany({});
+  await backendClient.device.deleteMany({});
+  await backendClient.group.deleteMany({});
+  const user = await initUser();
+  const tenant = await initTenant(user.id);
+  const sites = await seedSites(tenant.id);
+  const devices = await seedDevices({
+    tenantId: tenant.id,
+    groupIds: sites.map((site) => site.id),
+  });
+  console.log({ user, tenant, sites, devices });
+  await backendClient.group.deleteMany({
+    where: {
+      OR: [
+        { name: "MICRO DC" },
+        { name: "Mini  DC" },
+      ]
+    }
+  })
+  const site1 = await backendClient.group.create({
+    include: { _count: true },
+    data: {
+      name: "MICRO DC",
+      location: "Dubai",
+      lat: 25.2048,
+      lng: 55.2708,
+      tenantId: tenant?.id,
+      ip: 'cmsdatwyler.no-ip.org/',
+      devices: {
+        createMany: {
+          data: config[0].devices.map((device) => ({
+            name: device.label,
+            serial: device.serial,
+            tenantId: tenant?.id,
+          })),
+          skipDuplicates: true,
+        }
+      }
+    }
+  })
+  const site2 = await backendClient.group.create({
+    include: { _count: true },
+    data: {
+      name: "Mini  DC",
+      location: "Dubai",
+      lat: 27.2048,
+      lng: 55.2708,
+      ip: 'cmsdatwyler.no-ip.org:81',
+      tenantId: tenant?.id,
+      devices: {
+        createMany: {
+          data: config[1].devices.map((device) => ({
+            tenantId: tenant?.id,
+            name: device.label,
+            serial: device.serial,
+          })),
+          skipDuplicates: true,
+        }
+      }
+    }
+  })
 
   // console.log({ site1, site2 });
   // const alert = await backendClient.alert.findFirst({

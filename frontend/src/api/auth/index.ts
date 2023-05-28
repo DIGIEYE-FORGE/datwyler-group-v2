@@ -80,6 +80,7 @@ export default class AuthApi {
   private refreshToken: string;
   private api = axios.create({
     baseURL: env.VITE_AUTH_API,
+    // baseURL: 'http://localhost:5000',
     // baseURL: `http://${window.location.hostname}:5000`,
   });
 
@@ -87,6 +88,7 @@ export default class AuthApi {
     accessToken = "",
     refreshToken = "",
   }: {
+
     accessToken?: string;
     refreshToken?: string;
   } = {}) {
