@@ -165,3 +165,17 @@ services:
     restart: always
     networks:
       - default
+
+  proxy:
+     build:
+       context: ./proxy
+       dockerfile: ./Dockerfile
+     container_name: proxy
+     ports:
+      - 80:80
+      - 443:443
+      - 8000:8080
+     networks:
+      - default
+     restart: unless-stopped 
+

@@ -1,14 +1,16 @@
 http:
   services:
-    digieye-cluster:
+    frontend:
       loadbalancer:
         servers:
-          - url: "https://192.168.10.26:443"
-          - url: "https://192.168.10.27:443"
-          - url: "https://192.168.10.28:443"
-          - url: "https://192.168.10.31:443"
-    devcorp-cluster:
+          - url: "http://frontend:8084"
+   
+    backend:
       loadbalancer:
         servers:
-          - url: "https://192.168.10.51:443"
-          - url: "https://192.168.10.54:443"
+          - url: "http://backend:3000"
+
+    auth:
+      loadbalancer:
+        servers:
+          - url: "http://auth:5000"
