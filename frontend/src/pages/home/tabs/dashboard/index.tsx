@@ -369,7 +369,7 @@ function Overview() {
 
 function DashboardTab() {
   const context = useProvider<AppContext>();
-  const { backendApi, tenantId } = context;
+  const { backendApi, tenantId, activeTab, loginState } = context;
   const [data, setData] = useState<DashboardData | {}>({});
 
   async function fetchDashboardData() {
@@ -377,18 +377,19 @@ function DashboardTab() {
       const data = await backendApi.getDashboardData();
       setData(data);
     } catch (err) {
-      toast.error("Error while fetching dashboard data");
-      console.log(err);
+      console.error(err);
     }
   }
 
   useEffect(() => {
+    if (activeTab !== 0 || loginState !== "idle") return;
     fetchDashboardData();
-    // const interval = setInterval(() => {
-    //   fetchDashboardData();
-    // }, 5000);
-    // return () => clearInterval(interval);
-  }, [tenantId]);
+    const interval = setInterval(() => {
+      if (activeTab !== 0) return;
+      fetchDashboardData();
+    }, 8000);
+    return () => clearInterval(interval);
+  }, [tenantId, loginState, activeTab]);
   return (
     <Provider
       value={{

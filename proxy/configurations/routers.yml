@@ -6,10 +6,32 @@ http:
       rule: "PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
       middlewares:
         - "basic-auth-api@file"
-    frontend:
+    backend:
        entryPoints: ["websecure"]
-       rule: "Host(`ms-workflows-dev2.dmp.devcorp.fr`)"
-       service: "digieye@file"
+       rule: "Host(`ssp.itinfra.datwyler.com`) && PathPrefix(`/api`)"
+       service: "backend@file"
+       middlewares:  
+         - "backend-api-replace-path"
        tls:
          certResolver: "production"
          options: "tlsv12@file"
+
+    auth:
+       entryPoints: ["websecure"]
+       rule: "Host(`ssp.itinfra.datwyler.com`) && PathPrefix(`/auth`)"
+       service: "auth@file"
+       middlewares:
+         - "auth-replace-path"
+       tls:
+         certResolver: "production"
+         options: "tlsv12@file"
+
+    
+    frontend:
+       entryPoints: ["websecure"]
+       rule: "Host(`ssp.itinfra.datwyler.com`) && PathPrefix(`/`)"
+       service: "frontend@file"
+       tls:
+         certResolver: "production"
+         options: "tlsv12@file"
+

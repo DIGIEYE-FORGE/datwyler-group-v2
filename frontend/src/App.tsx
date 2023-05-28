@@ -123,6 +123,9 @@ function App() {
   }, [groups]);
 
   useEffect(() => {
+    if (loginState !== "idle" || activeTab === null || activeTab > 1) return;
+    console.log("fetching groups");
+
     backendApi.getGroups(defaulParams).then((res) => {
       setGroups(res.results);
     });
@@ -130,9 +133,9 @@ function App() {
       backendApi.getGroups(defaulParams).then((res) => {
         setGroups(res.results);
       });
-    }, 7000);
+    }, 80000);
     return () => clearInterval(interval);
-  }, [tenantId]);
+  }, [tenantId, loginState, activeTab]);
 
   const [user, setUser] = useState<User | null>({
     id: 1,

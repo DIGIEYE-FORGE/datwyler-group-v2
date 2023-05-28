@@ -4,3 +4,13 @@ http:
       basicauth:
         users:
           - "admin:$apr1$5k7nc0dr$kVPPRTNUDPE4ds2VYyCq61"
+   
+    backend-api-replace-path:
+      replacePathRegex:
+        regex: "^/api/(.*)"
+        replacement: "/$1"
+
+    auth-replace-path:
+      replacePathRegex:
+        regex: "^/auth/(.*)"
+        replacement: "/$1"

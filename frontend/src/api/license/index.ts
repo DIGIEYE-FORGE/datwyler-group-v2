@@ -21,8 +21,8 @@ type LoginResponse = {
 
 export default class LicenseApi {
   private api = axios.create({
-    // baseURL: env.VITE_AUTH_API,
-    baseURL: `http://${window.location.hostname}:2000`,
+    baseURL: env.VITE_LICENSE_API,
+    // baseURL: `http://${window.location.hostname}:2000`,
   });
 
   constructor({
@@ -44,7 +44,7 @@ export default class LicenseApi {
     tenantId?: number | undefined;
   }): Promise<ManyResponse<Report[]>> {
     console.log("getLicense", params);
-    
+
     const res = await this.api.get("/license", {
       params: {
         tenantId: params?.tenantId || undefined,
@@ -55,17 +55,17 @@ export default class LicenseApi {
 
 
   async addLicense(props: {
-  name?: string;
-  description?: string;
-  tenantId?: number;
-  parentId?: number;
-  startDate?: string;
-  expiredAt?: string;
-  numberOfUsers?: number;
-  numberOfDataCenters?: number;
+    name?: string;
+    description?: string;
+    tenantId?: number;
+    parentId?: number;
+    startDate?: string;
+    expiredAt?: string;
+    numberOfUsers?: number;
+    numberOfDataCenters?: number;
 
   }): Promise<ManyResponse<Report[]>> {
-    const res = await this.api.post("/license",props );
+    const res = await this.api.post("/license", props);
     return res.data;
   }
 }

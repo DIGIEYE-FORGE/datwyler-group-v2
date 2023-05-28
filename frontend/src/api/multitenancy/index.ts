@@ -4,8 +4,8 @@ import { User } from "../../utils";
 
 export default class MultiTenancyApi {
   private api = axios.create({
-    // baseURL: env.VITE_AUTH_API,
-    baseURL: `http://${window.location.hostname}:4000`,
+    baseURL: env.VITE_MULTITENANCY_API,
+    // baseURL: `http://${window.location.hostname}:4000`,
   });
 
   constructor({
@@ -43,13 +43,13 @@ export default class MultiTenancyApi {
   }
 
 
-  public async removeUserFromTenant({ userId, tenantId }: { userId: number | undefined, tenantId: number | undefined}) {
+  public async removeUserFromTenant({ userId, tenantId }: { userId: number | undefined, tenantId: number | undefined }) {
 
-      if (!userId || !tenantId)
-          throw new Error("userId or tenantId is undefined");
-      await this.api.patch(`/tenant/${tenantId}/remove-user`, {
-        userId,
-      });
-    }
+    if (!userId || !tenantId)
+      throw new Error("userId or tenantId is undefined");
+    await this.api.patch(`/tenant/${tenantId}/remove-user`, {
+      userId,
+    });
+  }
 
 }
