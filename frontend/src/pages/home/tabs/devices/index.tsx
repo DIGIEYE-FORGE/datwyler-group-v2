@@ -19,12 +19,13 @@ function DevicesTab() {
       group: true,
       _count: true,
     },
+    where:{}
   });
   const [state, setState] = useState<"idle" | "loading" | "error">("loading");
 
   const [rows, setRows] = useState<Device[]>([]);
 
-  async function getDevices() {
+  async function getDevices(params: Params) {
     try {
       setState("loading");
       const res = await backendApi.getDevices(params);
@@ -39,7 +40,7 @@ function DevicesTab() {
   }
 
   useEffect(() => {
-    getDevices();
+    getDevices(params);
   }, [tenantId, params]);
 
   const columns: Column[] = [
@@ -49,7 +50,13 @@ function DevicesTab() {
       valueGetter: (row: Device) => row.group?.location,
       filter: {
         type: "text",
-        onChange: () => {},
+        onChange:(v:any)=>{
+          setParams({...params,where:{...params.where,group:{location:{
+            contains:v,
+            mode:"insensitive"
+          }}
+          }})
+        }
       },
     },
     {
@@ -58,7 +65,13 @@ function DevicesTab() {
       valueGetter: (row: Device) => row.group?.name,
       filter: {
         type: "text",
-        onChange: () => {},
+        onChange: (v:any) => {
+          setParams({...params,where:{...params.where,group:{name:{
+            contains:v,
+            mode:"insensitive"
+          }}
+          }})
+        },
       },
     },
     {
@@ -69,7 +82,12 @@ function DevicesTab() {
         type: "select",
         options: systems.map((s) => ({ label: s, value: s })),
 
-        onChange: () => {},
+        onChange: (v:any) => {
+          setParams({...params,where:{...params.where,name:{
+            contains:v,
+            mode:"insensitive"
+          }}})
+        },
       },
     },
     {
@@ -78,7 +96,12 @@ function DevicesTab() {
       field: "serial",
       filter: {
         type: "text",
-        onChange: () => {},
+        onChange: (v:any) => {
+          setParams({...params,where:{...params.where,serial:{
+            contains:v,
+            mode:"insensitive"
+          }}})
+        },
       },
     },
   ];
