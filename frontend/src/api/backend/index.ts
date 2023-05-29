@@ -109,6 +109,11 @@ export default class BackendApi {
     return res.data;
   }
 
+  async deleteGroup(id: number): Promise<Group> {
+    const res = await this.api.delete(`/group/${id}`);
+    return res.data;
+  }
+
   async acklowledgeAlerts({
     id,
     user,

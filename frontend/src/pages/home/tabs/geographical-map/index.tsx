@@ -119,19 +119,19 @@ function GeographicalMapTab({ details = true }: Props) {
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
   const [showList, setShowList] = useState<0 | 1 | 2>(0);
 
-  const deleteGroup = () => {
-    console.log("delete group");
+  const deleteGroup = (id: number) => {
+    console.log("delete group", id);
 
     confirm({
       title: "Delete Group",
       description: "Are you sure you want to delete this group?",
       onConfirm: async () => {
-        if (!selectedGroup) return;
         try {
-          const res = await backendApi.deleteGroup(selectedGroup);
+          const res = await backendApi.deleteGroup(id);
           toast.success("Group deleted successfully");
-          setGroups(groups.filter((g) => g.id !== selectedGroup));
+          setGroups(groups.filter((g) => g.id !== res.id));
         } catch (e) {
+          console.error(e);
           toast.error("Failed to delete group");
         }
       },
@@ -276,7 +276,7 @@ function GeographicalMapTab({ details = true }: Props) {
                         variant="text"
                         color="danger"
                         className="!rounded-full"
-                        onClick={deleteGroup}
+                        onClick={() => deleteGroup(group.id)}
                       >
                         <MdDeleteOutline />
                       </Button>
