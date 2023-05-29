@@ -576,8 +576,9 @@ function LicenseTab() {
                   toast.success("License created successfully");
                 })
                 .catch((err) => {
+                  console.log(err);
                   toast.error(
-                    err?.response?.data?.message || "Something went wrong"
+                    err?.response?.data?.error || "Something went wrong"
                   );
                 });
             }}

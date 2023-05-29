@@ -45,7 +45,11 @@ export class ReportController {
   @ApiCreatedResponse({ type: GenerateRapport })
   @Post('generate')
   generate(@Body() data: GenerateRapport) {
-    return this.reportService.generate(data);
+    try {
+      return this.reportService.generate(data);
+    } catch (err) {
+      return err;
+    }
   }
 
   @ApiCreatedResponse({ type: Report })
@@ -65,13 +69,6 @@ export class ReportController {
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.reportService.remove(id);
   }
-
-  // @Get('download/excel')
-  // @Header('Content-type', 'application/xlsx')
-  // async downloadExcel(@Body() data: Record<string, any>[], @Res() res: any) {
-  //   const file = await this.reportService.generateFileExcel('Report', data);
-  //   return res.download(file);
-  // }
 
   @ApiOkResponse({ type: Report })
   @Get('download/file')

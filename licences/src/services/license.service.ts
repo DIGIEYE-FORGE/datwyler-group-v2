@@ -22,6 +22,8 @@ const createLicenseService = async (data: LicenseType) => {
 				}
 			}
 		});
+		// console.log("----------------------parent------", parent);
+		
 		if (parent) {
 			const license = await prisma.license.create({
 				data: {
@@ -29,6 +31,7 @@ const createLicenseService = async (data: LicenseType) => {
 					parentId: parent.id
 				}
 			});
+			// console.log("----------------------parent------", license);
 			if (license)
 			{
 				const updateLicense = await prisma.license.update({
@@ -40,6 +43,7 @@ const createLicenseService = async (data: LicenseType) => {
 						numberOfUsers: parent.numberOfUsers - data.numberOfUsers,
 					}
 				});
+				// console.log("----------------------parent------", updateLicense);
 				if (updateLicense)
 					return license;
 				else
@@ -52,7 +56,7 @@ const createLicenseService = async (data: LicenseType) => {
 			}
 		}	
 		else
-			throw new Error("data is not valid for create license");
+			throw new Error("access denied for create license");
 	}
 	else
 	{
@@ -168,7 +172,7 @@ const updatedLicenseService = async (tenantId: number, data: UpdateType) => {
 			}
 			else
 			{
-				throw new Error("data is not valid for update license");
+				throw new Error("access denied for update license");
 			}
 		}
 		else

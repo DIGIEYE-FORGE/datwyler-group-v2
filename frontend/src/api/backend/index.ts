@@ -86,7 +86,6 @@ export default class BackendApi {
   }
 
   async generateFile(props: ReportDevice): Promise<ManyResponse<any>> {
-    if (props.groups) delete props.groups;
     const res = await this.api.post("/report/generate", props);
     return res.data;
   }
