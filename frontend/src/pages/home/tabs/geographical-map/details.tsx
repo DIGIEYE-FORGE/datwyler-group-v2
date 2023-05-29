@@ -261,7 +261,7 @@ function Details() {
 
   return (
     <div
-      className="absolute top-[1rem] left-[1rem]    blur-background z-[400] shadow-lg rounded shadow-dark/25 overflow-hidden bg-light/10 dark:bg-primary-dark"
+      className="absolute top-[1rem] left-[1rem] blur-background z-[400] shadow-lg rounded shadow-dark/25 overflow-hidden bg-light/50 dark:bg-primary-dark"
       style={{
         transition: "width 150ms, 150ms, background-color 1s",
         height: showList ? "calc(100% - 2rem)" : "3rem",

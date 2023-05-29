@@ -56,9 +56,11 @@ export type AppContext = {
   multiTenancyApi: MultiTenancyApi;
   confirm: (data?: ConfirmData) => void;
   groups: Group[];
+  setGroups: React.Dispatch<React.SetStateAction<Group[]>>;
+  tenantParentId: number | undefined;
 };
 
-const defaulParams: Params = {
+export const defaulParams: Params = {
   pagination: {
     page: 1,
     perPage: 100,
@@ -109,6 +111,7 @@ function App() {
     "tenantId",
     undefined
   );
+
   const [groups, setGroups] = useState<Group[]>([]);
 
   const filterdGroups = useMemo(() => {
@@ -145,6 +148,9 @@ function App() {
     avatar:
       "https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745",
   });
+  const tenantParentId = useMemo(() => {
+    return user?.tenants?.find((t) => t.id === tenantId)?.parentId || undefined;
+  }, [tenantId, user]);
   const [accessToken, setAccessToken] = useLocalStorage("accessToken", "");
   const [refreshToken, setRefreshToken] = useLocalStorage("refreshToken", "");
   const [rtl, setRtl] = useState(false);
@@ -277,6 +283,8 @@ function App() {
         confirm,
         multiTenancyApi,
         groups: filterdGroups,
+        setGroups,
+        tenantParentId,
       }}
     >
       <div className={theme}>
@@ -292,7 +300,7 @@ function App() {
       <Modal
         handleClose={handleOpenConfirm}
         open={openConfirm}
-        className="flex flex-col p-4 gap-4"
+        className="flex flex-col p-4 gap-4 !z-[999]"
       >
         <div>
           <h1 className="text-2xl font-bold">

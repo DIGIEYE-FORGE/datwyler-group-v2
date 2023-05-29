@@ -19,6 +19,14 @@ type LoginResponse = {
   user: User;
 };
 
+export type GroupData = {
+  id?: number;
+  name: string;
+  location?: string;
+  lat?: number;
+  lng?: number;
+  ip?: string;
+};
 export default class BackendApi {
   private api = axios.create({
     baseURL: env.VITE_BACK_API,
@@ -87,6 +95,18 @@ export default class BackendApi {
     const res = await this.api.get("/alert", {
       params: convertParams(params),
     });
+    return res.data;
+  }
+
+  async addEditGroup({ id, ...groupData }: GroupData & {
+    tenantId: number;
+    tenantParentId?: number;
+  }): Promise<Group> {
+    if (id) {
+      const res = await this.api.patch(`/group/${id}`, groupData);
+      return res.data;
+    }
+    const res = await this.api.post("/group", groupData);
     return res.data;
   }
 

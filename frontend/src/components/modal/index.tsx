@@ -51,7 +51,7 @@ function Modal({ children, className, ...props }: ModalProps) {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className={`card absolute left-1/2 top-1/2 ${className}`}
+            className={`card absolute z-[200] left-1/2 top-1/2 ${className}`}
             {...props}
             onClick={(e) => {
               e.stopPropagation();

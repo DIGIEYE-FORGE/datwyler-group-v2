@@ -22,6 +22,16 @@ import Details from "./details";
 import { AppContext } from "../../../../App";
 import { useLocation } from "react-router-dom";
 import Show from "../../../../components/show";
+import Button from "../../../../components/button";
+import {
+  MdDeleteOutline,
+  MdEdit,
+  MdOutlineAddLocationAlt,
+  MdOutlineSave,
+} from "react-icons/md";
+import Modal from "../../../../components/modal";
+import { GroupData } from "../../../../api/backend";
+import { toast } from "react-toastify";
 
 export type GeographicalMapTabContext = {
   groups: Group[];
@@ -29,6 +39,7 @@ export type GeographicalMapTabContext = {
   selectGroup: (id: number) => void;
   showList: 0 | 1 | 2;
   setShowList: (value: 0 | 1 | 2) => void;
+  setGroupData: React.Dispatch<React.SetStateAction<GroupData | null>>;
 };
 
 function MapControls({ bounds }: { bounds?: [number, number][] }) {
@@ -81,11 +92,90 @@ interface Props {
   details?: boolean;
 }
 
+const defaultGroupData: GroupData = {
+  name: "",
+  location: "",
+  ip: "",
+};
+
 function GeographicalMapTab({ details = true }: Props) {
-  const { groups } = useProvider<AppContext>();
-  const location = useLocation();
+  const {
+    groups: rawGroups,
+    setGroups,
+    tenantParentId,
+    tenantId,
+    backendApi,
+    confirm,
+  } = useProvider<AppContext>();
+  const [search, setSearch] = useState("");
+  const groups = useMemo(() => {
+    return rawGroups.filter(
+      (g) =>
+        g.name.toLowerCase().includes(search.toLowerCase()) ||
+        g.location?.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [search, rawGroups]);
+  const [groupData, setGroupData] = useState<GroupData | null>(null);
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
   const [showList, setShowList] = useState<0 | 1 | 2>(0);
+
+  const deleteGroup = () => {
+    console.log("delete group");
+
+    confirm({
+      title: "Delete Group",
+      description: "Are you sure you want to delete this group?",
+      onConfirm: async () => {
+        if (!selectedGroup) return;
+        try {
+          const res = await backendApi.deleteGroup(selectedGroup);
+          toast.success("Group deleted successfully");
+          setGroups(groups.filter((g) => g.id !== selectedGroup));
+        } catch (e) {
+          toast.error("Failed to delete group");
+        }
+      },
+    });
+  };
+
+  async function handleSave() {
+    if (!tenantId || !groupData) return;
+    try {
+      const data = await backendApi.addEditGroup({
+        ...groupData,
+        tenantId,
+        tenantParentId,
+      });
+      toast.success("Group saved successfully");
+      if (groupData.id) {
+        console.log("edit group", data);
+
+        setGroups(
+          groups.map((g) => {
+            if (g.id === groupData.id)
+              return {
+                ...g,
+                ...data,
+              };
+            return g;
+          })
+        );
+      } else {
+        console.log("add group", data);
+        setGroups([
+          ...groups,
+          {
+            ...data,
+            devices: [],
+          },
+        ]);
+      }
+      setGroupData(null);
+    } catch (e) {
+      console.log(e);
+      toast.error("Failed to save group");
+    }
+  }
   function selectGroup(id: number) {
     setSelectedGroup(id);
     setShowList(2);
@@ -103,9 +193,28 @@ function GeographicalMapTab({ details = true }: Props) {
         selectGroup,
         showList,
         setShowList,
+        setGroupData,
       }}
     >
-      <div className="relative w-full h-full ">
+      <div className="relative w-full h-full">
+        <Show when={details}>
+          <div className="absolute z-[500] top-4 right-4 flex items-center gap-4 ">
+            <input
+              type="text"
+              className="bg-light/75 dark:bg-primary-dark/75 bg-blur w-[13.5rem] py-1"
+              placeholder="Search by name or location"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <Button
+              className="flex items-center gap-2 capitalize"
+              onClick={() => setGroupData(defaultGroupData)}
+            >
+              <span className="hidden md:inline-block">add site</span>
+              <MdOutlineAddLocationAlt className="text-lg " />
+            </Button>
+          </div>
+        </Show>
         <MapContainer
           center={
             groups.length === 1
@@ -141,8 +250,36 @@ function GeographicalMapTab({ details = true }: Props) {
               >
                 <Popup closeButton={false} autoClose>
                   <div className="flex flex-col min-w-[18rem] ">
-                    <div className="py-2 text-lg font-bold">
-                      {group.name} {`(${group.alerts?.length || 0})`}
+                    <div className="py-2 text-lg font-bold flex justify-between">
+                      <span>
+                        {group.name} {`(${group.alerts?.length || 0})`}
+                      </span>
+                      <Button
+                        variant="text"
+                        color="info"
+                        className="ml-auto !rounded-full"
+                        onClick={() => {
+                          const groupData: GroupData = {
+                            id: group.id,
+                            name: group.name,
+                            location: group.location,
+                            ip: group.ip,
+                            lat: group.lat,
+                            lng: group.lng,
+                          };
+                          setGroupData(groupData);
+                        }}
+                      >
+                        <MdEdit />
+                      </Button>
+                      <Button
+                        variant="text"
+                        color="danger"
+                        className="!rounded-full"
+                        onClick={deleteGroup}
+                      >
+                        <MdDeleteOutline />
+                      </Button>
                     </div>
                     <div className="flex justify-evenly h-[3.5rem] items-center bg-primary/5 rounded">
                       <DoorAlertIcon />
@@ -179,6 +316,97 @@ function GeographicalMapTab({ details = true }: Props) {
           <Details />
         </Show>
       </div>
+      <Modal
+        open={!!groupData}
+        handleClose={() => {
+          setGroupData(null);
+        }}
+        className="grid grid-cols-4 [&>label]:col-span-1 [&>input]:col-span-3 gap-y-4 p-4 min-w-[20rem] bg-blur !bg-light/75 dark:!bg-primary-dark/75 !z-[500]"
+      >
+        <div className="capitalize text-center text-xl border-b pb-2 col-span-full">
+          {groupData?.id ? "edit" : "add"} site
+        </div>
+        <label htmlFor="name">name</label>
+        <input
+          type="text"
+          id="name"
+          placeholder="Site name"
+          value={groupData?.name}
+          onChange={(e) => {
+            setGroupData({
+              ...groupData!,
+              name: e.target.value,
+            });
+          }}
+        />
+        <label htmlFor="location">location</label>
+        <input
+          type="text"
+          id="location"
+          placeholder="Site location"
+          value={groupData?.location}
+          onChange={(e) => {
+            setGroupData({
+              ...groupData!,
+              location: e.target.value,
+            });
+          }}
+        />
+        <label htmlFor="ip">ip</label>
+        <input
+          type="text"
+          id="ip"
+          placeholder="Site location"
+          value={groupData?.ip}
+          onChange={(e) => {
+            setGroupData({
+              ...groupData!,
+              ip: e.target.value,
+            });
+          }}
+        />
+        <label htmlFor="lat">lat</label>
+        <input
+          type="number"
+          id="lat"
+          placeholder="Site lattitude"
+          value={groupData?.lat}
+          onChange={(e) => {
+            setGroupData({
+              ...groupData!,
+              lat: Number(e.target.value),
+            });
+          }}
+        />
+        <label htmlFor="lng">lng</label>
+        <input
+          id="lng"
+          type="number"
+          placeholder="Site longitude"
+          value={groupData?.lng}
+          onChange={(e) => {
+            setGroupData({
+              ...groupData!,
+              lng: Number(e.target.value),
+            });
+          }}
+        />
+        <div className="pt-4 border-t flex-center col-span-full">
+          <Button
+            className="flex items-center gap-2"
+            disabled={
+              !groupData ||
+              Object.values(groupData).some((v) => !v) ||
+              !groupData.lat ||
+              !groupData.lng
+            }
+            onClick={handleSave}
+          >
+            <span className="capitalize">save</span>
+            <MdOutlineSave className="text-xl" />
+          </Button>
+        </div>
+      </Modal>
     </Provider>
   );
 }
