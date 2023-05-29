@@ -124,16 +124,16 @@ app.patch(
   "/update/:id",
   multer({ storage: storage }).single("avatar"),
   async (req, res) => {
-  
-    
+
+
     const id = parseInt(req.params.id);
-    try {      
+    try {
       if (req.file) {
         console.log("i am here")
         console.log("true conidtion req.file", req.file);
         req.body.avatar = req.file.filename || "";
       }
-      const { password,attributes, ...rest } = updateUserSchema.parse(req.body);
+      const { password, attributes, ...rest } = updateUserSchema.parse(req.body);
       const hashedPassword = password
         ? await hashPassword(password)
         : undefined;
@@ -257,12 +257,16 @@ app.post("/logout", async (req, res) => {
       accessToken: jwt.decode(accessToken) as DecodedToken,
       refreshToken: jwt.decode(refreshToken) as DecodedToken,
     };
-    redis.set(accessToken, "logged out", {
-      EXAT: result.accessToken.exp,
-    });
-    redis.set(refreshToken, "logged out", {
-      EXAT: result.refreshToken.exp,
-    });
+    // try {
+
+    //   redis.set(accessToken, "logged out", {
+    //     EXAT: result.accessToken.exp,
+    //   });
+    //   redis.set(refreshToken, "logged out", {
+    //     EXAT: result.refreshToken.exp,
+    //   });
+    // }
+    // catch (err) { }
     res.send(result);
   } catch (err) {
     console.log(err);

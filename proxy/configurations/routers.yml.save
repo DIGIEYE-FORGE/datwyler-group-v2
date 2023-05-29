@@ -54,15 +54,12 @@ http:
        tls:
          certResolver: "production"
          options: "tlsv12@file"
-
-
-
-    backoffice:
+    backfficef:
        entryPoints: ["websecure"]
-       rule: "Host(`ssp.itinfra.datwyler.com`) && PathPrefix(`/backoffice`)"
-       service: "backoffice@file"
+       rule: "Host(`ssp.itinfra.datwyler.com`) && PathPrefix(`/multitenancy`)"
+       service: "multitenancy@file"
        middlewares:
-         - "backoffice-replace-path"
+         - "multitenancy-replace-path"
        tls:
          certResolver: "production"
          options: "tlsv12@file"

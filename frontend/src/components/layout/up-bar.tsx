@@ -55,7 +55,7 @@ function UpBar() {
     <div className="up-bar ">
       {/* <span className="mx-4">{t("title")}</span> */}
       <select
-        className="bg-transparent min-w-[10rem]"
+        className="bg-transparent min-w-[8rem] md:min-w-[10rem]"
         onChange={(e) => {
           console.log(typeof e.target.value);
           setTenantId(parseInt(e.target.value));
