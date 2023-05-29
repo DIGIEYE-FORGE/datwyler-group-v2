@@ -24,3 +24,8 @@ http:
       replacePathRegex:
         regex: "^/multitenancy/(.*)"
         replacement: "/$1"
+
+    backoffice-replace-path:
+      replacePathRegex:
+        regex: "^/backoffice/(.*)"
+        replacement: "/$1"

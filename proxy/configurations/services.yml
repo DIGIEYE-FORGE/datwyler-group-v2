@@ -24,3 +24,9 @@ http:
       loadbalancer:
         servers:
           - url: "http://multitenancy:4000"
+   
+    backoffice:
+      loadbalancer:
+        servers:
+          - url: "http://backoffice:8081"
+
