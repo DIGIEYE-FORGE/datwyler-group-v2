@@ -156,13 +156,21 @@ export type DashboardData = {
   [key: string]: any;
 };
 
+export type Tenant = {
+  name: string;
+  id?: number;
+  parentId?: number;
+  _count?: {
+    users: number;
+    children: number;
+  };
+  children?: Tenant[];
+  createdAt?: Date;
+  updatedAt?: Date;
+};
+
 export type LoginState = "idle" | "loading" | "error";
 
-export type Tenant = {
-  id: number;
-  name: string;
-  [other: string]: any;
-};
 
 export type ManyResponse<T extends any = any> = {
   results: T[];

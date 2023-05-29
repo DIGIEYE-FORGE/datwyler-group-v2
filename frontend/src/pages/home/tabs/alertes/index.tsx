@@ -71,7 +71,7 @@ const paramsReducer = (
         ...state,
         where: {
           ...state.where,
-          level: action.payload,
+          level: action.payload || undefined,
         },
       };
     case "location":

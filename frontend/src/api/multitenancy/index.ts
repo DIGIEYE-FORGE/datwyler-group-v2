@@ -1,6 +1,6 @@
 import { env } from "../../utils/env";
 import axios from "axios";
-import { User } from "../../utils";
+import { Params, Tenant, User, convertParams } from "../../utils";
 
 export default class MultiTenancyApi {
   private api = axios.create({
@@ -42,6 +42,28 @@ export default class MultiTenancyApi {
     return res.data;
   }
 
+  public async getTenants({
+    tenantId
+  }: {
+    tenantId: number | undefined;
+  }): Promise<Tenant[]> {
+    if (!tenantId) return [];
+    const res = await this.api.get(`/tenant/`, {
+      params: {
+        take: 1000,
+        where: JSON.stringify({ parentId: tenantId }),
+        include: JSON.stringify({
+          _count: true,
+          children: {
+            include: {
+              _count: true,
+            },
+          },
+        }),
+      },
+    });
+    return res.data;
+  }
 
   public async removeUserFromTenant({ userId, tenantId }: { userId: number | undefined, tenantId: number | undefined }) {
 
