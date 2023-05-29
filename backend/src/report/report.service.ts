@@ -32,27 +32,61 @@ export class ReportService {
     let res;
     let file;
     if (data.type == 'alert') {
-      res = await this.prisma.alert.findMany({
-        where: {
-          deviceId: {
-            in: data.devices,
+      if (data.devices.length > 0) {
+        res = await this.prisma.alert.findMany({
+          where: {
+            deviceId: {
+              in: data.devices,
+            },
+            createdAt: {
+              gte: new Date(data.date).toISOString(),
+            },
           },
-          createdAt: {
-            gte: new Date(data.date).toISOString(),
+        });
+      } else if (data.groups.length > 0) {
+        res = await this.prisma.alert.findMany({
+          where: {
+            device: {
+              group: {
+                id: {
+                  in: data.groups,
+                },
+              },
+            },
           },
-        },
-      });
+        });
+      } else
+        throw new Error(
+          'please select devices or groups to generate report alert',
+        );
     } else if (data.type == 'Mesurement') {
-      res = await this.prisma.history.findMany({
-        where: {
-          deviceId: {
-            in: data.devices,
+      if (data.devices.length > 0) {
+        res = await this.prisma.history.findMany({
+          where: {
+            deviceId: {
+              in: data.devices,
+            },
+            createdAt: {
+              gte: new Date(data.date).toISOString(),
+            },
           },
-          createdAt: {
-            gte: new Date(data.date).toISOString(),
+        });
+      } else if (data.groups.length > 0) {
+        res = await this.prisma.history.findMany({
+          where: {
+            device: {
+              group: {
+                id: {
+                  in: data.groups,
+                },
+              },
+            },
           },
-        },
-      });
+        });
+      } else
+        throw new Error(
+          'please select devices or groups to generate report history',
+        );
     }
 
     if (res.length == 0) {
@@ -141,8 +175,9 @@ export class ReportService {
       if (item.attributes) {
         item.acknowledgedBy = item?.attributes?.user || 'not acknowledged';
       }
-
       delete item.attributes;
+      delete item.startTime;
+      delete item.endTime;
       if (item.createdAt) {
         item.createdAt = new Date(item.createdAt).toLocaleString();
       }

@@ -59,7 +59,11 @@ export class GenerateRapport {
   @IsDateString()
   date: Date;
   @ApiProperty({ required: true })
+  @IsOptional()
   devices: number[];
+  @ApiProperty({ required: true })
+  @IsOptional()
+  groups: number[];
 }
 export class CreateReportDto {
   @ApiProperty({ required: true })
@@ -93,6 +97,12 @@ export class CreateReportDto {
   @MaxLength(255)
   @IsOptional()
   url: string;
+  @ApiProperty({ required: true })
+  @IsOptional()
+  groups: number[];
+  @ApiProperty({ required: true })
+  @IsOptional()
+  devices: number[];
 }
 
 export class UpdateReportDto {
@@ -130,4 +140,10 @@ export class UpdateReportDto {
   @MaxLength(255)
   @IsOptional()
   url: string;
+  @ApiProperty({ required: true })
+  @IsOptional()
+  groups: number[];
+  @ApiProperty({ required: true })
+  @IsOptional()
+  devices: number[];
 }

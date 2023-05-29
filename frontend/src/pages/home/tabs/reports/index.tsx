@@ -113,6 +113,9 @@ function ReportsTab() {
         page: 1,
         perPage: 10,
       },
+      where: {
+        tenantId: tenantId
+      }
     });
     return res;
   };
