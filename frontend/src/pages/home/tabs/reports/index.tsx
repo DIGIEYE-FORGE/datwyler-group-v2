@@ -58,27 +58,22 @@ function ReportsTab() {
     if (row.format === "pdf")
       return (
         <div className="w-full h-full flex-center z-10">
-          <Tooltip>
-            <button
-              className="w-[2.5rem] aspect-square rounded-full flex-center  hover:bg-dark/5 active:bg-dark/10 transition-colors"
-              onClick={() => {
-                backendApi
-                  .downloadFile({
-                    name: row.url,
-                    type: row.type,
-                  })
-                  .then((res) => {})
-                  .catch((err) => {
-                    toast.error(err.message);
-                  });
-              }}
-            >
-              <PdfIcon />
-            </button>
-            <div className="bg-dark/50  text-light rounded-full px-2 py-1 whitespace-nowrap mr-[4rem]">
-              export as pdf
-            </div>
-          </Tooltip>
+          <button
+            className="w-[2.5rem] aspect-square rounded-full flex-center  hover:bg-dark/5 active:bg-dark/10 transition-colors"
+            onClick={() => {
+              backendApi
+                .downloadFile({
+                  name: row.url,
+                  type: row.type,
+                })
+                .then((res) => {})
+                .catch((err) => {
+                  toast.error(err.message);
+                });
+            }}
+          >
+            <PdfIcon />
+          </button>
         </div>
       );
     return (
@@ -114,8 +109,8 @@ function ReportsTab() {
         perPage: 10,
       },
       where: {
-        tenantId: tenantId
-      }
+        tenantId: tenantId,
+      },
     });
     return res;
   };
@@ -326,7 +321,7 @@ function ReportsTab() {
         </Button>
       </div>
       <DataGrid
-        className=" table-fixed w-full text-left "
+        className=" table-fixed w-full text-left"
         headClassName="h-[5.5rem] bg-dark/5 dark:bg-light/5 text-[#697681] [&>*]:px-2 "
         rowClassName="h-[4rem] [&>*]:px-2 even:bg-dark/5 dark:even:bg-light/5 hover:bg-dark/10 dark:hover:bg-light/10"
         columns={columns}
