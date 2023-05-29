@@ -66,7 +66,6 @@ function GeneraleState() {
                 <Avatar
                   user={avatarData ? {
                     avatar:URL.createObjectURL(avatarData)
-                  
                   } : user!}
                   className="w-[10rem] text-4xl"
                 ></Avatar>
