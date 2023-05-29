@@ -281,13 +281,13 @@ function GeographicalMapTab({ details = true }: Props) {
                         <MdDeleteOutline />
                       </Button>
                     </div>
-                    <div className="flex justify-evenly h-[3.5rem] items-center bg-primary/5 rounded">
+                    {/* <div className="flex justify-evenly h-[3.5rem] items-center bg-primary/5 rounded">
                       <DoorAlertIcon />
                       <LeakAlertIcon />
                       <LockAlertIcon />
                       <FireAlertIcon />
                       <PowerAlertIcon />
-                    </div>
+                    </div> */}
                     <div className="grid grid-cols-2 py-2 gap-y-2">
                       <div className="text-[#82848E]">lat, lng:</div>
                       <div className="font-bold">
