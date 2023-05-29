@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { RegisterUser } from "../../../../../api/auth";
 import { useProvider } from "../../../../../components/provider";
 import { AppContext } from "../../../../../App";
@@ -31,6 +31,14 @@ function AddUser({ refetch, open, setOpen }: Props) {
     setOpen(false);
     setUserData(defaultUser);
   };
+
+  useEffect(() => {
+    if (!open) {
+      setUserData(defaultUser);
+    }
+  }, [open]);
+
+
   const createUser = async () => {
     try {
       const user = await authApi.register(userData);
