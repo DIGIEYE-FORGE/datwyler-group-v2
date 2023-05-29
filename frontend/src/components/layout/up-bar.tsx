@@ -178,7 +178,7 @@ function UpBar() {
           </div>
           <div
             onClick={() => {
-              selectTab(8);
+              selectTab(9);
             }}
             className="rounded p-2 hover:bg-primary/10 active:bg-primary/20 whitespace-nowrap"
           >
