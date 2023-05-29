@@ -1,6 +1,7 @@
 import { env } from "../../utils/env";
 import axios from "axios";
 import { Params, Tenant, User, convertParams } from "../../utils";
+import { da } from "date-fns/locale";
 
 export default class MultiTenancyApi {
   private api = axios.create({
@@ -72,6 +73,22 @@ export default class MultiTenancyApi {
     await this.api.patch(`/tenant/${tenantId}/remove-user`, {
       userId,
     });
+  }
+
+  public async addEditTenant({ id, name, parentId }: { id?: number; name: string; parentId: number }) {
+    if (id) {
+      const res = await this.api.patch(`/tenant/${id}`, {
+        name,
+        parentId,
+      });
+      return res.data;
+    }
+    const res = await this.api.post(`/tenant/`, {
+      name,
+      parentId,
+    });
+    return res.data;
+
   }
 
 }

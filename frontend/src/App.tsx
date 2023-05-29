@@ -285,6 +285,7 @@ function App() {
         groups: filterdGroups,
         setGroups,
         tenantParentId,
+        loginState,
       }}
     >
       <div className={theme}>

@@ -48,7 +48,7 @@ interface DataGridProps extends React.HTMLAttributes<HTMLDivElement> {
   bodyClassName?: string;
   bodyStyle?: React.CSSProperties;
   rowClassName?: string;
-  action?: (row: JsonObject) => React.ReactNode;
+  action?: (row: any) => React.ReactNode;
   hideAction?: boolean;
   onRowSelect?: (params: RowSelectAction) => void;
   loading?: boolean;
