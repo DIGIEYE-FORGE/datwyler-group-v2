@@ -38,17 +38,24 @@ function TenantsTab() {
     }
   }, [tenantId]);
 
-  const handleDelete = useCallback(async (id: number) => {
-    try {
-      await multiTenancyApi.deleteTenant({
-        id,
-      });
-      toast.success("Tenant deleted successfully");
-      getTenants();
-    } catch (err) {
-      console.error(err);
-      toast.error("Error while deleting tenant");
-    }
+  const handleDelete = useCallback((id: number) => {
+    confirm({
+      title: "Delete Tenant",
+      description: "Are you sure you want to delete this tenant?",
+      onConfirm: async () => {
+        try {
+          if (!tenantId) return;
+          await multiTenancyApi.deleteTenant({
+            id,
+          });
+          toast.success("Tenant deleted successfully");
+          getTenants();
+        } catch (err) {
+          console.error(err);
+          toast.error("Error while deleting tenant");
+        }
+      },
+    });
   }, []);
 
   const handleSave = useCallback(async () => {

@@ -46,7 +46,7 @@ class TenantController {
         }
 
         res.send(result);
-      } catch (err) {}
+      } catch (err) { }
     });
 
     this.router.post("/", async (req, res) => {
@@ -131,8 +131,26 @@ class TenantController {
       try {
         const tenantId = z.number().int().parse(+req.params.id);
         const result = await this.service.getTenantUsers(tenantId);
-        
-        res.send(result.filter((user:any) => user.firstName));
+
+        res.send(result.filter((user: any) => user.firstName));
+      } catch (err) {
+        if (err instanceof z.ZodError) res.status(400).send(err.errors);
+        else {
+          const error: any = err;
+          res.status(400).send([error.message]);
+        }
+      }
+    });
+
+    this.router.delete("/:id", async (req, res) => {
+      try {
+        const id = z.number().int().parse(+req.params.id);
+        const result = await this.service.delete(id);
+        if (!result) {
+          res.status(404).send(["Not found"]);
+          return;
+        }
+        res.send(result);
       } catch (err) {
         if (err instanceof z.ZodError) res.status(400).send(err.errors);
         else {
@@ -144,6 +162,7 @@ class TenantController {
 
     return this.router;
   }
+
 }
 
 export default TenantController;

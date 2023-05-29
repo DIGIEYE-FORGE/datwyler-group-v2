@@ -67,9 +67,9 @@ class TenantService {
         const res = await licenseClient.AffectLicense(data);
         if (!res) throw new Error("Permission denied");
         else
-         if (res.result == false){
-           throw new Error("Permission denied");
-         }
+          if (res.result == false) {
+            throw new Error("Permission denied");
+          }
       }
 
       return await prisma.tenant.update({
@@ -146,6 +146,10 @@ class TenantService {
       return users.map((u) => ({ ...usersMap[u.id], ...u }));
     }
     return users;
+  }
+
+  public async delete(id: number): Promise<Tenant | undefined> {
+    return await prisma.tenant.delete({ where: { id } });
   }
 }
 
