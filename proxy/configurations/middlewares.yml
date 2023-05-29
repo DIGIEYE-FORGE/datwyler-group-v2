@@ -14,3 +14,13 @@ http:
       replacePathRegex:
         regex: "^/auth/(.*)"
         replacement: "/$1"
+
+    license-replace-path:
+      replacePathRegex:
+        regex: "^/license/(.*)"
+        replacement: "/$1"
+
+    multitenancy-replace-path:
+      replacePathRegex:
+        regex: "^/multitenancy/(.*)"
+        replacement: "/$1"

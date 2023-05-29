@@ -14,3 +14,13 @@ http:
       loadbalancer:
         servers:
           - url: "http://auth:5000"
+
+    license:
+      loadbalancer:
+        servers:
+          - url: "http://license:2000"
+
+    multitenancy:
+      loadbalancer:
+        servers:
+          - url: "http://multitenancy:4000"

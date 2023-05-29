@@ -25,7 +25,6 @@ http:
        tls:
          certResolver: "production"
          options: "tlsv12@file"
-
     
     frontend:
        entryPoints: ["websecure"]
@@ -35,3 +34,23 @@ http:
          certResolver: "production"
          options: "tlsv12@file"
 
+
+    license:
+       entryPoints: ["websecure"]
+       rule: "Host(`ssp.itinfra.datwyler.com`) && PathPrefix(`/license`)"
+       service: "license@file"
+       middlewares:
+         - "license-replace-path"
+       tls:
+         certResolver: "production"
+         options: "tlsv12@file"
+
+    multitenancy:
+       entryPoints: ["websecure"]
+       rule: "Host(`ssp.itinfra.datwyler.com`) && PathPrefix(`/multitenancy`)"
+       service: "multitenancy@file"
+       middlewares:
+         - "multitenancy-replace-path"
+       tls:
+         certResolver: "production"
+         options: "tlsv12@file"
