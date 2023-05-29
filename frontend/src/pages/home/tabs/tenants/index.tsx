@@ -38,7 +38,7 @@ function TenantsTab() {
     }
   }, [tenantId]);
 
-  const deleteTenant = useCallback(async (id: number) => {
+  const handleDelete = useCallback(async (id: number) => {
     try {
       await multiTenancyApi.deleteTenant({
         id,
@@ -50,8 +50,6 @@ function TenantsTab() {
       toast.error("Error while deleting tenant");
     }
   }, []);
-
-  const handleDelete = useCallback(async (tenantId: number) => {}, []);
 
   const handleSave = useCallback(async () => {
     try {

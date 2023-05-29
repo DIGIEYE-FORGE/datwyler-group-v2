@@ -88,7 +88,10 @@ export default class MultiTenancyApi {
       parentId,
     });
     return res.data;
+  }
 
+  public async deleteTenant({ id }: { id: number }) {
+    await this.api.delete(`/tenant/${id}`);
   }
 
 }
