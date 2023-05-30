@@ -162,7 +162,7 @@ export default class BackendApi {
       params: {
         where: JSON.stringify({
           groupId,
-          // startDate: startDate.toISOString(),
+          startDate:startDate.toISOString(),
           // endDate: endDate && endDate.toISOString(),
         }),
       }

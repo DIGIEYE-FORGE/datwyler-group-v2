@@ -6,6 +6,9 @@ import { useCallback, useEffect, useState } from "react";
 import For from "../../../../../components/for";
 import { HistoryResponse } from "../../../../../api/backend";
 import Show from "../../../../../components/show";
+import { format } from "date-fns";
+import Button from "../../../../../components/button";
+import Load from "../../../../../components/load";
 
 const dateMap = {
   "last hour": new Date(Date.now() - 1000 * 60 * 60),
@@ -17,21 +20,47 @@ const dateMap = {
 function Overview() {
   const { theme, tenantId, backendApi, groups } = useProvider<AppContext>();
   const [groupId, setgroupId] = useState<number | "">();
-  const [history, setHistory] = useState<HistoryResponse[]>([]);
+  // const [history, setHistory] = useState<HistoryResponse[]>([]);
   const [date, setDate] = useState<keyof typeof dateMap>("last hour");
+  const [chartHistory, setChartHistory] = useState<any>([]);
+  const [state, setState] = useState<"idle" | "loading" | "error">("idle");
+
 
   const getHistory = useCallback(async () => {
     try {
       if (!groupId) return;
+      setState("loading");
       const data = await backendApi.getHistory({
         groupId,
         startDate: dateMap["last hour"],
       });
       console.log({ data });
 
-      setHistory(data);
+      setChartHistory([
+        {
+          color:"#EE3124",
+          name: "temperature",
+          data: data?.[0]?.temperature?.map((d) => ({
+            x: new Date(d.createdAt).getTime(),
+            y: d.value.toFixed(2),
+          })),
+        },
+        {
+          color:"#0091AE",
+          name: "humidity",
+          data: data?.[0]?.humidity?.map((d) => ({
+            x: new Date(d.createdAt).getTime(),
+            y: d.value.toFixed(2),
+          })),
+        }
+      ]);
+      console.log("i am here",{ chartHistory });
+      await new Promise((res) => setTimeout(res, 10000));
+      setState("idle");
+
     } catch (err) {
       console.error(err);
+      setState("error");
     }
   }, [groupId, date]);
 
@@ -59,6 +88,10 @@ function Overview() {
           <select
             className="ml-auto  border-2 border-primary [&>*]:capitalize"
             placeholder="Select range of time"
+            onChange={(e) => {
+              setDate(e.target.value as any);
+            }
+            }
           >
             <option value="last hour"> last hour</option>
             <option value="last 4 hour"> last 4 hour</option>
@@ -66,6 +99,23 @@ function Overview() {
             <option value="last 7 days"> last 7 days</option>
           </select>
         </div>
+        <Show when={state === "error"}>
+          <div className="flex h-full flex-col gap-2">
+
+          <div className="text-center text-red-500">Error</div>
+          <p>
+            Please check your internet connection and try again. If the problem
+          </p>
+          <Button onClick={getHistory}>Retry</Button>
+          </div>
+        </Show>
+        <Show when={state === "loading"}>
+          <div className="flex h-full w-full justify-center items-center">
+              <Load/>
+          </div>
+        </Show>
+        <Show when={state === "idle"}>
+
         <ReactApexChart
           width={"100%"}
           height={"80%"}
@@ -75,7 +125,6 @@ function Overview() {
               zoom: {
                 enabled: false,
               },
-              stacked: true,
               toolbar: {
                 show: false,
               },
@@ -83,57 +132,39 @@ function Overview() {
             stroke: {
               width: [3, 3],
               curve: "smooth",
-              // dashArray: [0, 2],
             },
             tooltip: {
               enabled: false,
             },
-
-            yaxis: {
-              labels: {
-                style: {
-                  colors: theme === "dark" ? "#fff" : "#373d3f",
-                  fontSize: "12px",
+            
+            yaxis: [
+              {
+                title: {
+                  text: "temperature"
                 },
               },
-            },
-
+              {
+                opposite: true,
+                title: {
+                  text: "humidity"
+                }
+              }
+            ],
             xaxis: {
-              categories: [
-                "Jan",
-                "Feb",
-                "Mar",
-                "Apr",
-                "May",
-                "Jun",
-                "Jul",
-                "Aug",
-                "Sep",
-                "Oct",
-                "Nov",
-                "Dec",
-              ],
+              type: "datetime",
               labels: {
-                style: {
-                  colors: theme === "dark" ? "#fff" : "#373d3f",
-                  fontSize: "12px",
+                formatter: function (value, timestamp) {
+                  return format(
+                    new Date(timestamp!),
+                    "MM/yyyy  HH:mm"
+                    );
+                  },
                 },
               },
-            },
-          }}
-          series={[
-            {
-              data: [30, 40, 45, 50, 49, 60, 70, 91, 125, 91, 80, 91],
-              color: "#0091AE",
-              name: "Humidity",
-            },
-            {
-              data: [35, 41, 62, 42, 13, 18, 29, 37, 36, 51, 32, 35],
-              color: "#EE3124",
-              name: "Temperature",
-            },
-          ]}
-        />
+            }}
+            series={chartHistory}
+            />
+            </Show>
       </div>
     </Chart>
   );

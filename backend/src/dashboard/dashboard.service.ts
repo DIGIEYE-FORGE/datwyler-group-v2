@@ -3,7 +3,7 @@ import { PrismaService } from 'src/prisma.service';
 
 @Injectable()
 export class DashboardService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async getDashboardHistory(query: { where?: string }) {
     const { groupId, startDate } = JSON.parse(query.where);
@@ -17,9 +17,12 @@ export class DashboardService {
       devices.map(async (device) => {
         const temperature = await this.prisma.history.findMany({
           where: {
-            deviceId: device.id,
+            deviceId: 2,
             name: 'TEMPERATURE',
             createdAt: { gte: startDate },
+          },
+          orderBy: {
+            createdAt: 'asc',
           },
         });
         const humidity = await this.prisma.history.findMany({
@@ -27,6 +30,9 @@ export class DashboardService {
             deviceId: device.id,
             name: 'HUMIDITY',
             createdAt: { gte: startDate },
+          },
+          orderBy: {
+            createdAt: 'asc',
           },
         });
         return {
