@@ -56,13 +56,6 @@ function Overview() {
               {(group) => <option value={group.id}>{group.name}</option>}
             </For>
           </select>
-          <Show when={history.length > 0}>
-            <select>
-              <For each={history}>
-                {(item) => <option value={item.id}>{item.serial}</option>}
-              </For>
-            </select>
-          </Show>
           <select
             className="ml-auto  border-2 border-primary [&>*]:capitalize"
             placeholder="Select range of time"

@@ -31,13 +31,13 @@ export type HistoryResponse = {
   id: number;
   name: string;
   temperature: {
-    name: string;
     value: number;
+    createdAt: Date;
     [key: string]: any;
   }[];
   humidity: {
-    name: string;
     value: number;
+    createdAt: Date;
     [key: string]: any;
   }[];
   [key: string]: any;
