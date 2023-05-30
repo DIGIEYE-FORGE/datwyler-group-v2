@@ -293,7 +293,7 @@ function GeographicalMapTab({ details = true }: Props) {
                     <div className="grid grid-cols-2 py-2 gap-y-2">
                       <div className="text-[#82848E]">lat, lng:</div>
                       <div className="font-bold">
-                        {toFixed(group.lat, 2)}, {toFixed(group.lng, 2)}
+                        {toFixed(group.lat, 5)}, {toFixed(group.lng, 5)}
                       </div>
                       <div className="text-[#82848E]">location: </div>
                       <div className="font-bold">{group.location}</div>
