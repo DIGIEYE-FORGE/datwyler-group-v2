@@ -2,69 +2,69 @@ import axios from "axios";
 
 const api = axios.create({
 	// baseURL: import.meta.env.VITE_AUTH_AUTH,
-	baseURL: `http://${window.location.hostname}:5000`,
+	baseURL: `https://cms.itinfra.datwyler.com/auth`,
 });
 
 const multiTenancyApi = axios.create({
-	baseURL: `http://${window.location.hostname}:4000`
+	baseURL: `https://cms.itinfra.datwyler.com/multitenancy`
 });
 
 
-api.interceptors.response.use(
-	(response) => {
-		return response;
-	},
-	(error) => {
-		if (error.response.status === 401) {
-			const auth = axios.create({
-				baseURL: import.meta.env.VITE_AUTH_AUTH,
-			});
-			auth
-				.post("refresh", {
-					refreshToken: localStorage.getItem("refreshToken"),
-				})
-				.then((response) => {
-					localStorage.setItem("accessToken", response.data.accessToken);
-					localStorage.setItem("refreshToken", response.data.refreshToken);
-					axios.defaults.headers.common["Authorization"] =
-						"Bearer " + response.data.accessToken;
-				}).catch((error) => {
-					localStorage.removeItem("accessToken");
-					localStorage.removeItem("refreshToken");
-					window.location.href = "/login";
-				});
-		}
-		return Promise.reject(error);
-	}
-);
+// api.interceptors.response.use(
+// 	(response) => {
+// 		return response;
+// 	},
+// 	(error) => {
+// 		if (error.response.status === 401) {
+// 			const auth = axios.create({
+// 				baseURL: import.meta.env.VITE_AUTH_AUTH,
+// 			});
+// 			auth
+// 				.post("refresh", {
+// 					refreshToken: localStorage.getItem("refreshToken"),
+// 				})
+// 				.then((response) => {
+// 					localStorage.setItem("accessToken", response.data.accessToken);
+// 					localStorage.setItem("refreshToken", response.data.refreshToken);
+// 					axios.defaults.headers.common["Authorization"] =
+// 						"Bearer " + response.data.accessToken;
+// 				}).catch((error) => {
+// 					localStorage.removeItem("accessToken");
+// 					localStorage.removeItem("refreshToken");
+// 					window.location.href = "/backoffice/login";
+// 				});
+// 		}
+// 		return Promise.reject(error);
+// 	}
+// );
 
-multiTenancyApi.interceptors.response.use(
-	(response) => {
-		return response;
-	},
-	(error) => {
-		if (error.response.status === 401) {
-			const auth = axios.create({
-				baseURL: import.meta.env.VITE_AUTH_AUTH,
-			});
-			auth
-				.post("refresh", {
-					refreshToken: localStorage.getItem("refreshToken"),
-				})
-				.then((response) => {
-					localStorage.setItem("accessToken", response.data.accessToken);
-					localStorage.setItem("refreshToken", response.data.refreshToken);
-					axios.defaults.headers.common["Authorization"] =
-						"Bearer " + response.data.accessToken;
-				}).catch((error) => {
-					localStorage.removeItem("accessToken");
-					localStorage.removeItem("refreshToken");
-					window.location.href = "/login";
-				});
-		}
-		return Promise.reject(error);
-	}
-);
+// multiTenancyApi.interceptors.response.use(
+// 	(response) => {
+// 		return response;
+// 	},
+// 	(error) => {
+// 		if (error.response.status === 401) {
+// 			const auth = axios.create({
+// 				baseURL: import.meta.env.VITE_AUTH_AUTH,
+// 			});
+// 			auth
+// 				.post("refresh", {
+// 					refreshToken: localStorage.getItem("refreshToken"),
+// 				})
+// 				.then((response) => {
+// 					localStorage.setItem("accessToken", response.data.accessToken);
+// 					localStorage.setItem("refreshToken", response.data.refreshToken);
+// 					axios.defaults.headers.common["Authorization"] =
+// 						"Bearer " + response.data.accessToken;
+// 				}).catch((error) => {
+// 					localStorage.removeItem("accessToken");
+// 					localStorage.removeItem("refreshToken");
+// 					window.location.href = "/backoffice/login";
+// 				});
+// 		}
+// 		return Promise.reject(error);
+// 	}
+// );
 
 
 interface Params {

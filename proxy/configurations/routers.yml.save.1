@@ -6,12 +6,11 @@ http:
       rule: "PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
       middlewares:
         - "basic-auth-api@file"
-
     backend:
        entryPoints: ["websecure"]
        rule: "Host(`ssp.itinfra.datwyler.com`) && PathPrefix(`/api`)"
        service: "backend@file"
-       middlewares:  
+       middlewares:
          - "backend-api-replace-path"
        tls:
          certResolver: "production"
@@ -26,6 +25,15 @@ http:
        tls:
          certResolver: "production"
          options: "tlsv12@file"
+
+    frontend:
+       entryPoints: ["websecure"]
+       rule: "Host(`ssp.itinfra.datwyler.com`) && PathPrefix(`/`)"
+       service: "frontend@file"
+       tls:
+         certResolver: "production"
+         options: "tlsv12@file"
+
 
     license:
        entryPoints: ["websecure"]
@@ -44,8 +52,10 @@ http:
        middlewares:
          - "multitenancy-replace-path"
        tls:
-        #  certResolver: "production"
+         certResolver: "production"
          options: "tlsv12@file"
+
+
 
     backoffice:
        entryPoints: ["websecure"]
@@ -54,22 +64,5 @@ http:
        middlewares:
          - "backoffice-replace-path"
        tls:
-        #  certResolver: "production"
+         certResolver: "production"
          options: "tlsv12@file"
-
-    frontend:
-       entryPoints: ["websecure"]
-       rule: "Host(`ssp.itinfra.datwyler.com`) && PathPrefix(`/`)"
-       service: "frontend@file"
-       tls:
-        #  certResolver: "production"
-         options: "tlsv12@file"
-
-    # httpchallenge:
-    #    entryPoints: ["web"]
-    #    rule: "Host(`ssp.itinfra.datwyler.com`) && PathPrefix(`/.well-known/pki-validation`)"
-    #    service: "httpchallenge@file"
-    #    middlewares:
-    #      - "httpchallenge-replace-path"
-       
-       

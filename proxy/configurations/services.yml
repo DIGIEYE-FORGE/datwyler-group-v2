@@ -30,3 +30,8 @@ http:
         servers:
           - url: "http://backoffice:8081"
 
+    # httpchallenge:
+    #   loadbalancer:
+    #     servers:
+    #       - url: "http://http_challenge"      
+

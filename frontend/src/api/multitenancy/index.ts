@@ -6,7 +6,7 @@ import { da } from "date-fns/locale";
 export default class MultiTenancyApi {
   private api = axios.create({
     baseURL: env.VITE_MULTITENANCY_API,
-    // baseURL: `http://${window.location.hostname}:4000`,
+    // baseURL: `https://cms.itinfra.datwyler.com/multitenancy`,
   });
 
   constructor({

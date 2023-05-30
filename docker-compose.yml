@@ -26,7 +26,6 @@ services:
     restart: always
     networks:
       - default
-  
   backend:
     build: 
       context: ./backend
@@ -146,9 +145,9 @@ services:
     ports:
       - 8084:8084
       - 8085:8085
-    volumes:
-      - ./frontend/src:/app/src
-      - ./frontend/public:/app/public
+    #volumes:
+    #  - ./frontend/src:/app/src
+    #  - ./frontend/public:/app/public
     restart: always
     networks:
       - default
@@ -175,7 +174,21 @@ services:
        - 80:80
        - 443:443
        - 8000:8080
+      volumes:
+        - ./proxy/certs:/etc/traefik/certs   
       networks:
        - default
       restart: unless-stopped 
+
+  http_challenge:
+    profiles: ["ignored"]
+    build: 
+      context: ./http-cert-challenge
+      dockerfile: Dockerfile
+    container_name: http_challenge
+    restart: unless-stopped
+    expose:
+      - 80
+    networks:
+      - default    
 
