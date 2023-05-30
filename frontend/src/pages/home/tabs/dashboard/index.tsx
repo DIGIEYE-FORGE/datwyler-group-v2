@@ -15,6 +15,8 @@ import { DashboardData, strTake } from "../../../../utils";
 import GeographicalMap from "./goegraphical-map";
 import { toast } from "react-toastify";
 import { format } from "date-fns";
+import Loader from "../../../../components/loader";
+import Button from "../../../../components/button";
 
 interface IconButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   tooltip?: string;
@@ -371,25 +373,37 @@ function DashboardTab() {
   const context = useProvider<AppContext>();
   const { backendApi, tenantId, activeTab, loginState } = context;
   const [data, setData] = useState<DashboardData | {}>({});
+  const [state, setState] = useState<"idle" | "loading" | "error">("loading");
 
-  async function fetchDashboardData() {
+  async function fetchDashboardData(firstTime = false) {
     try {
+      if (firstTime) setState("loading");
       const data = await backendApi.getDashboardData();
+      setState("idle");
       setData(data);
     } catch (err) {
       console.error(err);
+      setState("error");
     }
   }
 
   useEffect(() => {
     if (activeTab !== 0 || loginState !== "idle") return;
-    fetchDashboardData();
+    fetchDashboardData(true);
     const interval = setInterval(() => {
       if (activeTab !== 0) return;
       fetchDashboardData();
     }, 8000);
     return () => clearInterval(interval);
   }, [tenantId, loginState, activeTab]);
+  if (state === "error")
+    return (
+      <div className="w-full h-full flex-center flex-col gap-4">
+        <h1 className="text-6xl">Something went wrong!</h1>
+        <p>Please try again later</p>
+        <Button onClick={() => fetchDashboardData(true)}>Retry</Button>
+      </div>
+    );
   return (
     <Provider
       value={{
@@ -405,6 +419,11 @@ function DashboardTab() {
           <WaterFlow />
           <Overview />
         </div>
+        {state === "loading" && (
+          <div className="absolute z-[999] bg-[#7f7f7f]/50  w-full h-full flex-center">
+            <Loader />
+          </div>
+        )}
       </div>
     </Provider>
   );
