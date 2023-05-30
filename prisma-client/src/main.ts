@@ -2106,74 +2106,106 @@ async function seedSites(tenantId: number) {
   );
 }
 
+async function addRecord({
+  deviceId,
+  name,
+  value,
+}:
+  {
+    deviceId: number;
+    name: string;
+    value: number;
+  }
+) {
+  return await backendClient.device.update({
+    where: { id: deviceId },
+    data: {
+      lastTelemetries: {
+        upsert: {
+          where: { deviceId_name: { deviceId, name } },
+          update: { value },
+          create: { name, value },
+        }
+      },
+      history: {
+        create: {
+          name,
+          value,
+        }
+      }
+    }
+  })
+
+}
+
 
 
 async function freshStart() {
-  await authClient.user.deleteMany({});
-  await multitenancyClient.user.deleteMany({});
-  await multitenancyClient.tenant.deleteMany({});
-  await backendClient.alert.deleteMany({});
-  await backendClient.lastTelemetry.deleteMany({});
-  await backendClient.device.deleteMany({});
-  await backendClient.group.deleteMany({});
-  const user = await initUser();
-  const tenant = await initTenant(user.id);
-  const sites = await seedSites(tenant.id);
-  const devices = await seedDevices({
-    tenantId: tenant.id,
-    groupIds: sites.map((site) => site.id),
-  });
-  console.log({ user, tenant, sites, devices });
-  await backendClient.group.deleteMany({
-    where: {
-      OR: [
-        { name: "MICRO DC" },
-        { name: "Mini  DC" },
-      ]
-    }
-  })
-  const site1 = await backendClient.group.create({
-    include: { _count: true },
-    data: {
-      name: "MICRO DC",
-      location: "Dubai",
-      lat: 25.2048,
-      lng: 55.2708,
-      tenantId: tenant?.id,
-      ip: 'cmsdatwyler.no-ip.org/',
-      devices: {
-        createMany: {
-          data: config[0].devices.map((device) => ({
-            name: device.label,
-            serial: device.serial,
-            tenantId: tenant?.id,
-          })),
-          skipDuplicates: true,
-        }
-      }
-    }
-  })
-  const site2 = await backendClient.group.create({
-    include: { _count: true },
-    data: {
-      name: "Mini  DC",
-      location: "Dubai",
-      lat: 27.2048,
-      lng: 55.2708,
-      ip: 'cmsdatwyler.no-ip.org:81',
-      tenantId: tenant?.id,
-      devices: {
-        createMany: {
-          data: config[1].devices.map((device) => ({
-            tenantId: tenant?.id,
-            name: device.label,
-            serial: device.serial,
-          })),
-          skipDuplicates: true,
-        }
-      }
-    }
-  })
+  // await authClient.user.deleteMany({});
+  // await multitenancyClient.user.deleteMany({});
+  // await multitenancyClient.tenant.deleteMany({});
+  // await backendClient.alert.deleteMany({});
+  // await backendClient.lastTelemetry.deleteMany({});
+  // await backendClient.device.deleteMany({});
+  // await backendClient.group.deleteMany({});
+  // const user = await initUser();
+  // const tenant = await initTenant(user.id);
+  // const sites = await seedSites(tenant.id);
+  // const devices = await seedDevices({
+  //   tenantId: tenant.id,
+  //   groupIds: sites.map((site) => site.id),
+  // });
+  // console.log({ user, tenant, sites, devices });
+  // await backendClient.group.deleteMany({
+  //   where: {
+  //     OR: [
+  //       { name: "MICRO DC" },
+  //       { name: "Mini  DC" },
+  //     ]
+  //   }
+  // })
+  // const site1 = await backendClient.group.create({
+  //   include: { _count: true },
+  //   data: {
+  //     name: "MICRO DC",
+  //     location: "Dubai",
+  //     lat: 25.2048,
+  //     lng: 55.2708,
+  //     tenantId: tenant?.id,
+  //     ip: 'cmsdatwyler.no-ip.org/',
+  //     devices: {
+  //       createMany: {
+  //         data: config[0].devices.map((device) => ({
+  //           name: device.label,
+  //           serial: device.serial,
+  //           tenantId: tenant?.id,
+  //         })),
+  //         skipDuplicates: true,
+  //       }
+  //     }
+  //   }
+  // })
+  // const site2 = await backendClient.group.create({
+  //   include: { _count: true },
+  //   data: {
+  //     name: "Mini  DC",
+  //     location: "Dubai",
+  //     lat: 27.2048,
+  //     lng: 55.2708,
+  //     ip: 'cmsdatwyler.no-ip.org:81',
+  //     tenantId: tenant?.id,
+  //     devices: {
+  //       createMany: {
+  //         data: config[1].devices.map((device) => ({
+  //           tenantId: tenant?.id,
+  //           name: device.label,
+  //           serial: device.serial,
+  //         })),
+  //         skipDuplicates: true,
+  //       }
+  //     }
+  //   }
+  // })
 
   // console.log({ site1, site2 });
   // const alert = await backendClient.alert.findFirst({
@@ -2191,6 +2223,50 @@ async function freshStart() {
   //       acknowledgedBy: alert.acknowledgedBy,
   //     }
   //   })
+  // const device = await backendClient.device.findFirst({
+  //   where: {
+  //     name: "TEMPERATURE AND HUMIDITY"
+  //   }
+  // })
+  // console.log({ device });
+  // if (!device) return;
+  // setInterval(async () => {
+  //   addRecord({
+  //     deviceId: device.id,
+  //     name: "TEMPERATURE",
+  //     value: Math.floor(Math.random() * 100),
+  //   })
+  //   addRecord({
+  //     deviceId: device.id,
+  //     name: "HUMIDITY",
+  //     value: Math.floor(Math.random() * 100),
+  //   })
+  // }, 1000);
+
+  // setInterval(async () => {
+  //   // log the current state of the system
+  //   const history = await backendClient.history.count();
+  //   console.log({ history });
+
+  // }, 1000);
+
+  const devices = await backendClient.device.findMany({
+    where: {
+      name: "TEMPERATURE AND HUMIDITY"
+    },
+    include: {
+      history: {
+        where: {
+          name: "TEMPERATURE"
+        },
+        orderBy: {
+          createdAt: "desc"
+        }
+      }
+    }
+  });
+
+  console.log(devices[0].history);
 
 
 }

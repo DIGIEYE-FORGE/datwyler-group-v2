@@ -12,7 +12,6 @@ import {
 import { format } from "date-fns";
 import Button from "../../../../components/button";
 import { AiOutlineCheckCircle } from "react-icons/ai";
-import { BiExport } from "react-icons/bi";
 import { AiOutlineAlert } from "react-icons/ai";
 import { useProvider } from "../../../../components/provider";
 import { AppContext } from "../../../../App";
@@ -23,6 +22,7 @@ const defaultParams: Params = {
     page: 1,
     perPage: 10,
   },
+  orderBy: { createdAt: "asc" },
   include: {
     device: {
       select: {
@@ -192,7 +192,7 @@ function AlertsTab() {
       setTotal(alerts.totalResult);
     } catch (e) {
       setState("error");
-      console.log("error getting alerts", e);
+      console.error("error getting alerts", e);
     }
   }, [params, tenantId]);
 

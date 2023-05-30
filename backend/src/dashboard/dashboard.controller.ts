@@ -11,6 +11,12 @@ export class DashboardController {
     console.log(query);
 
     return this.dashboardService.findAll(query);
+  }
+  @Get('/history')
+  getDashboardHistory(@Query() query: { where?: string }) {
+    console.clear();
+    console.log(query);
 
+    return this.dashboardService.getDashboardHistory(query);
   }
 }

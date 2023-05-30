@@ -12,7 +12,6 @@ import {
   User,
   convertParams,
 } from "../../utils";
-import { de } from "date-fns/locale";
 type LoginResponse = {
   accessToken: string;
   refreshToken: string;
@@ -27,10 +26,25 @@ export type GroupData = {
   lng?: number;
   ip?: string;
 };
+
+export type HistoryResponse = {
+  id: number;
+  name: string;
+  temperature: {
+    name: string;
+    value: number;
+    [key: string]: any;
+  }[];
+  humidity: {
+    name: string;
+    value: number;
+    [key: string]: any;
+  }[];
+  [key: string]: any;
+}
 export default class BackendApi {
   private api = axios.create({
     baseURL: env.VITE_BACK_API,
-    // baseURL: `http://${window.location.hostname}:3001`,
   });
 
   constructor({
@@ -131,6 +145,28 @@ export default class BackendApi {
   }
   async getDashboardData(): Promise<DashboardData> {
     const res = await this.api.get("/dashboard");
+    return res.data;
+  }
+
+
+  async getHistory({
+    groupId,
+    startDate,
+    endDate,
+  }: {
+    groupId: number;
+    startDate: Date;
+    endDate?: Date
+  }): Promise<HistoryResponse[]> {
+    const res = await this.api.get("/dashboard/history", {
+      params: {
+        where: JSON.stringify({
+          groupId,
+          // startDate: startDate.toISOString(),
+          // endDate: endDate && endDate.toISOString(),
+        }),
+      }
+    });
     return res.data;
   }
 }

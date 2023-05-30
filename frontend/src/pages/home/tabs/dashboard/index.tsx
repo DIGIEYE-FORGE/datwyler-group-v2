@@ -5,7 +5,6 @@ import { GiLeak } from "react-icons/gi";
 import { BsFullscreen, BsFullscreenExit } from "react-icons/bs";
 import { FiSettings } from "react-icons/fi";
 import Tooltip from "../../../../components/tooltip";
-import ReactApexChart from "react-apexcharts";
 import For from "../../../../components/for";
 import Card from "../../../../components/card";
 import { GiSmokeBomb } from "react-icons/gi";
@@ -13,7 +12,6 @@ import Provider, { useProvider } from "../../../../components/provider";
 import { AppContext } from "../../../../App";
 import { DashboardData, strTake } from "../../../../utils";
 import GeographicalMap from "./goegraphical-map";
-import { toast } from "react-toastify";
 import { format } from "date-fns";
 import Loader from "../../../../components/loader";
 import Button from "../../../../components/button";
@@ -52,7 +50,7 @@ export function IconButton({ children, className, ...props }: IconButtonProps) {
 function Metrics() {
   const dashboardData = useProvider<DashboardData | null>();
   return (
-    <div className="w-full flex gap-6 flex-wrap">
+    <div className="w-full flex gap-6 flex-wrap ">
       <Card className="metric-card ">
         <div className="title rounded bg-primary/10  p-2">Online devices</div>
         <div className="flex-1 flex justify-between items-center p-2 ">
@@ -324,7 +322,7 @@ function DashboardTab() {
         ...data,
       }}
     >
-      <div className="container items-center w-full min-h-full flex flex-col gap-6 overflow-x-hidden p-6 ">
+      <div className="container min-w-[40rem] items-center w-full min-h-full flex flex-col gap-6 overflow-x-hidden p-6 ">
         <Metrics />
         <div className="w-full h-full  grid xl:grid-cols-3 gap-4 auto-rows-fr">
           <RecentAlarms />
