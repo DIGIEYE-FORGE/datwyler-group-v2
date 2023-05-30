@@ -55,7 +55,6 @@ function Overview() {
         },
       ]);
       console.log("i am here", { chartHistory });
-      await new Promise((res) => setTimeout(res, 10000));
       setState("idle");
     } catch (err) {
       console.error(err);
