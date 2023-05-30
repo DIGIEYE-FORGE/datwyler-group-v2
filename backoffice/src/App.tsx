@@ -142,8 +142,8 @@ function App() {
 
   useEffect(() => {
     if (
-      window.location.pathname !== "/login" &&
-      window.location.pathname !== "/signup"
+      window.location.pathname !== "/backoffice/login" &&
+      window.location.pathname !== "/backoffice/signup"
     ) {
       setIslogin(true);
     } else {
@@ -158,7 +158,7 @@ function App() {
   }, [lang]);
 
   useEffect(() => {
-    if (location.pathname !== "/login" && location.pathname !== "/signup") {
+    if (location.pathname !== "/backoffice/login" && location.pathname !== "/backoffice/signup") {
       const user = localStorage.getItem("accessToken");
       if (!user) {
         localStorage.clear();
@@ -178,8 +178,8 @@ function App() {
           }}
         >
           <div className="h-screen w-screen">
-            {location.pathname !== "/login" &&
-            location.pathname !== "/signup" ? (
+            {location.pathname !== "/backoffice/login" &&
+            location.pathname !== "/backoffice/signup" ? (
               <>
                 {/* {getUserQuery.isLoading && location.pathname != "/" ? (
                   <div className="h-screen w-screen flex justify-center align-center">

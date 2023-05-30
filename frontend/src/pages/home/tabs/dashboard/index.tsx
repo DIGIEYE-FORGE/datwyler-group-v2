@@ -15,6 +15,9 @@ import { DashboardData, strTake } from "../../../../utils";
 import GeographicalMap from "./goegraphical-map";
 import { toast } from "react-toastify";
 import { format } from "date-fns";
+import Loader from "../../../../components/loader";
+import Button from "../../../../components/button";
+import Overview from "./history";
 
 interface IconButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   tooltip?: string;
@@ -279,117 +282,41 @@ function WaterFlow() {
   );
 }
 
-function Overview() {
-  const { theme } = useProvider<AppContext>();
-  return (
-    <Chart title="Tempurature And Humidity" className="xl:col-span-2">
-      <div className="card-body  overflow-auto p-3 h-full flex flex-col  gap-4">
-        <select
-          className="ml-auto  border-2 border-primary [&>*]:capitalize"
-          placeholder="Select range of time"
-        >
-          <option value="">all</option>
-          <option value="last hour"> last hour</option>
-          <option value="last 4 hour"> last 4 hour</option>
-          <option value="last 24 hours"> last 24 hours</option>
-          <option value="last 7 days"> last 7 days</option>
-        </select>
-        <ReactApexChart
-          width={"100%"}
-          height={"80%"}
-          options={{
-            chart: {
-              id: "basic-bar",
-              zoom: {
-                enabled: false,
-              },
-              stacked: true,
-              toolbar: {
-                show: false,
-              },
-            },
-            stroke: {
-              width: [3, 3],
-              curve: "smooth",
-              // dashArray: [0, 2],
-            },
-            tooltip: {
-              enabled: false,
-            },
-
-            yaxis: {
-              labels: {
-                style: {
-                  colors: theme === "dark" ? "#fff" : "#373d3f",
-                  fontSize: "12px",
-                },
-              },
-            },
-
-            xaxis: {
-              categories: [
-                "Jan",
-                "Feb",
-                "Mar",
-                "Apr",
-                "May",
-                "Jun",
-                "Jul",
-                "Aug",
-                "Sep",
-                "Oct",
-                "Nov",
-                "Dec",
-              ],
-              labels: {
-                style: {
-                  colors: theme === "dark" ? "#fff" : "#373d3f",
-                  fontSize: "12px",
-                },
-              },
-            },
-          }}
-          series={[
-            {
-              data: [30, 40, 45, 50, 49, 60, 70, 91, 125, 91, 80, 91],
-              color: "#0091AE",
-              name: "Humidity",
-            },
-            {
-              data: [35, 41, 62, 42, 13, 18, 29, 37, 36, 51, 32, 35],
-              color: "#EE3124",
-              name: "Temperature",
-            },
-          ]}
-        />
-      </div>
-    </Chart>
-  );
-}
-
 function DashboardTab() {
   const context = useProvider<AppContext>();
   const { backendApi, tenantId, activeTab, loginState } = context;
   const [data, setData] = useState<DashboardData | {}>({});
+  const [state, setState] = useState<"idle" | "loading" | "error">("loading");
 
-  async function fetchDashboardData() {
+  async function fetchDashboardData(firstTime = false) {
     try {
+      if (firstTime) setState("loading");
       const data = await backendApi.getDashboardData();
+      setState("idle");
       setData(data);
     } catch (err) {
       console.error(err);
+      setState("error");
     }
   }
 
   useEffect(() => {
     if (activeTab !== 0 || loginState !== "idle") return;
-    fetchDashboardData();
+    fetchDashboardData(true);
     const interval = setInterval(() => {
       if (activeTab !== 0) return;
       fetchDashboardData();
     }, 8000);
     return () => clearInterval(interval);
   }, [tenantId, loginState, activeTab]);
+  if (state === "error")
+    return (
+      <div className="w-full h-full flex-center flex-col gap-4">
+        <h1 className="text-6xl">Something went wrong!</h1>
+        <p>Please try again later</p>
+        <Button onClick={() => fetchDashboardData(true)}>Retry</Button>
+      </div>
+    );
   return (
     <Provider
       value={{
@@ -405,6 +332,11 @@ function DashboardTab() {
           <WaterFlow />
           <Overview />
         </div>
+        {state === "loading" && (
+          <div className="absolute z-[999] bg-[#7f7f7f]/50  w-full h-full flex-center">
+            <Loader />
+          </div>
+        )}
       </div>
     </Provider>
   );

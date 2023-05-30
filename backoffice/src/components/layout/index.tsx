@@ -479,7 +479,7 @@ const Layout = (props: Props) => {
             <Button
               onClick={() => {
                 localStorage.removeItem("user");
-                navigate("/login");
+                navigate("/backoffice/login");
               }}
               close
               variant="text"

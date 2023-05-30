@@ -256,7 +256,7 @@ const SignUpPage = () => {
                 <span
                   className="dont-have-acount"
                   onClick={() => {
-                    navigate("/login");
+                    navigate("/backoffice/login");
                   }}
                 >
                   Sign In
