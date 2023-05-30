@@ -254,32 +254,34 @@ function GeographicalMapTab({ details = true }: Props) {
                       <span>
                         {group.name} {`(${group.alerts?.length || 0})`}
                       </span>
-                      <Button
-                        variant="text"
-                        color="info"
-                        className="ml-auto !rounded-full"
-                        onClick={() => {
-                          const groupData: GroupData = {
-                            id: group.id,
-                            name: group.name,
-                            location: group.location,
-                            ip: group.ip,
-                            lat: group.lat,
-                            lng: group.lng,
-                          };
-                          setGroupData(groupData);
-                        }}
-                      >
-                        <MdEdit />
-                      </Button>
-                      <Button
-                        variant="text"
-                        color="danger"
-                        className="!rounded-full"
-                        onClick={() => deleteGroup(group.id)}
-                      >
-                        <MdDeleteOutline />
-                      </Button>
+                      <Show when={details}>
+                        <Button
+                          variant="text"
+                          color="info"
+                          className="ml-auto !rounded-full"
+                          onClick={() => {
+                            const groupData: GroupData = {
+                              id: group.id,
+                              name: group.name,
+                              location: group.location,
+                              ip: group.ip,
+                              lat: group.lat,
+                              lng: group.lng,
+                            };
+                            setGroupData(groupData);
+                          }}
+                        >
+                          <MdEdit />
+                        </Button>
+                        <Button
+                          variant="text"
+                          color="danger"
+                          className="!rounded-full"
+                          onClick={() => deleteGroup(group.id)}
+                        >
+                          <MdDeleteOutline />
+                        </Button>
+                      </Show>
                     </div>
                     {/* <div className="flex justify-evenly h-[3.5rem] items-center bg-primary/5 rounded">
                       <DoorAlertIcon />
