@@ -25,7 +25,7 @@ function parseJSON(value: string) {
 
 async function fetchTenants(tenantId: number) {
   const result = await axios.get(
-    `http://${window.location.hostname}:4000/tenant/`,
+    `https://cms.itinfra.datwyler.com/multitenancy/tenant/`,
     {
       params: {
         where: JSON.stringify({ parentId: tenantId }),
@@ -46,7 +46,7 @@ async function fetchTenants(tenantId: number) {
 async function createTenant(tenant: Tenant) {
   const { name, parentId } = tenant;
   const result = await axios.post(
-    `http://${window.location.hostname}:4000/tenant/`,
+    `https://cms.itinfra.datwyler.com/multitenancy/tenant/`,
     {
       name,
       parentId,
@@ -58,7 +58,7 @@ async function createTenant(tenant: Tenant) {
 async function updateTenant(tenant: Tenant) {
   const { name } = tenant;
   const result = await axios.patch(
-    `http://${window.location.hostname}:4000/tenant/${tenant.id}`,
+    `https://cms.itinfra.datwyler.com/multitenancy/tenant/${tenant.id}`,
     {
       name,
     }
@@ -68,7 +68,7 @@ async function updateTenant(tenant: Tenant) {
 
 async function deleteTenant(tenant: Tenant) {
   const result = await axios.delete(
-    `http://${window.location.hostname}:4000/tenant/${tenant.id}`
+    `https://cms.itinfra.datwyler.com/multitenancy/tenant/${tenant.id}`
   );
   return result.data;
 }

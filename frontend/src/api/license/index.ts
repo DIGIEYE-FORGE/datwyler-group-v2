@@ -22,7 +22,7 @@ type LoginResponse = {
 export default class LicenseApi {
   private api = axios.create({
     baseURL: env.VITE_LICENSE_API,
-    // baseURL: `http://${window.location.hostname}:2000`,
+    // baseURL: `https://cms.itinfra.datwyler.com/license`,
   });
 
   constructor({

@@ -24,7 +24,7 @@ import { is } from "date-fns/locale";
 // axios.defaults.baseURL = import.meta.env.VITE_BACK_API;
 const accessToken = localStorage.getItem("accessToken");
 const refreshToken = localStorage.getItem("refreshToken");
-axios.defaults.baseURL = `http://${window.location.hostname}:3001`;
+axios.defaults.baseURL = `https://cms.itinfra.datwyler.com/api`;
 
 axios.defaults.headers.common["Authorization"] = `Bearer ${refreshToken}`;
 
@@ -38,7 +38,8 @@ axios.interceptors.response.use(
     return respone;
   },
   function (error) {
-    if (error.response.status === 401) {
+    if (error.response.status === 401 &&  window.location.pathname !== "/login" &&
+    window.location.pathname !== "/signup") {
       const auth = axios.create({
         baseURL: import.meta.env.VITE_AUTH_AUTH,
       });

@@ -81,7 +81,7 @@ export default class AuthApi {
   private api = axios.create({
     baseURL: env.VITE_AUTH_API,
     // baseURL: 'http://localhost:5000',
-    // baseURL: `http://${window.location.hostname}:5000`,
+    // baseURL: `https://cms.itinfra.datwyler.com/auth`,
   });
 
   constructor({
