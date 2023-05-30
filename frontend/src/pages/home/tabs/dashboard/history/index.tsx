@@ -9,6 +9,7 @@ import Show from "../../../../../components/show";
 import { format } from "date-fns";
 import Button from "../../../../../components/button";
 import Load from "../../../../../components/load";
+import { strTake } from "../../../../../utils";
 
 const dateMap = {
   "last hour": new Date(Date.now() - 1000 * 60 * 60),
@@ -25,7 +26,6 @@ function Overview() {
   const [chartHistory, setChartHistory] = useState<any>([]);
   const [state, setState] = useState<"idle" | "loading" | "error">("idle");
 
-
   const getHistory = useCallback(async () => {
     try {
       if (!groupId) return;
@@ -38,7 +38,7 @@ function Overview() {
 
       setChartHistory([
         {
-          color:"#EE3124",
+          color: "#EE3124",
           name: "temperature",
           data: data?.[0]?.temperature?.map((d) => ({
             x: new Date(d.createdAt).getTime(),
@@ -46,18 +46,17 @@ function Overview() {
           })),
         },
         {
-          color:"#0091AE",
+          color: "#0091AE",
           name: "humidity",
           data: data?.[0]?.humidity?.map((d) => ({
             x: new Date(d.createdAt).getTime(),
             y: d.value.toFixed(2),
           })),
-        }
+        },
       ]);
-      console.log("i am here",{ chartHistory });
+      console.log("i am here", { chartHistory });
       await new Promise((res) => setTimeout(res, 10000));
       setState("idle");
-
     } catch (err) {
       console.error(err);
       setState("error");
@@ -80,9 +79,13 @@ function Overview() {
               setgroupId(Number(e.target.value) || "");
             }}
           >
-            <option value="">none</option>
+            <option value="" disabled={!!groupId}>
+              select site
+            </option>
             <For each={groups}>
-              {(group) => <option value={group.id}>{group.name}</option>}
+              {(group) => (
+                <option value={group.id}>{strTake(group.name, 15)}</option>
+              )}
             </For>
           </select>
           <select
@@ -90,8 +93,7 @@ function Overview() {
             placeholder="Select range of time"
             onChange={(e) => {
               setDate(e.target.value as any);
-            }
-            }
+            }}
           >
             <option value="last hour"> last hour</option>
             <option value="last 4 hour"> last 4 hour</option>
@@ -101,70 +103,66 @@ function Overview() {
         </div>
         <Show when={state === "error"}>
           <div className="flex h-full flex-col gap-2">
-
-          <div className="text-center text-red-500">Error</div>
-          <p>
-            Please check your internet connection and try again. If the problem
-          </p>
-          <Button onClick={getHistory}>Retry</Button>
+            <div className="text-center text-red-500">Error</div>
+            <p>
+              Please check your internet connection and try again. If the
+              problem
+            </p>
+            <Button onClick={getHistory}>Retry</Button>
           </div>
         </Show>
         <Show when={state === "loading"}>
           <div className="flex h-full w-full justify-center items-center">
-              <Load/>
+            <Load />
           </div>
         </Show>
         <Show when={state === "idle"}>
-
-        <ReactApexChart
-          width={"100%"}
-          height={"80%"}
-          options={{
-            chart: {
-              id: "basic-bar",
-              zoom: {
-                enabled: false,
-              },
-              toolbar: {
-                show: false,
-              },
-            },
-            stroke: {
-              width: [3, 3],
-              curve: "smooth",
-            },
-            tooltip: {
-              enabled: false,
-            },
-            
-            yaxis: [
-              {
-                title: {
-                  text: "temperature"
+          <ReactApexChart
+            width={"100%"}
+            height={"80%"}
+            options={{
+              chart: {
+                id: "basic-bar",
+                zoom: {
+                  enabled: false,
+                },
+                toolbar: {
+                  show: false,
                 },
               },
-              {
-                opposite: true,
-                title: {
-                  text: "humidity"
-                }
-              }
-            ],
-            xaxis: {
-              type: "datetime",
-              labels: {
-                formatter: function (value, timestamp) {
-                  return format(
-                    new Date(timestamp!),
-                    "MM/yyyy  HH:mm"
-                    );
+              stroke: {
+                width: [3, 3],
+                curve: "smooth",
+              },
+              tooltip: {
+                enabled: false,
+              },
+
+              yaxis: [
+                {
+                  title: {
+                    text: "temperature",
+                  },
+                },
+                {
+                  opposite: true,
+                  title: {
+                    text: "humidity",
+                  },
+                },
+              ],
+              xaxis: {
+                type: "datetime",
+                labels: {
+                  formatter: function (value, timestamp) {
+                    return format(new Date(timestamp!), "MM/yyyy  HH:mm");
                   },
                 },
               },
             }}
             series={chartHistory}
-            />
-            </Show>
+          />
+        </Show>
       </div>
     </Chart>
   );
