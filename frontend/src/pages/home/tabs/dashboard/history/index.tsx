@@ -32,7 +32,7 @@ function Overview() {
       setState("loading");
       const data = await backendApi.getHistory({
         groupId,
-        startDate: dateMap["last hour"],
+        startDate: dateMap[date],
       });
       console.log({ data });
 
