@@ -17,8 +17,10 @@ interface PaginationProps {
   onChange?: (value: { page: number; perPage: number }) => void;
 }
 
-function Pagination({ total, onChange, className }: PaginationProps) {
-  const [{ page, perPage }, setValue] = useState({ page: 1, perPage: 10 });
+function Pagination({ total, onChange, className, ...props }: PaginationProps) {
+  const [{ page, perPage }, setValue] = useState(
+    props.value || { page: 1, perPage: 10 }
+  );
 
   const max = Math.ceil(total / perPage);
   const pages = Array.from({ length: max }, (_, i) => i + 1);

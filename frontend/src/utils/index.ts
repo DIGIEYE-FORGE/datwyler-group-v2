@@ -116,9 +116,10 @@ export type License = {
 
 }
 export type Device = {
-  id: string;
+  id: number;
   name: System;
   serial: string;
+  groupId?: number;
   deviceProfile: {
     name: string;
     [key: string]: any;

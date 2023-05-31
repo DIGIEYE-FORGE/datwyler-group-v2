@@ -42,6 +42,14 @@ export type HistoryResponse = {
   }[];
   [key: string]: any;
 }
+
+export type DeviceData = {
+  id?: number;
+  name: string;
+  serial: string;
+  description?: string;
+  groupId?: number;
+};
 export default class BackendApi {
   private api = axios.create({
     baseURL: env.VITE_BACK_API,
@@ -148,6 +156,40 @@ export default class BackendApi {
     return res.data;
   }
 
+  async getGroupsName(): Promise<ManyResponse<Group>> {
+    const res = await this.api.get("/group", {
+      params: {
+        take: 1000,
+        select: JSON.stringify({
+          name: true,
+          id: true,
+        })
+      },
+    });
+    return res.data;
+  }
+
+  async addEditDevice({
+    id,
+    ...deviceData }: DeviceData & {
+      tenantId: number;
+    }
+  ): Promise<Device> {
+    if (id) {
+      const res = await this.api.patch(`/device/${id}`, deviceData);
+      return res.data;
+    }
+    const res = await this.api.post("/device", {
+      ...deviceData,
+      tenantId: deviceData.tenantId + "",
+    });
+    return res.data;
+  }
+
+  async deleteDevice(id: number): Promise<Device> {
+    const res = await this.api.delete(`/device/${id}`);
+    return res.data;
+  }
 
   async getHistory({
     groupId,
@@ -162,7 +204,7 @@ export default class BackendApi {
       params: {
         where: JSON.stringify({
           groupId,
-          startDate:startDate.toISOString(),
+          startDate: startDate.toISOString(),
           // endDate: endDate && endDate.toISOString(),
         }),
       }

@@ -273,7 +273,8 @@ $h: 2rem;
 }
 
 input,
-select {
+select,
+textarea {
   @apply bg-light dark:bg-primary-dark px-2 py-1 outline-none rounded-md border border-dark/10 dark:border-light/10 dark:hover:border-light/20 dark:focus:border-primary hover:border-dark/20 focus:border-primary focus:border-2 relative;
   height: $h;
 }
