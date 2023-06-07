@@ -428,7 +428,7 @@ function LicenseTab() {
         handleClose={() => setOpen(false)}
         className="bg-white w-11/12 max-w-[40rem] rounded [&>*]:border-b [&>*]:border-black/20 max-h-full overflow-auto"
       >
-        <div className="flex items-center py-4  justify-between px-4">
+        <div className="flex items-center py-2 md:py-4  justify-between px-4">
           <span className="font-semibold">Create a License</span>
           <button
             onClick={() => setOpen(false)}
@@ -437,7 +437,7 @@ function LicenseTab() {
             <MdOutlineClose className="text-2xl text-gray-500" />
           </button>
         </div>
-        <form className="flex flex-col gap-6 py-4 [&>div]:flex [&>div]:flex-col [&>div]:gap-2 [&>div]:px-4">
+        <form className="flex flex-col gap-2 sm:gap-4 md:gap-6 py-2  md:py-4 [&>div]:flex [&>div]:flex-col [&>div]:gap-2 px-2 md:px-4">
           <div>
             <label
               className="w-fit"
@@ -485,7 +485,7 @@ function LicenseTab() {
             <input
               type="date"
               id="startDate"
-              className="h-11"
+              className="h-11 w-full"
               onChange={(e) => {
                 setCreateLicese({
                   ...createLicese,
@@ -505,7 +505,7 @@ function LicenseTab() {
             <input
               type="date"
               id="expiredAt"
-              className="h-11"
+              className="h-11 w-full"
               onChange={(e) => {
                 setCreateLicese({
                   ...createLicese,
@@ -557,9 +557,9 @@ function LicenseTab() {
             />
           </div>
         </form>
-        <div className="flex justify-between items-center h-20 px-6">
+        <div className="flex justify-between items-center py-2 md:py-4 px-4">
           <Button
-            className="flex items-center gap-2 py-3 px-4"
+            className="flex items-center gap-2 py-2 md:py-3 px-2 md:px-4"
             variant="outlined"
             onClick={() => setOpen(false)}
           >
@@ -567,7 +567,7 @@ function LicenseTab() {
             <MdCancel className="text-2xl" />
           </Button>
           <Button
-            className="flex items-center gap-2 py-3 px-4"
+            className="flex items-center gap-2 py-2 md:py-3 px-2 md:px-4"
             onClick={() => {
               licenseApi
                 .addLicense(createLicese)
