@@ -7,6 +7,7 @@ import { useProvider } from "../../../../components/provider";
 import { AppContext } from "../../../../App";
 import {
   MdAddCircleOutline,
+  MdBackspace,
   MdDeleteOutline,
   MdEdit,
   MdMoreVert,
@@ -211,15 +212,11 @@ function DevicesTab() {
           total={total}
           offset={1}
         />
-         <Button className="flex items-center gap-2">
-          export
-          <BiExport className="text-lg" />
-        </Button>
         <Button
           className="flex items-center gap-2 ml-auto"
           onClick={() => setDeviceData(defaultData)}
         >
-          rapport
+          add
           <MdAddCircleOutline className="text-lg" />
         </Button>
       </div>
@@ -277,7 +274,7 @@ function DevicesTab() {
       <Modal
         open={!!deviceData}
         handleClose={() => setDeviceData(null)}
-        className="bg-light/75 dark:bg-dark/75 bg-blur min-w-[20rem] max-w-[30rem] w-11/12"
+        className="bg-light/75 dark:bg-dark/75 bg-blur  max-w-[30rem] w-11/12"
       >
         <div className="py-4 text-center border-b">
           {deviceData?.id ? "Edit" : "Add"} Device
@@ -337,7 +334,14 @@ function DevicesTab() {
             </For>
           </select>
         </div>
-        <div className="flex justify-center py-4 border-t">
+        <div className="flex justify-between  p-4 border-t">
+          <Button
+            className="flex items-center gap-2"
+            onClick={() => setDeviceData(null)}
+          >
+            <span>Cancel</span>
+            <MdBackspace className="text-xl" />
+          </Button>
           <Button
             className="flex items-center gap-2"
             disabled={!deviceData?.name || !deviceData?.serial}
@@ -347,7 +351,6 @@ function DevicesTab() {
             <MdSave className="text-xl" />
           </Button>
         </div>
-        {/* {JSON.stringify(deviceData)} */}
       </Modal>
     </div>
   );

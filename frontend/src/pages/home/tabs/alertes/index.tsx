@@ -396,39 +396,39 @@ function AlertsTab() {
   });
   const [open, setOpen] = useState(false);
 
-  const generateReport =  useMemo(() => {
-    if (!open) return {
-      type: "pdf",
-      name: "",
-      tenantId: tenantId,
-      where: params.where,
-    }
+  const generateReport = useMemo(() => {
+    if (!open)
+      return {
+        type: "pdf",
+        name: "",
+        tenantId: tenantId,
+        where: params.where,
+      };
     return {
       ...rapportData,
       tenantId: tenantId,
       where: params.where,
-    }
-}, [params.where, tenantId,open,rapportData.name,rapportData.type]); 
+    };
+  }, [params.where, tenantId, open, rapportData.name, rapportData.type]);
 
- 
   return (
-    <div className="flex flex-col  w-full gap-6 p-6 min-w-[70rem]">
+    <div className="flex flex-col  w-full gap-6 p-6 ">
       <div className="flex gap-4 items-center flex-wrap justify-end">
         <Pagination
           value={params.pagination}
           onChange={(v) => dispatch({ type: "pagination", payload: v })}
           total={total}
         />
-        <Button className="flex items-center gap-2"
-        disabled={rows.length === 0 || !params?.where?.updatedAt}
-        onClick={() => {
-          setOpen(true);
-        }}
+        <Button
+          className="flex items-center gap-2"
+          disabled={rows.length === 0 || !params?.where?.updatedAt}
+          onClick={() => {
+            setOpen(true);
+          }}
         >
           Generate
           <BiExport className="text-lg" />
         </Button>
-        
       </div>
       <DataGrid
         loading={state === "loading"}
@@ -439,7 +439,7 @@ function AlertsTab() {
         columns={columns}
         rows={rows}
       ></DataGrid>
-     <Modal
+      <Modal
         open={open}
         handleClose={() => setOpen(false)}
         className="bg-white w-11/12 max-w-[40rem] rounded [&>*]:border-b [&>*]:border-black/20 max-h-full overflow-auto"
@@ -454,18 +454,18 @@ function AlertsTab() {
           </button>
         </div>
         <form className="flex flex-col gap-6 py-4 [&>div]:flex [&>div]:flex-col [&>div]:gap-2 [&>div]:px-4">
-        <div>
+          <div>
             <label className="w-fit" htmlFor="date-range">
               name
             </label>
             <input
-            className="h-12 px-4 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-            type="text"
-            placeholder="Name *"
-            onChange={(e) => {
-              setRapportData((prev) => ({ ...prev, name: e.target.value }));
-            }}
-          />
+              className="h-12 px-4 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              type="text"
+              placeholder="Name *"
+              onChange={(e) => {
+                setRapportData((prev) => ({ ...prev, name: e.target.value }));
+              }}
+            />
           </div>
           <div>
             <label className="w-fit" htmlFor="type">
@@ -508,19 +508,18 @@ function AlertsTab() {
             <MdCancel className="text-2xl" />
           </Button>
           <Button
-          onClick={()=>{
-            backendApi.alertsGenerate(
-              generateReport
-            ).then((res) => {
-              toast.success("Rapport generated successfully");
-              setOpen(false);
-            }
-            ).catch((err) => {
-              toast.error("Error generating rapport");
-            }
-            )
-          }}
-          disabled={rapportData.name === ""}
+            onClick={() => {
+              backendApi
+                .alertsGenerate(generateReport)
+                .then((res) => {
+                  toast.success("Rapport generated successfully");
+                  setOpen(false);
+                })
+                .catch((err) => {
+                  toast.error("Error generating rapport");
+                });
+            }}
+            disabled={rapportData.name === ""}
             className="flex items-center gap-2 py-3 px-4"
           >
             <span>Generate</span>
