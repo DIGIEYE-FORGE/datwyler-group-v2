@@ -202,15 +202,16 @@ function DevicesTab() {
     },
   ];
   return (
-    <div className="flex flex-col  w-full gap-6 p-6 min-w-[40rem]">
-      <div className="flex gap-4 items-center flex-wrap justify-end">
+    <div className="flex flex-col  w-full gap-6 p-6 ">
+      <div className="ml-auto flex gap-4 items-center w-fit flex-wrap ">
         <Pagination
           value={params.pagination}
           onChange={(v) => setParams({ ...params, pagination: v })}
           total={total}
+          offset={1}
         />
         <Button
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 ml-auto"
           onClick={() => setDeviceData(defaultData)}
         >
           add
@@ -241,20 +242,24 @@ function DevicesTab() {
             <div className="card  aspect-square -translate-x-1/2 px-2 pt-4  flex flex-col  ">
               <button
                 className="flex w-[6rem] items-center justify-between  p-2 hover:text-info hover:"
-                onClick={() =>
+                onClick={(e) => {
+                  e.stopPropagation();
                   setDeviceData({
                     id: row.id,
                     name: row.name,
                     serial: row.serial,
                     groupId: row.groupId,
-                  })
-                }
+                  });
+                }}
               >
                 <span>Edit</span>
                 <MdEdit className="text-xl" />
               </button>
               <button
-                onClick={() => deleteDevice(row.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  deleteDevice(row.id);
+                }}
                 className="flex w-[6rem] items-center justify-between p-2 hover:text-danger"
               >
                 <span>Delete</span>

@@ -13,7 +13,6 @@ interface PaginationProps {
     page: number;
     perPage: number;
   };
-  className?: string;
   style?: React.CSSProperties;
   onChange?: (value: { page: number; perPage: number }) => void;
 }
@@ -22,7 +21,6 @@ function Pagination({
   total,
   offset = 2,
   onChange,
-  className,
   ...props
 }: PaginationProps) {
   const [{ page, perPage }, setValue] = useState(
@@ -49,9 +47,7 @@ function Pagination({
   };
 
   return (
-    <div
-      className={` flex flex-wrap gap-2 sm:gap-4 items-center  ${className}`}
-    >
+    <>
       <span className="hidden lg:inline-block">Total {total} items</span>
       <div className="pagination text-primary underline">
         <button disabled={page === 1} onClick={() => changePage(page - 1)}>
@@ -88,18 +84,17 @@ function Pagination({
           <AiOutlineRight />
         </button>
       </div>
-      <div className="flex gap-2 items-center">
-        <select
-          onChange={(e) => changePerPage(Number(e.target.value))}
-          value={perPage}
-        >
-          <option label="5 / page">5</option>
-          <option label="10 / page">10</option>
-          <option label="20 / page">20</option>
-          <option label="50 / page">50</option>
-        </select>
-      </div>
-    </div>
+      <select
+        className="h-8"
+        onChange={(e) => changePerPage(Number(e.target.value))}
+        value={perPage}
+      >
+        <option label="5 / page">5</option>
+        <option label="10 / page">10</option>
+        <option label="20 / page">20</option>
+        <option label="50 / page">50</option>
+      </select>
+    </>
   );
 }
 
