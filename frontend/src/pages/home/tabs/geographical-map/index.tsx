@@ -201,7 +201,7 @@ function GeographicalMapTab({ details = true }: Props) {
           <div className="absolute z-[500] top-4 right-4 flex items-center gap-4 ">
             <input
               type="text"
-              className="bg-light/75 dark:bg-primary-dark/75 bg-blur w-[13.5rem] py-1"
+              className="bg-light/75 dark:bg-primary-dark/75 bg-blur w-44 sm:w-48 md:w-56 py-1"
               placeholder="Search by name or location"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -283,13 +283,6 @@ function GeographicalMapTab({ details = true }: Props) {
                         </Button>
                       </Show>
                     </div>
-                    {/* <div className="flex justify-evenly h-[3.5rem] items-center bg-primary/5 rounded">
-                      <DoorAlertIcon />
-                      <LeakAlertIcon />
-                      <LockAlertIcon />
-                      <FireAlertIcon />
-                      <PowerAlertIcon />
-                    </div> */}
                     <div className="grid grid-cols-2 py-2 gap-y-2">
                       <div className="text-[#82848E]">lat, lng:</div>
                       <div className="font-bold">
