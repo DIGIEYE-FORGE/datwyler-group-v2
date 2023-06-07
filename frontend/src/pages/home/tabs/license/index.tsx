@@ -147,23 +147,6 @@ function LicenseTab() {
 
   const columns: Column[] = [
     {
-      label: "serial",
-      header: "serial",
-      valueGetter: (row) => row.serialNumber || "----",
-      filter: {
-        type: "text",
-        onChange: (e) => {
-          if (e != "")
-            setRows(
-              backUpRows.filter(
-                (row: any) => row?.serialNumber?.includes(e) || undefined
-              )
-            );
-          else setRows(backUpRows);
-        }
-      },
-    },
-    {
       label: "name",
       header: "license name",
       field: "name",
@@ -174,6 +157,23 @@ function LicenseTab() {
             setRows(
               backUpRows.filter(
                 (row: any) => row?.name?.includes(e) || undefined
+              )
+            );
+          else setRows(backUpRows);
+        },
+      },
+    },
+    {
+      label: "serial",
+      header: "serial",
+      valueGetter: (row) => row.serialNumber || "----",
+      filter: {
+        type: "text",
+        onChange: (e) => {
+          if (e != "")
+            setRows(
+              backUpRows.filter(
+                (row: any) => row?.serialNumber?.includes(e) || undefined
               )
             );
           else setRows(backUpRows);
@@ -397,8 +397,8 @@ function LicenseTab() {
       });
   }, [tenantId]);
   return (
-    <div className="flex flex-col  gap-6 p-6 min-w-[80rem]">
-      <div className="flex gap-4 items-center flex-wrap justify-end ">
+    <div className="flex flex-col  gap-6 p-6 ">
+      <div className="flex gap-4 items-center flex-wrap w-fit ml-auto">
         <Pagination
           value={params.pagination}
           onChange={(v) => setParams({ type: "pagination", payload: v })}
@@ -415,7 +415,7 @@ function LicenseTab() {
       <DataGrid
         className=" table-fixed w-full text-left "
         headClassName="h-[5.5rem] bg-dark/5 dark:bg-light/5 text-[#697681] [&>*]:px-2 "
-        rowClassName="h-[4rem] [&>*]:px-2 even:bg-dark/5 dark:even:bg-light/5 hover:bg-dark/10 dark:hover:bg-light/10"
+        rowClassName="h-[4rem] [&>*]:px-2 even:bg-dark/5 dark:even:bg-light/5 hover:bg-dark/10 dark:hover:bg-light/10 shadow shadow-[#7f7f7f]/20"
         columns={columns}
         rows={rows.slice(
           (params.pagination.page - 1) * params.pagination.perPage,

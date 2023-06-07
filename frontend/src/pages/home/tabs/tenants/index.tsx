@@ -105,8 +105,8 @@ function TenantsTab() {
   ];
 
   return (
-    <div className="flex flex-col  gap-6 p-6 min-w-[40rem]">
-      <div className="flex gap-4 items-center flex-wrap justify-end">
+    <div className="flex flex-col  gap-6 p-6 ">
+      <div className="flex gap-4 items-center flex-wrap w-fit ml-auto">
         <Pagination
           value={pagination}
           onChange={setPagination}
