@@ -76,6 +76,19 @@ export default class BackendApi {
     });
     return res.data;
   }
+
+  async alertsGenerate(data: {
+    name: string;
+    tenantId: number|undefined;
+    type: string;
+    where: {
+      [key: string]: any;
+    };
+  }): Promise<ManyResponse<any>> {
+    const res = await this.api.post("/report/alertsGenerate", data);
+    return res.data;
+  }
+
   async downloadFile(query: {
     name: string;
     type: string;

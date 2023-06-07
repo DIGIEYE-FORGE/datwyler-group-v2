@@ -22,6 +22,7 @@ import Show from "../../../../components/show";
 import { IconButton } from "../dashboard";
 import { FaUserEdit } from "react-icons/fa";
 import { AiOutlineUserDelete } from "react-icons/ai";
+import { BiExport } from "react-icons/bi";
 
 const defaultData: DeviceData = {
   name: "UPS",
@@ -210,11 +211,15 @@ function DevicesTab() {
           total={total}
           offset={1}
         />
+         <Button className="flex items-center gap-2">
+          export
+          <BiExport className="text-lg" />
+        </Button>
         <Button
           className="flex items-center gap-2 ml-auto"
           onClick={() => setDeviceData(defaultData)}
         >
-          add
+          rapport
           <MdAddCircleOutline className="text-lg" />
         </Button>
       </div>

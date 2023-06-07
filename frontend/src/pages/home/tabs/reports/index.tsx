@@ -300,7 +300,7 @@ function ReportsTab() {
           setDevicesData(res.results);
         })
         .catch((err) => {
-          console.log(err);
+          toast.error(err.message);
         });
     }
   }, [createReport.groups]);
@@ -361,7 +361,7 @@ function ReportsTab() {
           </div>
           <div>
             <label className="w-fit" htmlFor="rapport-name">
-              Select a site
+              Select a site 
             </label>
             <span className="text-dark">
               <Select
@@ -391,6 +391,7 @@ function ReportsTab() {
           <div>
             <label className="w-fit" htmlFor="select-devices">
               Select devices
+              <span className="text-sm text-slate-500">(if no device is selected it will select all of them)</span>
             </label>
             <Select
               onChange={(v: any) =>
@@ -454,12 +455,14 @@ function ReportsTab() {
                   });
                 }
                 if (v.value === "last week") {
-                  console.log("i am here");
                   setCreateReport({
                     ...createReport,
                     date: new Date(addDays(new Date(), -7 * 24)),
                   });
                 }
+              }}
+              defaultValue={{
+                value: "last hour",
               }}
               classNames={{
                 option: (state) =>
@@ -501,7 +504,6 @@ function ReportsTab() {
             </label>
             <Select
               onChange={(v: any) => {
-                console.log("hello", v);
                 if (v.value == "PDF")
                   setCreateReport({ ...createReport, format: "pdf" });
                 if (v.value == "CSV") {
@@ -517,7 +519,7 @@ function ReportsTab() {
                     : "border border-black/20",
               }}
               getOptionLabel={(site: { value: string }) => site.value}
-              // getOptionValue={(site: { value: string }) => site.value + "waza"}
+              defaultValue={{ value: "PDF" }}
               options={[
                 {
                   value: "PDF",
@@ -541,6 +543,7 @@ function ReportsTab() {
                 if (v === "Mesurement")
                   setCreateReport({ ...createReport, type: "mesurement" });
               }}
+              defaultValue={{ value: "Alert" }}
               classNames={{
                 option: (state) =>
                   state.isFocused ? "!bg-primary/10" : "white",
@@ -550,7 +553,6 @@ function ReportsTab() {
                     : "border border-black/20",
               }}
               getOptionLabel={(site: { value: string }) => site.value}
-              // getOptionValue={(site: { value: string }) => site.value + "waza"}
               options={[
                 {
                   value: "Alert",
@@ -574,22 +576,26 @@ function ReportsTab() {
             <MdCancel className="text-2xl" />
           </Button>
           <Button
+            disabled={
+              createReport.name === "" ||
+              (createReport.groups && createReport.groups.length === 0)
+            }
             className="flex items-center gap-2 py-3 px-4"
             onClick={() => {
-              console.log(createReport);
               backendApi
                 .generateFile(createReport)
                 .then((res) => {
                   toast.success("Report generated successfully");
                   setCheckUpdate(!checkUpdate);
+                  setOpen(false);
                 })
                 .catch((err) => {
                   toast.error(err);
                 });
-              setOpen(false);
+              
             }}
           >
-            <span>Genarate</span>
+            <span>Generate</span>
             <MdWatchLater className="text-2xl" />
           </Button>
         </div>

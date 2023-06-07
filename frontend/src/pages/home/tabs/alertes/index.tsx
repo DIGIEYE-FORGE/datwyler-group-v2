@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
 import DataGrid, { Column } from "../../../../components/data-grid";
 import Pagination from "../../../../components/pagination";
 import {
@@ -9,13 +9,21 @@ import {
   strTake,
   systems,
 } from "../../../../utils";
-import { format } from "date-fns";
+import { addHours, format } from "date-fns";
 import Button from "../../../../components/button";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 import { AiOutlineAlert } from "react-icons/ai";
 import { useProvider } from "../../../../components/provider";
 import { AppContext } from "../../../../App";
 import Tooltip from "../../../../components/tooltip";
+import { BiExport } from "react-icons/bi";
+import Modal from "../../../../components/modal";
+import { MdCancel, MdOutlineClose, MdSave, MdWatchLater } from "react-icons/md";
+import Select from "react-select";
+import { InputActionMeta } from "react-select";
+import { Input } from "postcss";
+import { object } from "prop-types";
+import { toast } from "react-toastify";
 
 const defaultParams: Params = {
   pagination: {
@@ -382,6 +390,27 @@ function AlertsTab() {
       },
     },
   ];
+  const [rapportData, setRapportData] = useState({
+    type: "pdf",
+    name: "",
+  });
+  const [open, setOpen] = useState(false);
+
+  const generateReport =  useMemo(() => {
+    if (!open) return {
+      type: "pdf",
+      name: "",
+      tenantId: tenantId,
+      where: params.where,
+    }
+    return {
+      ...rapportData,
+      tenantId: tenantId,
+      where: params.where,
+    }
+}, [params.where, tenantId,open,rapportData.name,rapportData.type]); 
+
+ 
   return (
     <div className="flex flex-col  w-full gap-6 p-6 min-w-[70rem]">
       <div className="flex gap-4 items-center flex-wrap justify-end">
@@ -390,10 +419,16 @@ function AlertsTab() {
           onChange={(v) => dispatch({ type: "pagination", payload: v })}
           total={total}
         />
-        {/* <Button className="flex items-center gap-2">
-          export
+        <Button className="flex items-center gap-2"
+        disabled={rows.length === 0 || !params?.where?.updatedAt}
+        onClick={() => {
+          setOpen(true);
+        }}
+        >
+          Generate
           <BiExport className="text-lg" />
-        </Button> */}
+        </Button>
+        
       </div>
       <DataGrid
         loading={state === "loading"}
@@ -404,6 +439,95 @@ function AlertsTab() {
         columns={columns}
         rows={rows}
       ></DataGrid>
+     <Modal
+        open={open}
+        handleClose={() => setOpen(false)}
+        className="bg-white w-11/12 max-w-[40rem] rounded [&>*]:border-b [&>*]:border-black/20 max-h-full overflow-auto"
+      >
+        <div className="flex items-center py-4  justify-between px-4">
+          <span className="font-semibold">Create a raport</span>
+          <button
+            onClick={() => setOpen(false)}
+            className="rounded-full hover:bg-dark/10 active:shadow-inner w-8 h-8 flex-center"
+          >
+            <MdOutlineClose className="text-2xl text-gray-500" />
+          </button>
+        </div>
+        <form className="flex flex-col gap-6 py-4 [&>div]:flex [&>div]:flex-col [&>div]:gap-2 [&>div]:px-4">
+        <div>
+            <label className="w-fit" htmlFor="date-range">
+              name
+            </label>
+            <input
+            className="h-12 px-4 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            type="text"
+            placeholder="Name *"
+            onChange={(e) => {
+              setRapportData((prev) => ({ ...prev, name: e.target.value }));
+            }}
+          />
+          </div>
+          <div>
+            <label className="w-fit" htmlFor="type">
+              Format
+            </label>
+            <Select
+              onChange={(v: any) => {
+                setRapportData((prev) => ({ ...prev, type: v.value }));
+              }}
+              classNames={{
+                option: (state) =>
+                  state.isFocused ? "!bg-primary/10" : "white",
+                control: (state) =>
+                  state.isFocused
+                    ? "!border-2 !border-primary !shadow-none"
+                    : "border border-black/20",
+              }}
+              getOptionLabel={(site: { value: string }) => site.value}
+              defaultValue={{ value: "pdf" }}
+              options={[
+                {
+                  value: "pdf",
+                },
+                {
+                  value: "csv",
+                },
+              ]}
+              isClearable
+              backspaceRemovesValue
+            />
+          </div>
+        </form>
+        <div className="flex justify-between items-center h-20 px-6">
+          <Button
+            className="flex items-center gap-2 py-3 px-4"
+            variant="outlined"
+            onClick={() => setOpen(false)}
+          >
+            <span>Cancel</span>
+            <MdCancel className="text-2xl" />
+          </Button>
+          <Button
+          onClick={()=>{
+            backendApi.alertsGenerate(
+              generateReport
+            ).then((res) => {
+              toast.success("Rapport generated successfully");
+              setOpen(false);
+            }
+            ).catch((err) => {
+              toast.error("Error generating rapport");
+            }
+            )
+          }}
+          disabled={rapportData.name === ""}
+            className="flex items-center gap-2 py-3 px-4"
+          >
+            <span>Generate</span>
+            <MdWatchLater className="text-2xl" />
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 }

@@ -113,7 +113,7 @@ export type License = {
   numberOfDataCenters?: number;
   users?: number[];
   dataCenters?: number[];
-
+  serialNumber: string;
 }
 export type Device = {
   id: number;

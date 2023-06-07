@@ -24,7 +24,7 @@ import { FindAllQuery, FindOneQuery } from 'src/utils';
 import { log } from 'console';
 import * as fs from 'fs';
 import path from 'path';
-import { Response } from 'express';
+import { Response, response } from 'express';
 
 @ApiTags('report')
 @Controller('report')
@@ -52,6 +52,25 @@ export class ReportController {
     }
   }
 
+  @Post('alertsGenerate')
+  alertsGenerate(
+    @Body()
+    data: {
+      name: string;
+      tenantId: number;
+      date: Date;
+      type: 'pdf' | 'csv';
+      where: {
+        [key: string]: any;
+      };
+    },
+  ) {
+    try {
+      return this.reportService.alertsGenerate(data);
+    } catch (err) {
+      return err;
+    }
+  }
   @ApiCreatedResponse({ type: Report })
   @Post()
   create(@Body() data: CreateReportDto) {

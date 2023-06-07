@@ -28,6 +28,57 @@ export class ReportService {
   }
 
   @HandleRequestErrors()
+  async alertsGenerate(data: {
+    name: string;
+    tenantId: number;
+    type: 'pdf' | 'csv';
+    where: {
+      [key: string]: any;
+    };
+  }) {
+    const whereDevice = {
+      tenantId: data.tenantId,
+      ...data.where.device,
+    };
+    delete data.where.device;
+    const date = data.where.updatedAt.gte || undefined;
+    delete data.where.updatedAt;
+    const res = await this.prisma.alert.findMany({
+      where: {
+        device: {
+          ...whereDevice,
+        },
+        createdAt: {
+          gte: new Date(date).toISOString(),
+        },
+        ...data.where,
+      },
+    });
+    if (res.length == 0) {
+      throw new Error('No data found');
+    } else {
+      let file;
+      if (data.type == 'csv') {
+        file = await this.generateFileExcel(data.name, res);
+      } else if (data.type == 'pdf') {
+        file = await this.generateFilePdf(data.name, res);
+      }
+
+      await this.prisma.report.create({
+        data: {
+          name: data.name,
+          url: file,
+          query: '---',
+          type: 'alert',
+          format: data.type,
+          tenantId: data.tenantId,
+        },
+      });
+      return file;
+    }
+  }
+
+  @HandleRequestErrors()
   async generate(data: GenerateRapport) {
     let res;
     let file;
