@@ -156,7 +156,9 @@ export function IsPhoneNumber() {
     };
     const setter = function (newVal: string) {
       try {
-        const valid = newVal.match(/^\+?[0-9]{10,15}$/);
+        const valid = newVal.match(
+          /^\+?[0-9]{1,3}\s?\(?[0-9]{1,4}\)?[-.\s]?[0-9]{1,4}[-.\s]?[0-9]{1,9}$/,
+        );
         if (!valid) throw new Error();
       } catch (e) {
         throw new BadRequestException(

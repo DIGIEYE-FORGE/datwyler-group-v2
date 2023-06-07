@@ -63,7 +63,6 @@ function LicenseTab() {
   const [rows, setRows] = useState<License[]>([]);
   const [backUpRows, setBackUpRows] = useState<License[]>([]);
   const { theme, user, tenantId, licenseApi } = useProvider<AppContext>();
-  //   const action = (row: any) => {
   //     if (row.format === "pdf")
   //       return (
   //         <div className="w-full h-full flex-center z-10">
@@ -123,13 +122,6 @@ function LicenseTab() {
     return res;
   };
 
-  //   const getTenant = async (id:number) => {
-  //     const res = await .getTenant({
-  //         id: id,
-  //     });
-  //     return res;
-  //     };
-
   const [createLicese, setCreateLicese] = useState<{
     name: string;
     description: string;
@@ -154,6 +146,23 @@ function LicenseTab() {
   });
 
   const columns: Column[] = [
+    {
+      label: "serial",
+      header: "serial",
+      valueGetter: (row) => row.serialNumber || "----",
+      filter: {
+        type: "text",
+        onChange: (e) => {
+          if (e != "")
+            setRows(
+              backUpRows.filter(
+                (row: any) => row?.serialNumber?.includes(e) || undefined
+              )
+            );
+          else setRows(backUpRows);
+        }
+      },
+    },
     {
       label: "name",
       header: "license name",
@@ -583,7 +592,7 @@ function LicenseTab() {
                 });
             }}
           >
-            <span>Genarate</span>
+            <span>Generate</span>
             <MdWatchLater className="text-2xl" />
           </Button>
         </div>

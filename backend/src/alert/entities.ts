@@ -8,7 +8,6 @@ import {
   IsDateString,
   IsOptional,
 } from 'class-validator';
-import { IsPassword, IsPhoneNumber } from 'src/utils';
 
 export class Alert {
   @ApiProperty({ required: false })

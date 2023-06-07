@@ -33,8 +33,8 @@ export const registerSchema = z.object({
     }),
   phoneNumber: z
     .string()
-    .regex(/^\d{10}$/, {
-      message: "Phone number must be 10 digits",
+    .regex(/^\+?[0-9]{1,3}\s?\(?[0-9]{1,4}\)?[-.\s]?[0-9]{1,4}[-.\s]?[0-9]{1,9}$/, {
+      message: "Phone number is invalid",
     })
     .optional(),
   role: z.enum(["USER", "ADMIN"]),
@@ -62,8 +62,8 @@ export const updateSchema = z.object({
     }),
   phoneNumber: z
     .string()
-    .regex(/^\d{10}$/, {
-      message: "Phone number must be 10 digits",
+    .regex(/^\+?[0-9]{1,3}\s?\(?[0-9]{1,4}\)?[-.\s]?[0-9]{1,4}[-.\s]?[0-9]{1,9}$/, {
+      message: "Phone number is invalid",
     })
     .optional(),
   avatar: z.any().optional(),

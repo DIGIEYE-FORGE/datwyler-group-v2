@@ -14,10 +14,11 @@ import { Alert, CreateAlertDto, UpdateAlertDto } from './entities';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { FindAllQuery, FindOneQuery } from 'src/utils';
 
+
 @ApiTags('alert')
 @Controller('alert')
 export class AlertController {
-  constructor(private readonly alertService: AlertService) { }
+  constructor(private readonly alertService: AlertService) {}
 
   @ApiOkResponse({ type: [Alert] })
   @Get()

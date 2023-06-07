@@ -26,7 +26,7 @@ export const registerSchema = z.object({
   avatar: z.any().optional(),
   phoneNumber: z
     .string()
-    .regex(/^\d{10}$/)
+    .regex(/^\+?[0-9]{1,3}\s?\(?[0-9]{1,4}\)?[-.\s]?[0-9]{1,4}[-.\s]?[0-9]{1,9}$/)
     .optional(),
   attributes: z.record(z.any()).optional(),
 });
@@ -59,9 +59,8 @@ export const updateUserSchema = z.object({
   avatar: z.any().optional(),
   phoneNumber: z
     .string()
-    .regex(/^\d{10}$/)
+    .regex(/^\+?[0-9]{1,3}\s?\(?[0-9]{1,4}\)?[-.\s]?[0-9]{1,4}[-.\s]?[0-9]{1,9}$/)
     .optional(),
-    //parse to object
   attributes: z.union([z.string(), z.record(z.any())]).optional(),
   });
 
