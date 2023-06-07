@@ -8,6 +8,7 @@ import Show from "../show";
 import "./index.scss";
 interface PaginationProps {
   total: number;
+  offset?: number;
   value: {
     page: number;
     perPage: number;
@@ -17,14 +18,19 @@ interface PaginationProps {
   onChange?: (value: { page: number; perPage: number }) => void;
 }
 
-function Pagination({ total, onChange, className, ...props }: PaginationProps) {
+function Pagination({
+  total,
+  offset = 2,
+  onChange,
+  className,
+  ...props
+}: PaginationProps) {
   const [{ page, perPage }, setValue] = useState(
     props.value || { page: 1, perPage: 10 }
   );
 
   const max = Math.ceil(total / perPage);
   const pages = Array.from({ length: max }, (_, i) => i + 1);
-  const offset = 2;
 
   const showPages = pages.slice(
     Math.max(0, page - offset - 1),
@@ -43,7 +49,9 @@ function Pagination({ total, onChange, className, ...props }: PaginationProps) {
   };
 
   return (
-    <div className={`flex  gap-4 justify-center items-center  ${className}`}>
+    <div
+      className={` flex flex-wrap gap-2 sm:gap-4 items-center  ${className}`}
+    >
       <span className="hidden lg:inline-block">Total {total} items</span>
       <div className="pagination text-primary underline">
         <button disabled={page === 1} onClick={() => changePage(page - 1)}>
@@ -84,7 +92,6 @@ function Pagination({ total, onChange, className, ...props }: PaginationProps) {
         <select
           onChange={(e) => changePerPage(Number(e.target.value))}
           value={perPage}
-          className="select-page"
         >
           <option label="5 / page">5</option>
           <option label="10 / page">10</option>
