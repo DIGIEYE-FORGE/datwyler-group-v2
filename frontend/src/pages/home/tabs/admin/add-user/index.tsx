@@ -78,7 +78,7 @@ function AddUser({ refetch, open, setOpen }: Props) {
           <MdOutlineClose className="text-2xl text-gray-500" />
         </button>
       </div>
-      <form className="flex flex-col gap-2 sm:gap-3 md:gap-4 py-2 sm:py-3 md:py-4 [&>div]:flex [&>div]:items-center [&>div]:w-full [&>div>label]:w-[8rem] [&>div>input]:flex-1 [&>div]:gap-2 [&>div]:px-6">
+      <form className="flex flex-col gap-2 sm:gap-3 md:gap-4 py-2 sm:py-3 md:py-4 [&>div]:flex [&>div]:items-center [&>div]:w-full [&>div>label]:w-[8rem] [&>div>input]:flex-1 [&>div]:gap-2 px-2 md:px-6">
         <div>
           <label className="w-fit capitalize" htmlFor="first-name">
             first name
@@ -107,10 +107,10 @@ function AddUser({ refetch, open, setOpen }: Props) {
             }}
           />
         </div>
-        <div className="flex gap-6 items-center justify-between">
+        <div className="flex gap-6 items-center justify-between ">
           <span className="w-[6rem]">Role</span>
           <div
-            className={` flex flex-col py-2 w-[12rem] px-3  gap-2 items-center justify-center rounded cursor-pointer ${
+            className={` flex flex-col py-2 w-28 md:w-40 px-3  gap-2 items-center justify-center rounded cursor-pointer ${
               userData.role === "ADMIN"
                 ? "bg-primary   text-white"
                 : "bg-primary/20 text-primary"
@@ -124,7 +124,7 @@ function AddUser({ refetch, open, setOpen }: Props) {
             <span className="text-lg sm:text-xl md:text-2xl">Admin</span>
           </div>
           <div
-            className={` flex flex-col py-2 w-[12rem]  gap-2 items-center justify-center rounded cursor-pointer ${
+            className={` flex flex-col py-2 w-28 md:w-40  gap-2 items-center justify-center rounded cursor-pointer ${
               userData.role === "USER"
                 ? "bg-primary   text-white"
                 : "bg-primary/20 text-primary"
