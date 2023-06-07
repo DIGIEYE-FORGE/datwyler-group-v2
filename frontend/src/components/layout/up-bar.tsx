@@ -145,15 +145,6 @@ function UpBar() {
             <span>français</span>
             <FrIcon className="ml-2 h-[2rem] w-[1.5rem]" />
           </div>
-          {/* <div
-            className="rounded p-2 hover:bg-primary/10 active:bg-primary/20 flex justify-between items-center"
-            onClick={() => {
-              changeLang("ar");
-            }}
-          >
-            <span>العربية</span>
-            <SaIcon className="ml-2 h-[2rem] w-[1.5rem]" />
-          </div> */}
         </div>
       </Tooltip>
       <div className="notifacations hidden md:flex">

@@ -4,7 +4,6 @@ import { AppContext } from "../../../../../App";
 import { useProvider } from "../../../../../components/provider";
 import { useCallback, useEffect, useState } from "react";
 import For from "../../../../../components/for";
-import { HistoryResponse } from "../../../../../api/backend";
 import Show from "../../../../../components/show";
 import { format } from "date-fns";
 import Button from "../../../../../components/button";
@@ -154,7 +153,7 @@ function Overview() {
                 type: "datetime",
                 labels: {
                   formatter: function (value, timestamp) {
-                    return format(new Date(timestamp!), "MM/yyyy  HH:mm");
+                    return format(new Date(timestamp!), "MM/yy  HH:mm");
                   },
                 },
               },

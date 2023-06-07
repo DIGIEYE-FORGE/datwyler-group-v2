@@ -52,9 +52,9 @@ function Metrics() {
   return (
     <div className="w-full flex gap-6 flex-wrap ">
       <Card className="metric-card ">
-        <div className="title rounded bg-primary/10  p-2">Online devices</div>
+        <div className=" rounded bg-primary/10  p-2">Online devices</div>
         <div className="flex-1 flex justify-between items-center p-2 ">
-          <span className="text-3xl">
+          <span className="text-2xl">
             {dashboardData?.devices?.online ?? 0} /
             {dashboardData?.devices?.total ?? 0}
           </span>
@@ -64,27 +64,27 @@ function Metrics() {
         </div>
       </Card>
       <Card className="metric-card ">
-        <div className="title rounded bg-primary/10 p-2"> Critical Alarms</div>
+        <div className=" rounded bg-primary/10 p-2"> Critical Alarms</div>
         <div className="flex-1 flex justify-between items-center p-2 ">
-          <span className="text-3xl">{dashboardData?.criticalAlarms ?? 0}</span>
+          <span className="text-2xl">{dashboardData?.criticalAlarms ?? 0}</span>
           <span className="w-[2.75rem] aspect-square flex-center bg-accent/20 rounded-full">
             <BsAlarm className="text-accent" fontSize={24} />
           </span>
         </div>
       </Card>
       <Card className="metric-card ">
-        <div className="title rounded bg-primary/10 p-2">Door Alarms</div>
+        <div className=" rounded bg-primary/10 p-2">Door Alarms</div>
         <div className="flex-1 flex justify-between items-center p-2 ">
-          <span className="text-3xl">{dashboardData?.doorAlarms ?? 0}</span>
+          <span className="text-2xl">{dashboardData?.doorAlarms ?? 0}</span>
           <span className="w-[2.75rem] aspect-square flex-center bg-[#F86F28]/20 rounded-full">
             <BsDoorClosedFill color="#F86F28" fontSize={24} />
           </span>
         </div>
       </Card>
       <Card className="metric-card ">
-        <div className="title rounded bg-primary/10 p-2">Water leakage</div>
+        <div className=" rounded bg-primary/10 p-2">Water leakage</div>
         <div className="flex-1 flex justify-between items-center p-2 ">
-          <span className="text-3xl">
+          <span className="text-2xl">
             {dashboardData?.waterLeakAlarms ?? 0}
           </span>
           <span className="w-[2.75rem] aspect-square flex-center bg-blue-500/20 rounded-full">
@@ -93,9 +93,9 @@ function Metrics() {
         </div>
       </Card>
       <Card className="metric-card ">
-        <div className="title rounded bg-primary/10 p-2">Smoke</div>
+        <div className=" rounded bg-primary/10 p-2">Smoke</div>
         <div className="flex-1 flex justify-between items-center p-2 ">
-          <span className="text-3xl">{dashboardData?.smokeAlarms ?? 0}</span>
+          <span className="text-2xl">{dashboardData?.smokeAlarms ?? 0}</span>
           <span className="w-[2.75rem] aspect-square flex-center bg-gray-500/20 rounded-full">
             <GiSmokeBomb className="text-gray-600" fontSize={24} />
           </span>
@@ -133,7 +133,10 @@ export function Chart({
       <div className="card-header">
         <span>{title}</span>
         <span className="options">
-          <IconButton onClick={chartFullscreen}>
+          <IconButton
+            onClick={chartFullscreen}
+            className="hidden md:inline-block"
+          >
             {isChartFullscreen ? (
               <BsFullscreenExit
                 fontSize={20}
@@ -206,30 +209,31 @@ function RecentAlarms() {
   return (
     <Chart title="UPS" className="flex h-full ">
       <div className="flex gap-3  h-[calc(100%-3rem)] p-3">
-        <div className="flex-[3] flex justify-center items-center h-full">
-          <div className=" h-1/2 max-h-full aspect-square rounded-full  outline outline-8 outline-primary   relative">
+        <div className="flex-[3] md:flex-[3] flex justify-center items-center h-full">
+          <div className="h-20  md:h-1/2 max-h-full aspect-square rounded-full  outline  outline-4 md:outline-8 outline-primary   relative">
             <div className="absolute-center flex flex-col items-center">
-              <div className="text-5xl text-black dark:text-white">
+              <div className="text-2xl md:text-5xl text-black dark:text-white">
                 {alarms.length}
               </div>
               <div className="font-xl text-[#00323C]">Alarm</div>
             </div>
           </div>
         </div>
-        <div className="flex-[4] flex flex-col gap-2  overflow-auto ">
+        <div className=" flex-[4] flex flex-col gap-2  overflow-auto ">
           <For each={alarms}>
             {(alarm) => (
-              <div className="flex items-center gap-2 p-2 shadow-inner">
-                <div className="w-[2.75rem] aspect-square flex-center bg-[#F86F28]/20 rounded-full">
-                  <TbBellRinging color="#F86F28" fontSize={24} />
+              <div className="flex  items-center gap-2 p-2 shadow-inner">
+                <div className="p-2 aspect-square flex-center bg-[#F86F28]/20 rounded-full">
+                  <TbBellRinging
+                    color="#F86F28"
+                    className="text-base md:text-2xl"
+                  />
                 </div>
-                <div className="w-[100%] p-1">
-                  <div className="flex [&>*]:flex-1 ">
-                    <span>{strTake(alarm.type, 20)}</span>
-                    <span>
-                      {format(new Date(alarm.createdAt), "dd/MM/yy HH:mm")}
-                    </span>
-                  </div>
+                <div className="flex flex-col md:flex-row  flex-1 items-center [&>*]:flex-1 text-xs sm:text-sm md:text-base">
+                  <span>{strTake(alarm.type, 20)}</span>
+                  <span>
+                    {format(new Date(alarm.createdAt), "dd/MM/yy HH:mm")}
+                  </span>
                 </div>
               </div>
             )}
@@ -244,32 +248,66 @@ function WaterFlow() {
   const dashboardData = useProvider<DashboardData | null>();
   const alarms = dashboardData?.coolingUnitAlarms ?? [];
   return (
+    // <Chart title="COOLING UNIT" className="flex h-full ">
+    //   <div className="flex gap-3  h-[calc(100%-3rem)] p-3">
+    //     <div className="flex-[3] flex justify-center items-center h-full">
+    //       <div className=" h-1/2 max-h-full aspect-square rounded-full  outline outline-8 outline-primary   relative">
+    //         <div className="absolute-center flex flex-col items-center">
+    //           <div className="text-5xl text-black dark:text-white">
+    //             {alarms.length}
+    //           </div>
+    //           <div className="font-xl text-[#00323C]">Alarm</div>
+    //         </div>
+    //       </div>
+    //     </div>
+    //     <div className="flex-[4] flex flex-col gap-2  overflow-auto ">
+    //       <For each={alarms}>
+    //         {(alarm) => (
+    //           <div className="flex items-center gap-2 p-2 shadow-inner">
+    //             <div className="w-[2.75rem] aspect-square flex-center bg-[#F86F28]/20 rounded-full">
+    //               <TbBellRinging color="#F86F28" fontSize={24} />
+    //             </div>
+    //             <div className="w-[100%] p-1">
+    //               <div className="flex [&>*]:flex-1 ">
+    //                 <span>{strTake(alarm.type, 20)}</span>
+    //                 <span>
+    //                   {format(new Date(alarm.createdAt), "dd/MM/yy HH:mm")}
+    //                 </span>
+    //               </div>
+    //             </div>
+    //           </div>
+    //         )}
+    //       </For>
+    //     </div>
+    //   </div>
+    // </Chart>
     <Chart title="COOLING UNIT" className="flex h-full ">
       <div className="flex gap-3  h-[calc(100%-3rem)] p-3">
-        <div className="flex-[3] flex justify-center items-center h-full">
-          <div className=" h-1/2 max-h-full aspect-square rounded-full  outline outline-8 outline-primary   relative">
+        <div className="flex-[3] md:flex-[3] flex justify-center items-center h-full">
+          <div className="h-20  md:h-1/2 max-h-full aspect-square rounded-full  outline  outline-4 md:outline-8 outline-primary   relative">
             <div className="absolute-center flex flex-col items-center">
-              <div className="text-5xl text-black dark:text-white">
+              <div className="text-2xl md:text-5xl text-black dark:text-white">
                 {alarms.length}
               </div>
               <div className="font-xl text-[#00323C]">Alarm</div>
             </div>
           </div>
         </div>
-        <div className="flex-[4] flex flex-col gap-2  overflow-auto ">
+        <div className=" flex-[4] flex flex-col gap-2  overflow-auto ">
           <For each={alarms}>
             {(alarm) => (
-              <div className="flex items-center gap-2 p-2 shadow-inner">
-                <div className="w-[2.75rem] aspect-square flex-center bg-[#F86F28]/20 rounded-full">
-                  <TbBellRinging color="#F86F28" fontSize={24} />
+              <div className="flex  items-center gap-2 p-2 shadow-inner">
+                <div className="p-2 aspect-square flex-center bg-[#F86F28]/20 rounded-full">
+                  <TbBellRinging
+                    color="#F86F28"
+                    className="text-base md:text-2xl"
+                  />
                 </div>
-                <div className="w-[100%] p-1">
-                  <div className="flex [&>*]:flex-1 ">
-                    <span>{strTake(alarm.type, 20)}</span>
-                    <span>
-                      {format(new Date(alarm.createdAt), "dd/MM/yy HH:mm")}
-                    </span>
-                  </div>
+                <div className="flex flex-col md:flex-row  flex-1 items-center [&>*]:flex-1 text-xs sm:text-sm md:text-base">
+                  <span>{strTake(alarm.type, 20)}</span>
+                  <span>
+                    {format(new Date(alarm.createdAt), "dd/MM/yy HH:mm")}
+                  </span>
                 </div>
               </div>
             )}
@@ -322,7 +360,7 @@ function DashboardTab() {
         ...data,
       }}
     >
-      <div className="container min-w-[40rem] items-center w-full min-h-full flex flex-col gap-6 overflow-x-hidden p-6 ">
+      <div className="container text-sm md:text-base items-center w-full min-h-full flex flex-col gap-6 overflow-x-hidden p-4 sm:p-4 md:p-6 ">
         <Metrics />
         <div className="w-full h-full  grid xl:grid-cols-3 gap-4 auto-rows-fr">
           <RecentAlarms />
