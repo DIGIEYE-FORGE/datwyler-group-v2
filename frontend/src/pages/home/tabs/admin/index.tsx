@@ -40,7 +40,7 @@ function AdminTab() {
   const [open, setOpen] = useState<boolean>(false);
   const [state, setState] = useState<"idle" | "loading" | "error">("loading");
   const [params, setParams] = useState<Params>(defaultParams);
-  const [userBackup,setUserBackup] = useState<User[]>([])
+  const [userBackup, setUserBackup] = useState<User[]>([]);
   const handleDelete = useCallback(
     (userId: number) => {
       confirm({
@@ -73,7 +73,7 @@ function AdminTab() {
       setState("loading");
       const res = await multiTenancyApi.getUsers({ tenantId });
       setUsers(res);
-      setUserBackup(res)
+      setUserBackup(res);
       setState("idle");
     } catch (err) {
       console.log(err);
@@ -101,9 +101,15 @@ function AdminTab() {
         type: "text",
         onChange: (value) => {
           if (value === "") {
-            setUsers(userBackup)
+            setUsers(userBackup);
           } else {
-            setUsers(userBackup.filter((user) => user.firstName.includes(value) || user.lastName.includes(value)))
+            setUsers(
+              userBackup.filter(
+                (user) =>
+                  user.firstName.includes(value) ||
+                  user.lastName.includes(value)
+              )
+            );
           }
         },
       },
@@ -116,9 +122,11 @@ function AdminTab() {
         type: "text",
         onChange: (value) => {
           if (value === "") {
-            setUsers(userBackup)
+            setUsers(userBackup);
           } else {
-            setUsers(userBackup.filter((user) => user.tenantName.includes(value)))
+            setUsers(
+              userBackup.filter((user) => user.tenantName.includes(value))
+            );
           }
         },
       },
@@ -141,9 +149,9 @@ function AdminTab() {
         ],
         onChange: (value) => {
           if (value === "") {
-            setUsers(userBackup)
+            setUsers(userBackup);
           } else {
-            setUsers(userBackup.filter((user) => user.role.includes(value)))
+            setUsers(userBackup.filter((user) => user.role.includes(value)));
           }
         },
       },
@@ -156,20 +164,18 @@ function AdminTab() {
         type: "text",
         onChange: (value) => {
           if (value === "") {
-            setUsers(userBackup)
+            setUsers(userBackup);
           } else {
-            setUsers(userBackup.filter((user) => user.email.includes(value)))
+            setUsers(userBackup.filter((user) => user.email.includes(value)));
           }
         },
       },
     },
   ];
   return (
-    <div className="flex flex-col gap-6 p-6 min-w-[50rem]">
-      <div className="flex gap-4">
-        <span className="text-xl font-semibold">Users</span>
+    <div className="flex flex-col gap-6 p-6 ">
+      <div className="flex items-center w-fit ml-auto gap-4">
         <Pagination
-          className="ml-auto "
           value={params.pagination}
           total={users.length}
           onChange={(value) => {
@@ -182,7 +188,7 @@ function AdminTab() {
             setOpen(true);
           }}
         >
-          <span>Add User</span>
+          <span>Add</span>
           <RiUserAddLine className="text-lg" />
         </Button>
       </div>

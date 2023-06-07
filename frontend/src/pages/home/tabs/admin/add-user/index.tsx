@@ -38,7 +38,6 @@ function AddUser({ refetch, open, setOpen }: Props) {
     }
   }, [open]);
 
-
   const createUser = async () => {
     try {
       const user = await authApi.register(userData);
@@ -70,7 +69,7 @@ function AddUser({ refetch, open, setOpen }: Props) {
       handleClose={handleClose}
       className=" bg-white  w-11/12 max-w-[40rem] rounded [&>*]:border-b [&>*]:border-black/20 max-h-full overflow-auto "
     >
-      <div className="flex items-center py-4  justify-between px-4">
+      <div className="flex items-center py-2 md:py-4  justify-between px-4">
         <span className="font-semibold">Create user</span>
         <button
           onClick={handleClose}
@@ -79,7 +78,7 @@ function AddUser({ refetch, open, setOpen }: Props) {
           <MdOutlineClose className="text-2xl text-gray-500" />
         </button>
       </div>
-      <form className="flex flex-col gap-6 py-4 [&>div]:flex [&>div]:items-center [&>div]:w-full [&>div>label]:w-[8rem] [&>div>input]:flex-1 [&>div]:gap-2 [&>div]:px-6">
+      <form className="flex flex-col gap-2 sm:gap-3 md:gap-4 py-2 sm:py-3 md:py-4 [&>div]:flex [&>div]:items-center [&>div]:w-full [&>div>label]:w-[8rem] [&>div>input]:flex-1 [&>div]:gap-2 [&>div]:px-6">
         <div>
           <label className="w-fit capitalize" htmlFor="first-name">
             first name
@@ -121,8 +120,8 @@ function AddUser({ refetch, open, setOpen }: Props) {
               setUserData({ ...userData, role: "ADMIN" });
             }}
           >
-            <RiAdminFill className="text-5xl" />
-            <span className={`text-2xl`}>Admin</span>
+            <RiAdminFill className="text-2xl sm:text-3xl md:text-5xl" />
+            <span className="text-lg sm:text-xl md:text-2xl">Admin</span>
           </div>
           <div
             className={` flex flex-col py-2 w-[12rem]  gap-2 items-center justify-center rounded cursor-pointer ${
@@ -135,8 +134,8 @@ function AddUser({ refetch, open, setOpen }: Props) {
               setUserData({ ...userData, role: "USER" });
             }}
           >
-            <RiUserFill className="text-5xl" />
-            <span className={`text-2xl`}>Regular User</span>
+            <RiUserFill className="text-2xl sm:text-3xl md:text-5xl" />
+            <span className="text-lg sm:text-xl md:text-2xl">User</span>
           </div>
         </div>
         <div>
@@ -188,7 +187,7 @@ function AddUser({ refetch, open, setOpen }: Props) {
           />
         </div>
       </form>
-      <div className="flex justify-between items-center h-20 px-6">
+      <div className="flex justify-between items-center py-2 md:py-4 px-6">
         <Button
           className="flex items-center gap-2 py-3 px-4"
           variant="outlined"

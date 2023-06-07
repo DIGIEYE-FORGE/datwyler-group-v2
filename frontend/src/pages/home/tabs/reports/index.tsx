@@ -323,7 +323,7 @@ function ReportsTab() {
       <DataGrid
         className=" table-fixed w-full text-left"
         headClassName="h-[5.5rem] bg-dark/5 dark:bg-light/5 text-[#697681] [&>*]:px-2 "
-        rowClassName="h-[4rem] [&>*]:px-2 even:bg-dark/5 dark:even:bg-light/5 hover:bg-dark/10 dark:hover:bg-light/10"
+        rowClassName="h-[4rem] [&>*]:px-2 even:bg-dark/5 dark:even:bg-light/5 hover:bg-dark/10 dark:hover:bg-light/10 shadow shadow-[#7f7f7f]/20"
         columns={columns}
         rows={rows}
         action={action}
@@ -333,7 +333,7 @@ function ReportsTab() {
         handleClose={() => setOpen(false)}
         className="bg-white w-11/12 max-w-[40rem] rounded [&>*]:border-b [&>*]:border-black/20 max-h-full overflow-auto"
       >
-        <div className="flex items-center py-4  justify-between px-4">
+        <div className="flex items-center sm:py-2 md:py-4  justify-between px-4">
           <span className="font-semibold">Create a raport</span>
           <button
             onClick={() => setOpen(false)}
@@ -342,7 +342,7 @@ function ReportsTab() {
             <MdOutlineClose className="text-2xl text-gray-500" />
           </button>
         </div>
-        <form className="flex flex-col gap-6 py-4 [&>div]:flex [&>div]:flex-col [&>div]:gap-2 [&>div]:px-4">
+        <form className="flex flex-col gap-3 md:gap-6 py-4 [&>div]:flex [&>div]:flex-col [&>div]:gap-2 [&>div]:px-4">
           <div>
             <label
               className="w-fit"
@@ -361,7 +361,7 @@ function ReportsTab() {
           </div>
           <div>
             <label className="w-fit" htmlFor="rapport-name">
-              Select a site 
+              Select a site
             </label>
             <span className="text-dark">
               <Select
@@ -391,7 +391,9 @@ function ReportsTab() {
           <div>
             <label className="w-fit" htmlFor="select-devices">
               Select devices
-              <span className="text-sm text-slate-500">(if no device is selected it will select all of them)</span>
+              <span className="text-sm text-slate-500">
+                (if no device is selected it will select all of them)
+              </span>
             </label>
             <Select
               onChange={(v: any) =>
@@ -566,9 +568,9 @@ function ReportsTab() {
             />
           </div>
         </form>
-        <div className="flex justify-between items-center h-20 px-6">
+        <div className="flex justify-between items-center  px-4 py-2 md:py-4">
           <Button
-            className="flex items-center gap-2 py-3 px-4"
+            className="flex items-center gap-2 py-2 md:py-3 px-2 md:px-4"
             variant="outlined"
             onClick={() => setOpen(false)}
           >
@@ -580,7 +582,7 @@ function ReportsTab() {
               createReport.name === "" ||
               (createReport.groups && createReport.groups.length === 0)
             }
-            className="flex items-center gap-2 py-3 px-4"
+            className="flex items-center gap-2 py-2 md:py-3 px-2 md:px-4"
             onClick={() => {
               backendApi
                 .generateFile(createReport)
@@ -592,7 +594,6 @@ function ReportsTab() {
                 .catch((err) => {
                   toast.error(err);
                 });
-              
             }}
           >
             <span>Generate</span>
