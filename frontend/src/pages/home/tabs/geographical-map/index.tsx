@@ -7,20 +7,19 @@ import {
   useMap,
 } from "react-leaflet";
 import For from "../../../../components/for";
-import { ReactComponent as DoorAlertIcon } from "../../../../assets/icons/door-alert.svg";
-import { ReactComponent as LeakAlertIcon } from "../../../../assets/icons/lock-alert.svg";
-import { ReactComponent as LockAlertIcon } from "../../../../assets/icons/leak-alert.svg";
-import { ReactComponent as PowerAlertIcon } from "../../../../assets/icons/fire-alert.svg";
-import { ReactComponent as FireAlertIcon } from "../../../../assets/icons/power-alert.svg";
+// import { ReactComponent as DoorAlertIcon } from "../../../../assets/icons/door-alert.svg";
+// import { ReactComponent as LeakAlertIcon } from "../../../../assets/icons/lock-alert.svg";
+// import { ReactComponent as LockAlertIcon } from "../../../../assets/icons/leak-alert.svg";
+// import { ReactComponent as PowerAlertIcon } from "../../../../assets/icons/fire-alert.svg";
+// import { ReactComponent as FireAlertIcon } from "../../../../assets/icons/power-alert.svg";
 import greenMarkerUrl from "../../../../assets/icons/green-marker.svg";
 import redMarkerUrl from "../../../../assets/icons/red-marker.svg";
-import { Alert, Group, Params, toFixed } from "../../../../utils";
+import { Group, Params, toFixed } from "../../../../utils";
 import { useEffect, useMemo, useState } from "react";
 import L from "leaflet";
 import Provider, { useProvider } from "../../../../components/provider";
 import Details from "./details";
 import { AppContext } from "../../../../App";
-import { useLocation } from "react-router-dom";
 import Show from "../../../../components/show";
 import Button from "../../../../components/button";
 import {
@@ -52,41 +51,6 @@ function MapControls({ bounds }: { bounds?: [number, number][] }) {
   }, [bounds]);
   return null;
 }
-
-const defaulParams: Params = {
-  pagination: {
-    page: 1,
-    perPage: 100,
-  },
-  include: {
-    devices: {
-      include: {
-        lastTelemetries: true,
-        alerts: {
-          include: {
-            device: {
-              select: {
-                serial: true,
-                name: true,
-              },
-            },
-          },
-          where: {
-            acknowledgedBy: null,
-          },
-        },
-      },
-    },
-  },
-  where: {
-    lat: {
-      not: null,
-    },
-    lng: {
-      not: null,
-    },
-  },
-};
 
 interface Props {
   details?: boolean;

@@ -19,6 +19,7 @@ import SettingsTab from "./settings";
 import AdminTab from "./admin";
 import DevicesTab from "./devices";
 import TenantsTab from "./tenants";
+import ProfileTab from "./profiles";
 const tabs: Tab[] = [
   {
     name: "dashboard",
@@ -65,10 +66,15 @@ const tabs: Tab[] = [
     icon: <SupportIcon />,
     component: <SupportTab />,
   },
+  // {
+  //   name: "Settings",
+  //   icon: <SettingsIcon />,
+  //   component: <SettingsTab />,
+  // },
   {
-    name: "Settings",
+    name: "Profile settings",
     icon: <SettingsIcon />,
-    component: <SettingsTab />,
+    component: <ProfileTab />,
   },
 ];
 
