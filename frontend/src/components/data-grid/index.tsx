@@ -5,6 +5,7 @@ import { TfiLayoutColumn3Alt as SelectColumnsIcon } from "react-icons/tfi";
 import For from "../for";
 import Show from "../show";
 import Provider, { useProvider } from "../provider";
+import { useTranslation } from "react-i18next";
 
 type TextFilter = {
   type: "text" | "date";
@@ -154,6 +155,7 @@ const DataGrid = ({ cellMinWidth = 200, ...props }: DataGridProps) => {
   const restColumns = useMemo(() => {
     return selectedColumns.filter((column) => column.show !== false).slice(max);
   }, [selectedColumns, max]);
+  const { t } = useTranslation();
 
   return (
     <Provider
@@ -181,7 +183,7 @@ const DataGrid = ({ cellMinWidth = 200, ...props }: DataGridProps) => {
                     <div>{column.header}</div>
                     {column.filter && column.filter.type === "text" && (
                       <input
-                        placeholder="Search..."
+                        placeholder={t("search") || "search..."}
                         onChange={(e) => {
                           column.filter?.onChange(e.target.value);
                         }}
@@ -202,7 +204,7 @@ const DataGrid = ({ cellMinWidth = 200, ...props }: DataGridProps) => {
                           column.filter?.onChange(e.target.value);
                         }}
                       >
-                        <option value="">All</option>
+                        <option value="">{t("all")}</option>
                         {column.filter.options.map((option, index) => (
                           <option key={index} value={option.value}>
                             {option.label}

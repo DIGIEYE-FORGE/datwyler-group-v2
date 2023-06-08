@@ -9,7 +9,7 @@ import {
   strTake,
   systems,
 } from "../../../../utils";
-import { addHours, format } from "date-fns";
+import { format } from "date-fns";
 import Button from "../../../../components/button";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 import { AiOutlineAlert } from "react-icons/ai";
@@ -18,12 +18,10 @@ import { AppContext } from "../../../../App";
 import Tooltip from "../../../../components/tooltip";
 import { BiExport } from "react-icons/bi";
 import Modal from "../../../../components/modal";
-import { MdCancel, MdOutlineClose, MdSave, MdWatchLater } from "react-icons/md";
+import { MdCancel, MdOutlineClose, MdWatchLater } from "react-icons/md";
 import Select from "react-select";
-import { InputActionMeta } from "react-select";
-import { Input } from "postcss";
-import { object } from "prop-types";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const defaultParams: Params = {
   pagination: {
@@ -227,11 +225,12 @@ function AlertsTab() {
       },
     });
   };
+  const { t } = useTranslation();
 
   const columns: Column[] = [
     {
-      label: "location",
-      header: "Location",
+      label: t("location"),
+      header: t("location"),
       valueGetter: (row: Alert) => row.device?.group?.location?.toUpperCase(),
       filter: {
         type: "text",
@@ -244,8 +243,8 @@ function AlertsTab() {
       },
     },
     {
-      label: "site",
-      header: "Site",
+      label: t("site"),
+      header: t("site"),
       valueGetter: (row: Alert) => row.device?.group?.name?.toUpperCase(),
       filter: {
         type: "text",
@@ -258,8 +257,8 @@ function AlertsTab() {
       },
     },
     {
-      label: "System",
-      header: "System",
+      label: t("system"),
+      header: t("system"),
       valueGetter: (row: Alert) => row.device?.name,
       filter: {
         type: "select",
@@ -273,8 +272,8 @@ function AlertsTab() {
       },
     },
     {
-      label: "level",
-      header: "level",
+      label: t("level"),
+      header: t("level"),
       valueGetter: (row: Alert) => (
         <div
           className={classNames("flex items-center gap-2", {
@@ -282,7 +281,7 @@ function AlertsTab() {
             "text-red-600": row.level === "Critical",
           })}
         >
-          <span>{row.level} </span>
+          <span>{t(row.level || "Notice")} </span>
           <AiOutlineAlert className="text-2xl" />
         </div>
       ),
@@ -299,8 +298,8 @@ function AlertsTab() {
     },
 
     {
-      label: "name",
-      header: "Alert Name",
+      label: t("name"),
+      header: t("name"),
       field: "type",
       filter: {
         type: "text",
@@ -310,8 +309,8 @@ function AlertsTab() {
       },
     },
     {
-      label: "message",
-      header: "Alert Message",
+      label: t("message"),
+      header: t("message"),
       valueGetter: (row: Alert) => (
         <Tooltip>
           <span>{strTake(row.message, 25)}</span>
@@ -326,27 +325,27 @@ function AlertsTab() {
       },
     },
     {
-      label: "date",
-      header: "Date",
+      label: t("date"),
+      header: t("date"),
       valueGetter: (row: Alert) =>
         format(new Date(row.updatedAt), "dd/MM/yyyy HH:mm"),
       filter: {
         type: "select",
         options: [
           {
-            label: "last hour",
+            label: t("last hour") || "last hour",
             value: "last hour",
           },
           {
-            label: "last 4 hours",
+            label: t("last 4 hours") || "last 4 hours",
             value: "last 4 hours",
           },
           {
-            label: "last 24 hours",
+            label: t("last 24 hours") || "last 24 hours",
             value: "last 24 hours",
           },
           {
-            label: "last 7 days",
+            label: t("last 7 days") || "last 7 days",
             value: "last 7 days",
           },
         ],
@@ -356,17 +355,17 @@ function AlertsTab() {
       },
     },
     {
-      label: "Acknowledgement",
-      header: "Acknowledgement",
+      label: t("acknowledgement"),
+      header: t("acknowledgement"),
       filter: {
         type: "select",
         options: [
           {
-            label: "Acknowledged",
+            label: t("acknowledged") || "acknowledged",
             value: "true",
           },
           {
-            label: "Not Acknowledged",
+            label: t("not acknowledged") || "not acknowledged",
             value: "false",
           },
         ],
@@ -383,8 +382,12 @@ function AlertsTab() {
             </div>
           );
         return (
-          <Button variant="outlined" onClick={() => handleAcknowledge(row.id)}>
-            Acknowledge
+          <Button
+            variant="outlined"
+            className="capitalize"
+            onClick={() => handleAcknowledge(row.id)}
+          >
+            {t("acknowledge")}
           </Button>
         );
       },
@@ -420,13 +423,13 @@ function AlertsTab() {
           total={total}
         />
         <Button
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 capitalize"
           disabled={rows.length === 0 || !params?.where?.updatedAt}
           onClick={() => {
             setOpen(true);
           }}
         >
-          Generate
+          <span>{t("generate")}</span>
           <BiExport className="text-lg" />
         </Button>
       </div>
@@ -445,7 +448,9 @@ function AlertsTab() {
         className="bg-white w-11/12 max-w-[40rem] rounded [&>*]:border-b [&>*]:border-black/20 max-h-full overflow-auto"
       >
         <div className="flex items-center py-4  justify-between px-4">
-          <span className="font-semibold">Create a raport</span>
+          <span className="font-semibold first-letter:uppercase">
+            {t("generate report") || "generate report"}
+          </span>
           <button
             onClick={() => setOpen(false)}
             className="rounded-full hover:bg-dark/10 active:shadow-inner w-8 h-8 flex-center"
@@ -456,20 +461,20 @@ function AlertsTab() {
         <form className="flex flex-col gap-6 py-4 [&>div]:flex [&>div]:flex-col [&>div]:gap-2 [&>div]:px-4">
           <div>
             <label className="w-fit" htmlFor="date-range">
-              name
+              {t("name")}
             </label>
             <input
               className="h-12 px-4 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               type="text"
-              placeholder="Name *"
+              placeholder={`${t("name")} *`}
               onChange={(e) => {
                 setRapportData((prev) => ({ ...prev, name: e.target.value }));
               }}
             />
           </div>
           <div>
-            <label className="w-fit" htmlFor="type">
-              Format
+            <label className="w-fit capitalize" htmlFor="type">
+              {t("format")}
             </label>
             <Select
               onChange={(v: any) => {
@@ -504,7 +509,7 @@ function AlertsTab() {
             variant="outlined"
             onClick={() => setOpen(false)}
           >
-            <span>Cancel</span>
+            <span>{t("cancel") || "cancel"}</span>
             <MdCancel className="text-2xl" />
           </Button>
           <Button
@@ -520,9 +525,9 @@ function AlertsTab() {
                 });
             }}
             disabled={rapportData.name === ""}
-            className="flex items-center gap-2 py-3 px-4"
+            className="flex items-center gap-2 py-3 px-4 capitalize"
           >
-            <span>Generate</span>
+            <span>{t("generate")}</span>
             <MdWatchLater className="text-2xl" />
           </Button>
         </div>

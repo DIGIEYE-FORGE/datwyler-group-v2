@@ -6,6 +6,7 @@ import { FiMoreHorizontal } from "react-icons/fi";
 import For from "../for";
 import Show from "../show";
 import "./index.scss";
+import { useTranslation } from "react-i18next";
 interface PaginationProps {
   total: number;
   offset?: number;
@@ -45,10 +46,12 @@ function Pagination({
     setValue({ page: 1, perPage: p });
     if (onChange) onChange({ page: 1, perPage: p });
   };
-
+  const { t } = useTranslation();
   return (
     <>
-      <span className="hidden lg:inline-block">Total {total} items</span>
+      <span className="hidden lg:inline-block">
+        Total {total} {t("item")}
+      </span>
       <div className="pagination text-primary underline">
         <button disabled={page === 1} onClick={() => changePage(page - 1)}>
           <AiOutlineLeft />
