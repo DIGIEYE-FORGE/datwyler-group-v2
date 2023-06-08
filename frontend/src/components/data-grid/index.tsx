@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from "react";
-import { JsonObject, stringify } from "../../utils";
+import { JsonObject, strTake, stringify } from "../../utils";
 import Popover from "../popover";
 import { TfiLayoutColumn3Alt as SelectColumnsIcon } from "react-icons/tfi";
 import For from "../for";
@@ -242,8 +242,11 @@ const DataGrid = ({ cellMinWidth = 200, ...props }: DataGridProps) => {
                             setSelectedColumns(newColumns);
                           }}
                         />
-                        <label className="pointer" htmlFor={`column-all`}>
-                          All
+                        <label
+                          className="pointer capitalize"
+                          htmlFor={`column-all`}
+                        >
+                          {t("all") || "all"}
                         </label>
                       </div>
                       {selectedColumns.map((column, index) => (
@@ -281,7 +284,7 @@ const DataGrid = ({ cellMinWidth = 200, ...props }: DataGridProps) => {
                             className="pointer"
                             htmlFor={`column-${index}`}
                           >
-                            {column.label}
+                            {strTake(column.label, 15)}
                           </label>
                         </div>
                       ))}

@@ -86,5 +86,10 @@
   "expiration date": "date d'expiration",
   "number of users": "nombre d'utilisateurs",
   "number of data centers": "nombre de centres de données",
-  "no data found": "aucune donnée trouvée"
+  "no data found": "aucune donnée trouvée",
+  "Are you sure you want to delete this tenant?": "Êtes-vous sûr de vouloir supprimer ce locataire?",
+  "operation successful": "opération réussie",
+  "operation failed": "opération échouée",
+  "number of subtenants": "nombre de sous-locataires",
+  "creation date": "date de création"
 }

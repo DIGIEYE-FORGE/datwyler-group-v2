@@ -86,5 +86,10 @@
   "expiration date": "expiration date",
   "number of users": "number of users",
   "number of data centers": "number of data centers",
-  "no data found": "no data found"
+  "no data found": "no data found",
+  "Are you sure you want to delete this tenant?": "Are you sure you want to delete this tenant?",
+  "operation successful": "operation successful",
+  "operation failed": "operation failed",
+  "number of subtenants": "number of subtenants",
+  "creation date": "creation date"
 }
