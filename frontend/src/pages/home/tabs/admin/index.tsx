@@ -17,6 +17,7 @@ import { RegisterUser } from "../../../../api/auth";
 import { toast } from "react-toastify";
 import AddUser from "./add-user";
 import { set } from "date-fns";
+import { useTranslation } from "react-i18next";
 
 const defaultParams: Params = {
   pagination: {
@@ -34,6 +35,7 @@ const defaultUser: RegisterUser = {
 };
 
 function AdminTab() {
+  const { t } = useTranslation();
   const [users, setUsers] = useState<User[]>([]);
   const { tenantId, multiTenancyApi, authApi, confirm } =
     useProvider<AppContext>();
@@ -87,8 +89,8 @@ function AdminTab() {
 
   const columns: Column[] = [
     {
-      label: "name",
-      header: "Name",
+      label: t("name"),
+      header: t("name"),
       valueGetter: (user) => (
         <div className="flex items-center gap-2">
           <Avatar className="w-[3rem]" user={user} />
@@ -115,8 +117,8 @@ function AdminTab() {
       },
     },
     {
-      label: "tenant",
-      header: "Tenant",
+      label: t("tenant"),
+      header: t("tenant"),
       field: "tenantName",
       filter: {
         type: "text",
@@ -132,18 +134,18 @@ function AdminTab() {
       },
     },
     {
-      label: "role",
-      header: "Role",
+      label: t("role"),
+      header: t("role"),
       valueGetter: (user) => <span>{user.role}</span>,
       filter: {
         type: "select",
         options: [
           {
-            label: "Admin",
+            label: t("admin") || "Admin",
             value: "ADMIN",
           },
           {
-            label: "User",
+            label: t("user") || "User",
             value: "USER",
           },
         ],
@@ -157,8 +159,8 @@ function AdminTab() {
       },
     },
     {
-      label: "email",
-      header: "Email Address",
+      label: t("email"),
+      header: t("email"),
       field: "email",
       filter: {
         type: "text",
@@ -183,12 +185,12 @@ function AdminTab() {
           }}
         />
         <Button
-          className="flex items-center gap-1"
+          className="flex items-center gap-1 capitalize"
           onClick={() => {
             setOpen(true);
           }}
         >
-          <span>Add</span>
+          <span>{t("add") || "add"}</span>
           <RiUserAddLine className="text-lg" />
         </Button>
       </div>
@@ -209,15 +211,15 @@ function AdminTab() {
               <MdMoreVert className="text-xl" />
             </IconButton>
             <div className="card  aspect-square -translate-x-1/2 px-2 pt-4  flex flex-col  ">
-              <button className="flex w-[6rem] items-center justify-between  p-2 hover:text-info hover:">
-                <span>Edit</span>
+              <button className="flex w-[7rem] items-center justify-between  p-2 hover:text-info hover:">
+                <span>{t("edit")}</span>
                 <FaUserEdit className="text-xl" />
               </button>
               <button
                 onClick={() => handleDelete(row.id as number)}
-                className="flex w-[6rem] items-center justify-between p-2 hover:text-danger"
+                className="flex w-[7rem] items-center justify-between p-2 hover:text-danger"
               >
-                <span>Delete</span>
+                <span>{t("delete")}</span>
                 <AiOutlineUserDelete className="text-xl" />
               </button>
             </div>

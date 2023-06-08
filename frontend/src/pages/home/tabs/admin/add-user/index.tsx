@@ -9,6 +9,7 @@ import { MdOutlineClose } from "react-icons/md";
 import { RiAdminFill, RiUserFill } from "react-icons/ri";
 import Button from "../../../../../components/button";
 import Modal from "../../../../../components/modal";
+import { useTranslation } from "react-i18next";
 const defaultUser: RegisterUser = {
   firstName: "",
   lastName: "",
@@ -26,6 +27,7 @@ interface Props {
 function AddUser({ refetch, open, setOpen }: Props) {
   const { tenantId, multiTenancyApi, authApi } = useProvider<AppContext>();
   const [userData, setUserData] = useState<RegisterUser>(defaultUser);
+  const { t } = useTranslation();
 
   const handleClose = () => {
     setOpen(false);
@@ -70,7 +72,7 @@ function AddUser({ refetch, open, setOpen }: Props) {
       className=" bg-white  w-11/12 max-w-[40rem] rounded [&>*]:border-b [&>*]:border-black/20 max-h-full overflow-auto "
     >
       <div className="flex items-center py-2 md:py-4  justify-between px-4">
-        <span className="font-semibold">Create user</span>
+        <span className="font-semibold">{t("add")}</span>
         <button
           onClick={handleClose}
           className="rounded-full hover:bg-dark/10 active:shadow-inner w-8 h-8 flex-center"
@@ -81,11 +83,11 @@ function AddUser({ refetch, open, setOpen }: Props) {
       <form className="flex flex-col gap-2 sm:gap-3 md:gap-4 py-2 sm:py-3 md:py-4 [&>div]:flex [&>div]:items-center [&>div]:w-full [&>div>label]:w-[8rem] [&>div>input]:flex-1 [&>div]:gap-2 px-2 md:px-6">
         <div>
           <label className="w-fit capitalize" htmlFor="first-name">
-            first name
+            {t("first name")}
           </label>
           <input
             id="first-name"
-            placeholder="first name"
+            placeholder={t("first name") || "first name"}
             className="h-11"
             value={userData.firstName}
             onChange={(e) => {
@@ -95,11 +97,11 @@ function AddUser({ refetch, open, setOpen }: Props) {
         </div>
         <div>
           <label className="w-fit capitalize" htmlFor="last-name">
-            last name
+            {t("last name")}
           </label>
           <input
             id="last-name"
-            placeholder="last name"
+            placeholder={t("last name") || "last name"}
             className="h-11"
             value={userData.lastName}
             onChange={(e) => {
@@ -108,7 +110,7 @@ function AddUser({ refetch, open, setOpen }: Props) {
           />
         </div>
         <div className="flex gap-6 items-center justify-between ">
-          <span className="w-[6rem]">Role</span>
+          <span className="w-[6rem] capitalize">{t("role")}</span>
           <div
             className={` flex flex-col py-2 w-28 md:w-40 px-3  gap-2 items-center justify-center rounded cursor-pointer ${
               userData.role === "ADMIN"
@@ -140,12 +142,12 @@ function AddUser({ refetch, open, setOpen }: Props) {
         </div>
         <div>
           <label className="w-fit capitalize" htmlFor="email">
-            email address
+            {t("email")}
           </label>
           <input
             id="email"
             type="email"
-            placeholder="email address"
+            placeholder={t("email") || "email"}
             className="h-11"
             value={userData.email}
             onChange={(e) => {
@@ -155,12 +157,12 @@ function AddUser({ refetch, open, setOpen }: Props) {
         </div>
         <div>
           <label className="w-fit capitalize" htmlFor="password">
-            password
+            {t("password")}
           </label>
           <input
             id="password"
             autoComplete="new-password"
-            placeholder="password"
+            placeholder={t("password") || "password"}
             type="password"
             className="h-11"
             value={userData.password}
@@ -171,11 +173,11 @@ function AddUser({ refetch, open, setOpen }: Props) {
         </div>
         <div>
           <label className="w-fit capitalize" htmlFor="phonenumber">
-            phone number
+            {t("phone number")}
           </label>
           <input
             id="phonenumber"
-            placeholder="phone number"
+            placeholder={t("phone number") || "phone number"}
             type="text"
             className="h-11"
             value={userData.phoneNumber}
@@ -193,13 +195,13 @@ function AddUser({ refetch, open, setOpen }: Props) {
           variant="outlined"
           onClick={handleClose}
         >
-          <span>Cancel</span>
+          <span>{t("cancel") || "cancel"}</span>
         </Button>
         <Button
           className="flex items-center gap-2 py-3 px-4"
           onClick={createUser}
         >
-          <span>Add User</span>
+          <span>{t("add") || "add"}</span>
         </Button>
       </div>
     </Modal>

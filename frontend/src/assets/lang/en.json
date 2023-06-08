@@ -69,5 +69,14 @@
   "create a report": "create a report",
   "device": "device",
   "devices": "devices",
-  "date range": "date range"
+  "date range": "date range",
+  "tenant": "tenant",
+  "role": "role",
+  "user": "user",
+  "admin": "admin",
+  "email": "email",
+  "first name": "first name",
+  "last name": "last name",
+  "password": "password",
+  "phone number": "phone number"
 }

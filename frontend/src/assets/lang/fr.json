@@ -69,5 +69,14 @@
   "if no device is selected, all devices will be included in the report": "si aucun appareil n'est sélectionné, tous les appareils seront inclus dans le rapport",
   "device": "appareil",
   "devices": "appareils",
-  "date range": "plage de dates"
+  "date range": "plage de dates",
+  "tenant": "locataire",
+  "role": "rôle",
+  "user": "utilisateur",
+  "admin": "administrateur",
+  "email": "email",
+  "first name": "prénom",
+  "last name": "nom de famille",
+  "password": "mot de passe",
+  "phone number": "numéro de téléphone"
 }
