@@ -2250,25 +2250,48 @@ async function freshStart() {
 
   // }, 1000);
 
-  const devices = await backendClient.device.findMany({
-    where: {
-      name: "TEMPERATURE AND HUMIDITY"
-    },
+  // 18w
+  // await backendClient.device.deleteMany({
+  //   where: {
+  //     groupId: 25
+  //   }
+  // })
+  // await backendClient.device.createMany({
+  //   data: ['UPS', 'Main Meter', 'Temp and Humid', 'Monitor IO', 'Aircon', 'IO Module', 'Door1', 'Door2', 'Door3', 'Door4', 'Door5',
+  //   ].map((sys, i) => ({
+  //     name: sys,
+  //     serial: `${i.toString().padStart(3, "0")}${new Date().getTime()}`,
+  //     groupId: 25,
+  //     tenantId: 40,
+  //   })),
+  //   skipDuplicates: true,
+  // })
+
+  // const users = await authClient.user.findMany();
+  const history = await backendClient.lastTelemetry.findMany({
+    take: 2,
     include: {
-      history: {
-        where: {
-          name: "TEMPERATURE"
-        },
-        orderBy: {
-          createdAt: "desc"
+      device: {
+        include: {
+          group: true,
         }
       }
+    },
+    orderBy: {
+      createdAt: "desc"
+    },
+    where: {
+      name: "TEMPERATURE",
+      device: {
+        groupId: 25
+      },
+      createdAt: {
+        // gte: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
+      }
     }
-  });
+  })
 
-  console.log(devices[0].history);
-
-
+  console.log({ history: JSON.stringify(history, null, 2) });
 }
 
 async function main() {

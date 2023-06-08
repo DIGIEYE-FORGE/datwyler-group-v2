@@ -158,7 +158,7 @@ const Edit = () => {
   const [Groupvalues, setGrouprvalues] = React.useState<Group>({
     name: "",
     updatedAt: "",
-    type: "",
+    type: undefined,
     location: undefined,
     lat: undefined,
     lng: undefined,
@@ -176,7 +176,7 @@ const Edit = () => {
     setGrouprvalues({
       name: rowselected.name || "",
       updatedAt: rowselected.updatedAt || "",
-      type: rowselected.type || "",
+      type: rowselected.type || undefined,
       attributes: rowselected.attributes || {},
       location: rowselected.location || "",
       lat: rowselected.lat || undefined,

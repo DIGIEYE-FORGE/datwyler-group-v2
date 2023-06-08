@@ -2,11 +2,11 @@ import axios from "axios";
 
 const api = axios.create({
 	// baseURL: import.meta.env.VITE_AUTH_AUTH,
-	baseURL: `https://cms.itinfra.datwyler.com/auth`,
+	baseURL: `https://ssp.itinfra.datwyler.com/auth`,
 });
 
 const multiTenancyApi = axios.create({
-	baseURL: `https://cms.itinfra.datwyler.com/multitenancy`
+	baseURL: `https://ssp.itinfra.datwyler.com/multitenancy`
 });
 
 

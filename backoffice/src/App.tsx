@@ -24,7 +24,7 @@ import { is } from "date-fns/locale";
 // axios.defaults.baseURL = import.meta.env.VITE_BACK_API;
 const accessToken = localStorage.getItem("accessToken");
 const refreshToken = localStorage.getItem("refreshToken");
-axios.defaults.baseURL = `https://cms.itinfra.datwyler.com/api`;
+axios.defaults.baseURL = `https://ssp.itinfra.datwyler.com/api`;
 
 axios.defaults.headers.common["Authorization"] = `Bearer ${refreshToken}`;
 
@@ -158,12 +158,12 @@ function App() {
   }, [lang]);
 
   useEffect(() => {
-    if (location.pathname !== "/backoffice/login" && location.pathname !== "/backoffice/signup") {
+    if (location.pathname !== "/login" && location.pathname !== "/signup") {
       const user = localStorage.getItem("accessToken");
       if (!user) {
         localStorage.clear();
         toast.error("Please login first");
-        window.location.href = "/backoffice/login";
+        window.location.href = "/login";
       }
     }
   }, [location.pathname]);
@@ -178,8 +178,8 @@ function App() {
           }}
         >
           <div className="h-screen w-screen">
-            {location.pathname !== "/backoffice/login" &&
-            location.pathname !== "/backoffice/signup" ? (
+            {location.pathname !== "/login" &&
+            location.pathname !== "/signup" ? (
               <>
                 {/* {getUserQuery.isLoading && location.pathname != "/" ? (
                   <div className="h-screen w-screen flex justify-center align-center">
