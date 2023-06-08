@@ -78,5 +78,13 @@
   "first name": "prénom",
   "last name": "nom de famille",
   "password": "mot de passe",
-  "phone number": "numéro de téléphone"
+  "phone number": "numéro de téléphone",
+  "create": "créer",
+  "create new license": "créer une nouvelle licence",
+  "description": "description",
+  "start date": "date de début",
+  "expiration date": "date d'expiration",
+  "number of users": "nombre d'utilisateurs",
+  "number of data centers": "nombre de centres de données",
+  "no data found": "aucune donnée trouvée"
 }

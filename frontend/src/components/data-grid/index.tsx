@@ -340,8 +340,10 @@ const DataGrid = ({ cellMinWidth = 200, ...props }: DataGridProps) => {
                         src="/data-grid-nodata.svg"
                         className="w-1/2 min-h-[20rem] h-[50vh]"
                       />
-                      <div className="text-center">
-                        <b>No data found</b>
+                      <div className="text-center capitalize">
+                        <b>
+                          {t("no data found") || "No data found for this table"}
+                        </b>
                       </div>
                     </div>
                   )}

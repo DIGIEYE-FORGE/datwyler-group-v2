@@ -1,23 +1,10 @@
 import { env } from "../../utils/env";
 import axios from "axios";
 import {
-  Alert,
-  DashboardData,
-  Device,
-  Group,
   ManyResponse,
-  Params,
   Report,
-  ReportDevice,
   User,
-  convertParams,
 } from "../../utils";
-import { de } from "date-fns/locale";
-type LoginResponse = {
-  accessToken: string;
-  refreshToken: string;
-  user: User;
-};
 
 export default class LicenseApi {
   private api = axios.create({

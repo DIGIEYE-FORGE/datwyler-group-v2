@@ -78,5 +78,13 @@
   "first name": "first name",
   "last name": "last name",
   "password": "password",
-  "phone number": "phone number"
+  "phone number": "phone number",
+  "create": "create",
+  "create new license": "create new license",
+  "description": "description",
+  "start date": "start date",
+  "expiration date": "expiration date",
+  "number of users": "number of users",
+  "number of data centers": "number of data centers",
+  "no data found": "no data found"
 }
