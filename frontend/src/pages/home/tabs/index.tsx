@@ -66,11 +66,6 @@ const tabs: Tab[] = [
     icon: <SupportIcon />,
     component: <SupportTab />,
   },
-  // {
-  //   name: "Settings",
-  //   icon: <SettingsIcon />,
-  //   component: <SettingsTab />,
-  // },
   {
     name: "Profile settings",
     icon: <SettingsIcon />,

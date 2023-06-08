@@ -16,6 +16,7 @@ import { format } from "date-fns";
 import Loader from "../../../../components/loader";
 import Button from "../../../../components/button";
 import Overview from "./history";
+import { useTranslation } from "react-i18next";
 
 interface IconButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   tooltip?: string;
@@ -48,11 +49,15 @@ export function IconButton({ children, className, ...props }: IconButtonProps) {
 }
 
 function Metrics() {
+  const { t } = useTranslation();
+
   const dashboardData = useProvider<DashboardData | null>();
   return (
     <div className="w-full flex gap-6 flex-wrap ">
       <Card className="metric-card ">
-        <div className=" rounded bg-primary/10  p-2">Online devices</div>
+        <div className=" rounded bg-primary/10 p-2 capitalize">
+          {t("online devices")}
+        </div>
         <div className="flex-1 flex justify-between items-center p-2 ">
           <span className="text-2xl">
             {dashboardData?.devices?.online ?? 0} /
@@ -64,7 +69,9 @@ function Metrics() {
         </div>
       </Card>
       <Card className="metric-card ">
-        <div className=" rounded bg-primary/10 p-2"> Critical Alarms</div>
+        <div className=" rounded bg-primary/10 p-2 capitalize">
+          {t("critical alarms")}
+        </div>
         <div className="flex-1 flex justify-between items-center p-2 ">
           <span className="text-2xl">{dashboardData?.criticalAlarms ?? 0}</span>
           <span className="w-[2.75rem] aspect-square flex-center bg-accent/20 rounded-full">
@@ -73,7 +80,9 @@ function Metrics() {
         </div>
       </Card>
       <Card className="metric-card ">
-        <div className=" rounded bg-primary/10 p-2">Door Alarms</div>
+        <div className=" rounded bg-primary/10 p-2 capitalize">
+          {t("door alarms")}
+        </div>
         <div className="flex-1 flex justify-between items-center p-2 ">
           <span className="text-2xl">{dashboardData?.doorAlarms ?? 0}</span>
           <span className="w-[2.75rem] aspect-square flex-center bg-[#F86F28]/20 rounded-full">
@@ -82,7 +91,9 @@ function Metrics() {
         </div>
       </Card>
       <Card className="metric-card ">
-        <div className=" rounded bg-primary/10 p-2">Water leakage</div>
+        <div className=" rounded bg-primary/10 p-2 capitalize">
+          {t("water leak")}
+        </div>
         <div className="flex-1 flex justify-between items-center p-2 ">
           <span className="text-2xl">
             {dashboardData?.waterLeakAlarms ?? 0}
@@ -93,7 +104,9 @@ function Metrics() {
         </div>
       </Card>
       <Card className="metric-card ">
-        <div className=" rounded bg-primary/10 p-2">Smoke</div>
+        <div className=" rounded bg-primary/10 p-2 capitalize">
+          {t("smoke alarms")}
+        </div>
         <div className="flex-1 flex justify-between items-center p-2 ">
           <span className="text-2xl">{dashboardData?.smokeAlarms ?? 0}</span>
           <span className="w-[2.75rem] aspect-square flex-center bg-gray-500/20 rounded-full">
@@ -113,6 +126,7 @@ export function Chart({
   const [isChartFullscreen, setIsChartFullscreen] = useState(false);
   const { theme } = useProvider<AppContext>();
   const alarmsRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   const chartFullscreen = () => {
     if (window.document.fullscreenElement === alarmsRef.current) {
@@ -131,7 +145,7 @@ export function Chart({
       ref={alarmsRef}
     >
       <div className="card-header">
-        <span>{title}</span>
+        <span className="first-letter:uppercase">{t(title || "")}</span>
         <span className="options">
           <IconButton
             onClick={chartFullscreen}
@@ -248,40 +262,7 @@ function WaterFlow() {
   const dashboardData = useProvider<DashboardData | null>();
   const alarms = dashboardData?.coolingUnitAlarms ?? [];
   return (
-    // <Chart title="COOLING UNIT" className="flex h-full ">
-    //   <div className="flex gap-3  h-[calc(100%-3rem)] p-3">
-    //     <div className="flex-[3] flex justify-center items-center h-full">
-    //       <div className=" h-1/2 max-h-full aspect-square rounded-full  outline outline-8 outline-primary   relative">
-    //         <div className="absolute-center flex flex-col items-center">
-    //           <div className="text-5xl text-black dark:text-white">
-    //             {alarms.length}
-    //           </div>
-    //           <div className="font-xl text-[#00323C]">Alarm</div>
-    //         </div>
-    //       </div>
-    //     </div>
-    //     <div className="flex-[4] flex flex-col gap-2  overflow-auto ">
-    //       <For each={alarms}>
-    //         {(alarm) => (
-    //           <div className="flex items-center gap-2 p-2 shadow-inner">
-    //             <div className="w-[2.75rem] aspect-square flex-center bg-[#F86F28]/20 rounded-full">
-    //               <TbBellRinging color="#F86F28" fontSize={24} />
-    //             </div>
-    //             <div className="w-[100%] p-1">
-    //               <div className="flex [&>*]:flex-1 ">
-    //                 <span>{strTake(alarm.type, 20)}</span>
-    //                 <span>
-    //                   {format(new Date(alarm.createdAt), "dd/MM/yy HH:mm")}
-    //                 </span>
-    //               </div>
-    //             </div>
-    //           </div>
-    //         )}
-    //       </For>
-    //     </div>
-    //   </div>
-    // </Chart>
-    <Chart title="COOLING UNIT" className="flex h-full ">
+    <Chart title="cooling unit" className="flex h-full ">
       <div className="flex gap-3  h-[calc(100%-3rem)] p-3">
         <div className="flex-[3] md:flex-[3] flex justify-center items-center h-full">
           <div className="h-20  md:h-1/2 max-h-full aspect-square rounded-full  outline  outline-4 md:outline-8 outline-primary   relative">
@@ -319,6 +300,7 @@ function WaterFlow() {
 }
 
 function DashboardTab() {
+  const { t } = useTranslation();
   const context = useProvider<AppContext>();
   const { backendApi, tenantId, activeTab, loginState } = context;
   const [data, setData] = useState<DashboardData | {}>({});
@@ -348,9 +330,11 @@ function DashboardTab() {
   if (state === "error")
     return (
       <div className="w-full h-full flex-center flex-col gap-4">
-        <h1 className="text-6xl">Something went wrong!</h1>
-        <p>Please try again later</p>
-        <Button onClick={() => fetchDashboardData(true)}>Retry</Button>
+        <h1 className="text-6xl first-letter:capitalize">
+          {t("something went wrong")}!
+        </h1>
+        <p className="first-letter:capitalize">{t("please try again later")}</p>
+        <Button onClick={() => fetchDashboardData(true)}>{t("retry")}</Button>
       </div>
     );
   return (

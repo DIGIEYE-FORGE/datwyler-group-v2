@@ -66,7 +66,7 @@ function Overview() {
   }, [getHistory]);
 
   return (
-    <Chart title="Tempurature And Humidity" className="xl:col-span-2">
+    <Chart title="temperature and humidity" className="xl:col-span-2">
       <div className="card-body  overflow-auto p-3 h-full flex flex-col  gap-4">
         <div className="flex gap-2 flex-wrap">
           <select

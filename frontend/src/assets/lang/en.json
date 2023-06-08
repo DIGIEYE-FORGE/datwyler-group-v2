@@ -1,7 +1,18 @@
 {
-  "title": "Welcome",
-  "description": {
-    "part1": "To get started, edit <1>src/App.js</1> and save to reload.",
-    "part2": "Switch language between english and german using buttons above."
-  }
+  "title": "lelcome",
+  "logout": "logout",
+  "online devices": "online devices",
+  "critical alarms": "critical alarms",
+  "door alarms": "door alarms",
+  "water leak": "water leak",
+  "smoke alarms": "smoke alarms",
+  "something went wrong": "something went wrong",
+  "please try again later": "please try again later",
+  "retry": "retry",
+  "geographical map": "geographical map",
+  "cooling unit": "cooling unit",
+  "and": "and",
+  "temperature": "temperature",
+  "humidity": "humidity",
+  "temperature and humidity": "temperature and humidity"
 }

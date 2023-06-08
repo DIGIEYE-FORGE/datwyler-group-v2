@@ -1,3 +1,18 @@
 {
-  "title": "Bienvenue"
+  "title": "dienvenue",
+  "logout": "déconnexion",
+  "online devices": "appareils en ligne",
+  "critical alarms": "alarmes critiques",
+  "door alarms": "alarmes de porte",
+  "water leak": "fuite d'eau",
+  "smoke alarms": "alarmes de fumée",
+  "something went wrong": "quelque chose s'est mal passé",
+  "please try again later": "veuillez réessayer plus tard",
+  "retry": "réessayer",
+  "geographical map": "carte géographique",
+  "cooling unit": "unité de refroidissement",
+  "and": "et",
+  "temperature": "température",
+  "humidity": "humidité",
+  "temperature and humidity": "température et humidité"
 }

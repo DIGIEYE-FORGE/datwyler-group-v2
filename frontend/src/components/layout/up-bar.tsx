@@ -44,6 +44,7 @@ function UpBar() {
   };
   const changeLang = (lang: "en" | "fr" | "ar") => {
     i18n.changeLanguage(lang);
+    localStorage.setItem("lang", lang);
     if (lang === "ar") {
       setRtl(true);
     }
@@ -53,7 +54,7 @@ function UpBar() {
   };
   return (
     <div className="up-bar ">
-      {/* <span className="mx-4">{t("title")}</span> */}
+      <span className="mx-4">{t("title")}</span>
       <select
         className="bg-transparent min-w-[8rem] md:min-w-[10rem]"
         onChange={(e) => {
@@ -164,7 +165,7 @@ function UpBar() {
             onClick={logout}
             className="rounded p-2 hover:bg-primary/10 active:bg-primary/20 whitespace-nowrap"
           >
-            <span>log out</span>
+            <span>{t("logout")}</span>
             <BiLogOutCircle className="inline-block ml-2" />
           </div>
           <div
