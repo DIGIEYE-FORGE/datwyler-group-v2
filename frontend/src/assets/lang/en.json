@@ -61,5 +61,7 @@
   "generate": "generate",
   "format": "format",
   "generate report": "generate report",
-  "item": "item"
+  "item": "item",
+  "serial": "serial",
+  "Are you sure you want to delete this device?": "Are you sure you want to delete this device?"
 }

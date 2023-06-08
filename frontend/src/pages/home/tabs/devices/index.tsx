@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import DataGrid, { Column } from "../../../../components/data-grid";
 import Pagination from "../../../../components/pagination";
-import { Device, Group, Params, strTake, systems } from "../../../../utils";
+import { Device, Group, Params, systems } from "../../../../utils";
 import Button from "../../../../components/button";
 import { useProvider } from "../../../../components/provider";
 import { AppContext } from "../../../../App";
@@ -18,12 +18,9 @@ import For from "../../../../components/for";
 import Popover from "../../../../components/popover";
 import { DeviceData } from "../../../../api/backend";
 import { toast } from "react-toastify";
-import Tooltip from "../../../../components/tooltip";
 import Show from "../../../../components/show";
 import { IconButton } from "../dashboard";
-import { FaUserEdit } from "react-icons/fa";
-import { AiOutlineUserDelete } from "react-icons/ai";
-import { BiExport } from "react-icons/bi";
+import { useTranslation } from "react-i18next";
 
 const defaultData: DeviceData = {
   name: "UPS",
@@ -91,8 +88,8 @@ function DevicesTab() {
 
   async function deleteDevice(id: number) {
     confirm({
-      title: "Delete device",
-      description: "Are you sure you want to delete this device?",
+      title: t("delete"),
+      description: t("Are you sure you want to delete this device?"),
       onConfirm: async () => {
         try {
           await backendApi.deleteDevice(id);
@@ -115,10 +112,11 @@ function DevicesTab() {
     getDevices(params);
   }, [tenantId, params]);
 
+  const { t } = useTranslation();
   const columns: Column[] = [
     {
-      label: "location",
-      header: "Location",
+      label: t("location"),
+      header: t("location"),
       valueGetter: (row: Device) => row.group?.location,
       filter: {
         type: "text",
@@ -139,8 +137,8 @@ function DevicesTab() {
       },
     },
     {
-      label: "site",
-      header: "Site",
+      label: t("site"),
+      header: t("site"),
       valueGetter: (row: Device) => row.group?.name,
       filter: {
         type: "text",
@@ -161,8 +159,8 @@ function DevicesTab() {
       },
     },
     {
-      label: "system",
-      header: "System",
+      label: t("system"),
+      header: t("system"),
       valueGetter: (row) => row.name,
       filter: {
         type: "select",
@@ -183,8 +181,8 @@ function DevicesTab() {
       },
     },
     {
-      label: "Serial",
-      header: "Serial",
+      label: t("serial"),
+      header: t("serial"),
       field: "serial",
       filter: {
         type: "text",
@@ -216,7 +214,7 @@ function DevicesTab() {
           className="flex items-center gap-2 ml-auto"
           onClick={() => setDeviceData(defaultData)}
         >
-          add
+          <span>{t("add")}</span>
           <MdAddCircleOutline className="text-lg" />
         </Button>
       </div>
@@ -243,7 +241,7 @@ function DevicesTab() {
             </IconButton>
             <div className="card  aspect-square -translate-x-1/2 px-2 pt-4  flex flex-col  ">
               <button
-                className="flex w-[6rem] items-center justify-between  p-2 hover:text-info hover:"
+                className="flex w-[7rem] items-center justify-between  p-2 hover:text-info hover:"
                 onClick={(e) => {
                   e.stopPropagation();
                   setDeviceData({
@@ -254,7 +252,7 @@ function DevicesTab() {
                   });
                 }}
               >
-                <span>Edit</span>
+                <span>{t("edit")}</span>
                 <MdEdit className="text-xl" />
               </button>
               <button
@@ -262,9 +260,9 @@ function DevicesTab() {
                   e.stopPropagation();
                   deleteDevice(row.id);
                 }}
-                className="flex w-[6rem] items-center justify-between p-2 hover:text-danger"
+                className="flex w-[7rem] items-center justify-between p-2 hover:text-danger"
               >
-                <span>Delete</span>
+                <span>{t("delete")}</span>
                 <MdDeleteOutline className="text-xl" />
               </button>
             </div>
@@ -276,13 +274,13 @@ function DevicesTab() {
         handleClose={() => setDeviceData(null)}
         className="bg-light/75 dark:bg-dark/75 bg-blur  max-w-[30rem] w-11/12"
       >
-        <div className="py-4 text-center border-b">
-          {deviceData?.id ? "Edit" : "Add"} Device
+        <div className="py-4 text-center border-b capitalize">
+          {deviceData?.id ? t("edit") : t("add")}
         </div>
         <div className="flex flex-col p-4 gap-4 [&>input]:w-full ">
           <input
             type="text"
-            placeholder="Serial *"
+            placeholder={`${t("serial")} *`}
             value={deviceData?.serial}
             onChange={(e) =>
               setDeviceData({ ...deviceData!, serial: e.target.value })
@@ -327,7 +325,7 @@ function DevicesTab() {
             }
           >
             <option value={""} disabled={deviceData?.groupId !== undefined}>
-              select group
+              {t("site")}
             </option>
             <For each={groups}>
               {(group) => <option value={group.id}>{group.name}</option>}
@@ -339,7 +337,7 @@ function DevicesTab() {
             className="flex items-center gap-2"
             onClick={() => setDeviceData(null)}
           >
-            <span>Cancel</span>
+            <span>{t("cancel")}</span>
             <MdBackspace className="text-xl" />
           </Button>
           <Button
@@ -347,7 +345,7 @@ function DevicesTab() {
             disabled={!deviceData?.name || !deviceData?.serial}
             onClick={addEditDevice}
           >
-            <span>Save</span>
+            <span>{t("save")}</span>
             <MdSave className="text-xl" />
           </Button>
         </div>
