@@ -429,7 +429,7 @@ function AlertsTab() {
             setOpen(true);
           }}
         >
-          <span>{t("generate")}</span>
+          <span>{t("create a report")}</span>
           <BiExport className="text-lg" />
         </Button>
       </div>

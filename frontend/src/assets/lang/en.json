@@ -57,11 +57,17 @@
   "last 4 hour": "last 4 hour",
   "last 12 hour": "last 12 hour",
   "last 24 hour": "last 24 hour",
+  "last day": "last day",
   "last 7 days": "last 7 days",
   "generate": "generate",
   "format": "format",
   "generate report": "generate report",
   "item": "item",
   "serial": "serial",
-  "Are you sure you want to delete this device?": "Are you sure you want to delete this device?"
+  "select a device": "select a device",
+  "Are you sure you want to delete this device?": "Are you sure you want to delete this device?",
+  "create a report": "create a report",
+  "device": "device",
+  "devices": "devices",
+  "date range": "date range"
 }

@@ -14,8 +14,8 @@ import Select from "react-select";
 import { useProvider } from "../../../../components/provider";
 import { AppContext } from "../../../../App";
 import { addHours, addDays } from "date-fns";
-import BackendApi from "../../../../api/backend";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const defaultParams: Params = {
   pagination: {
@@ -50,6 +50,7 @@ const paramsReducer = (
 };
 
 function ReportsTab() {
+  const { t } = useTranslation();
   const [params, setParams] = useReducer(paramsReducer, defaultParams);
   const [total, setTotal] = useState(100);
   const [rows, setRows] = useState<Report[]>([]);
@@ -131,8 +132,8 @@ function ReportsTab() {
 
   const columns: Column[] = [
     {
-      label: "name",
-      header: "Report name",
+      label: t("name"),
+      header: t("name"),
       field: "name",
       filter: {
         type: "text",
@@ -150,28 +151,27 @@ function ReportsTab() {
       },
     },
     {
-      label: "date",
-      header: "Report date ",
-
+      label: t("date"),
+      header: t("date"),
       valueGetter: (row) => format(new Date(row.createdAt), "dd/MM/yyyy HH:mm"),
       filter: {
         type: "select",
         options: [
           {
             value: "lasthour",
-            label: "last hour",
+            label: t("last hour") || "last hour",
           },
           {
             value: "last4hours",
-            label: "last 4 hours",
+            label: t("last 4 hours") || "last 4 hours",
           },
           {
             value: "last12hours",
-            label: "last 12 hours",
+            label: t("last 12 hours") || "last 12 hours",
           },
           {
             value: "lastday",
-            label: "last day",
+            label: t("last day") || "last day",
           },
         ],
         onChange: (e: string) => {
@@ -316,7 +316,7 @@ function ReportsTab() {
           className="flex items-center gap-2"
           onClick={() => setOpen(true)}
         >
-          Generate report
+          {t("generate")}
           <AiOutlinePlusCircle className="text-lg" />
         </Button>
       </div>
@@ -334,7 +334,9 @@ function ReportsTab() {
         className="bg-white w-11/12 max-w-[40rem] rounded [&>*]:border-b [&>*]:border-black/20 max-h-full overflow-auto"
       >
         <div className="flex items-center sm:py-2 md:py-4  justify-between px-4">
-          <span className="font-semibold">Create a raport</span>
+          <span className="font-semibold first-letter:uppercase">
+            {t("create a report")}
+          </span>
           <button
             onClick={() => setOpen(false)}
             className="rounded-full hover:bg-dark/10 active:shadow-inner w-8 h-8 flex-center"
@@ -344,14 +346,11 @@ function ReportsTab() {
         </div>
         <form className="flex flex-col gap-3 md:gap-6 py-4 [&>div]:flex [&>div]:flex-col [&>div]:gap-2 [&>div]:px-4">
           <div>
-            <label
-              className="w-fit"
-              htmlFor="rapport-name"
-              placeholder="Rapport name"
-            >
-              Rapport name
+            <label className="w-fit" htmlFor="rapport-name">
+              {t("name") || "name"}
             </label>
             <input
+              placeholder={t("name") || "name"}
               id="rapport-name"
               className="h-11"
               onChange={(e) => {
@@ -361,7 +360,7 @@ function ReportsTab() {
           </div>
           <div>
             <label className="w-fit" htmlFor="rapport-name">
-              Select a site
+              {t("site") || "site"}
             </label>
             <span className="text-dark">
               <Select
@@ -389,10 +388,13 @@ function ReportsTab() {
             </span>
           </div>
           <div>
-            <label className="w-fit" htmlFor="select-devices">
-              Select devices
+            <label className="w-fit capitalize" htmlFor="select-devices">
+              {t("devices") || "devices"}
               <span className="text-sm text-slate-500">
-                (if no device is selected it will select all of them)
+                {}
+                {` (${t(
+                  "if no device is selected, all devices will be included in the report"
+                )})`}
               </span>
             </label>
             <Select
@@ -421,8 +423,11 @@ function ReportsTab() {
             />
           </div>
           <div>
-            <label className="w-fit" htmlFor="date-range">
-              Date range
+            <label
+              className="w-fit first-letter:uppercase"
+              htmlFor="date-range"
+            >
+              {t("date range") || "date range"}
             </label>
             <Select
               onChange={(v: any) => {
@@ -501,8 +506,8 @@ function ReportsTab() {
             />
           </div>
           <div>
-            <label className="w-fit" htmlFor="type">
-              Format
+            <label className="w-fit first-letter:uppercase" htmlFor="type">
+              {t("format") || "format"}
             </label>
             <Select
               onChange={(v: any) => {
@@ -535,8 +540,8 @@ function ReportsTab() {
             />
           </div>
           <div>
-            <label className="w-fit" htmlFor="type">
-              Type
+            <label className="w-fit first-letter:uppercase" htmlFor="type">
+              {t("type") || "type"}
             </label>
             <Select
               onChange={(v: any) => {
@@ -574,7 +579,7 @@ function ReportsTab() {
             variant="outlined"
             onClick={() => setOpen(false)}
           >
-            <span>Cancel</span>
+            <span>{t("cancel") || "cancel"}</span>
             <MdCancel className="text-2xl" />
           </Button>
           <Button
@@ -582,7 +587,7 @@ function ReportsTab() {
               createReport.name === "" ||
               (createReport.groups && createReport.groups.length === 0)
             }
-            className="flex items-center gap-2 py-2 md:py-3 px-2 md:px-4"
+            className="flex items-center gap-2 py-2 md:py-3 px-2 md:px-4 capitalize"
             onClick={() => {
               backendApi
                 .generateFile(createReport)
@@ -596,7 +601,7 @@ function ReportsTab() {
                 });
             }}
           >
-            <span>Generate</span>
+            <span>{t("generate")}</span>
             <MdWatchLater className="text-2xl" />
           </Button>
         </div>
