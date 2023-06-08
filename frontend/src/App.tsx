@@ -18,6 +18,7 @@ import Button from "./components/button";
 import Modal from "./components/modal";
 import MultiTenancyApi from "./api/multitenancy";
 import LicenseApi from "./api/license";
+import { useTranslation } from "react-i18next";
 
 type ConfirmData = {
   title?: React.ReactNode;
@@ -96,6 +97,7 @@ export const defaulParams: Params = {
 };
 
 function App() {
+  const { t } = useTranslation();
   const [selectedTabs, setSelectedTabs] = useLocalStorage<number[]>(
     "selectedTabs",
     [0]
@@ -314,20 +316,22 @@ function App() {
         </div>
         <div className="flex justify-between">
           <Button
+            className="capitalize"
             onClick={() => {
               confirmData.onCancel?.();
               handleOpenConfirm();
             }}
           >
-            {confirmData.cancelText || "Cancel"}
+            {confirmData.cancelText || t("cancel")}
           </Button>
           <Button
+            className="capitalize"
             onClick={() => {
               confirmData.onConfirm?.();
               handleOpenConfirm();
             }}
           >
-            {confirmData.confirmText || "Confirm"}
+            {confirmData.confirmText || t("confirm")}
           </Button>
         </div>
       </Modal>

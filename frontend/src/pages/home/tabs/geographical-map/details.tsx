@@ -17,74 +17,31 @@ import {
 import GroupsList from "./groups-list";
 import DataGrid, { Column } from "../../../../components/data-grid";
 import { format } from "date-fns";
-import { GiBattery25, GiLeak } from "react-icons/gi";
-import {
-  FaHandHoldingWater,
-  FaTemperatureHigh,
-  FaTemperatureLow,
-  FaTint,
-  FaTintSlash,
-} from "react-icons/fa";
 import Accordion from "../../../../components/acordion";
 import For from "../../../../components/for";
-
-type AlertType =
-  | "low battery"
-  | "high temperature"
-  | "low temperature"
-  | "low water level"
-  | "water leak";
-
-const alertsComponentMap: {
-  [key in AlertType]: JSX.Element;
-} = {
-  "low battery": (
-    <div className="flex items-center gap-2 text-gray-400">
-      low battery <GiBattery25 />
-    </div>
-  ),
-  "high temperature": (
-    <div className="flex items-center gap-2 text-red-400">
-      high temperature <FaTemperatureHigh />
-    </div>
-  ),
-  "low temperature": (
-    <div className="flex items-center gap-2 text-blue-400">
-      low temperature <FaTemperatureLow />
-    </div>
-  ),
-  "low water level": (
-    <div className="flex items-center gap-2 text-yellow-500">
-      low water level <FaHandHoldingWater />
-    </div>
-  ),
-  "water leak": (
-    <div className="flex items-center gap-2 text-red-400">
-      water leak <GiLeak />
-    </div>
-  ),
-};
+import { useTranslation } from "react-i18next";
 
 function Group({ groupId }: { groupId?: number | null }) {
+  const { t } = useTranslation();
   const { groups, showList } = useProvider<GeographicalMapTabContext>();
   const group = groups.find((group) => group.id == groupId);
   const [tabIndex, setTabIndex] = React.useState(0);
   const columns: Column[] = [
     {
       label: "syteme",
-      header: "Systeme",
+      header: t("system") || "system",
       valueGetter: (row: Alert) => row.deviceName || row.device?.name,
     },
     {
       label: "type",
-      header: "Alert Type",
+      header: t("alert type") || "alert type",
       valueGetter(row: Alert) {
         return row.type;
       },
     },
     {
       label: "date",
-      header: "Date",
+      header: t("date") || "date",
       valueGetter: (row: Alert) =>
         format(new Date(row.updatedAt), "dd/MM/yyyy HH:mm"),
     },
@@ -108,8 +65,8 @@ function Group({ groupId }: { groupId?: number | null }) {
         <div className="border-b-2 border-b-dark/10 pl-4">
           <Tabs
             index={tabIndex}
-            labels={["Details", "status", "Alerts"]}
-            labelClassName="text-primary"
+            labels={[t("details"), t("status"), t("alerts")]}
+            labelClassName="text-primary capitalize"
             onChange={(tabIndex) => {
               setTabIndex(tabIndex);
             }}
@@ -124,7 +81,7 @@ function Group({ groupId }: { groupId?: number | null }) {
           <div className="h-full overflow-y-auto p-4 flex flex-col">
             <div className="grid grid-cols-5 my-1">
               <div className="col-span-2 text-slate-600 dark:text-slate-300 capitalize">
-                location:
+                {t("location")}:
               </div>
               <div className="col-span-3">{strTake(group.location, 50)}</div>
             </div>
@@ -148,19 +105,19 @@ function Group({ groupId }: { groupId?: number | null }) {
             </div>
             <div className="grid grid-cols-5 my-1">
               <div className="col-span-2 text-slate-600 dark:text-slate-300 capitalize">
-                number of devices:
+                {t("number of devices")}:
               </div>
               <div className="col-span-3">{toFixed(group.devices?.length)}</div>
             </div>
             <div className="grid grid-cols-5 my-1">
               <div className="col-span-2 text-slate-600 dark:text-slate-300 capitalize">
-                unaknowledged alerts:
+                {t("unaknowledged alerts")}:
               </div>
               <div className="col-span-3">{toFixed(group.alerts?.length)}</div>
             </div>
             <div className="grid grid-cols-5 my-4">
               <div className="col-span-2 text-slate-600 dark:text-slate-300 capitalize">
-                date:
+                {t("date")}:
               </div>
               <div className="col-span-3">{new Date().toISOString()}</div>
             </div>
@@ -169,8 +126,8 @@ function Group({ groupId }: { groupId?: number | null }) {
               target="_blank"
               className="block w-full mt-auto"
             >
-              <Button className="mt-auto py-2 w-full">
-                Access Remote Controller
+              <Button className="mt-auto py-2 w-full capitalize">
+                {t("access remote controller")}
               </Button>
             </a>
           </div>
@@ -181,9 +138,7 @@ function Group({ groupId }: { groupId?: number | null }) {
                 content: (
                   <div className="grid grid-cols-6">
                     <Show when={device.lastTelemetries?.length == 0}>
-                      <div className="col-span-6  ">
-                        no telemetries received yet
-                      </div>
+                      <div className="col-span-6  ">{t("no telemetries")}</div>
                     </Show>
                     <For each={device.lastTelemetries || []}>
                       {(telemetry) => (

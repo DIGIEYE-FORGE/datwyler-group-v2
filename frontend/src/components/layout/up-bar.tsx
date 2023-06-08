@@ -54,7 +54,7 @@ function UpBar() {
   };
   return (
     <div className="up-bar ">
-      <span className="mx-4">{t("title")}</span>
+      {/* <span className="mx-4">{t("title")}</span> */}
       <select
         className="bg-transparent min-w-[8rem] md:min-w-[10rem]"
         onChange={(e) => {
@@ -96,7 +96,7 @@ function UpBar() {
               setTheme("hybrid");
             }}
           >
-            <span>default</span>
+            <span>{t("default")}</span>
             <CgDarkMode className="ml-2 h-[2rem] w-[1.5rem]" />
           </div>
           <div
@@ -105,7 +105,7 @@ function UpBar() {
               setTheme("light");
             }}
           >
-            <span>light</span>
+            <span>{t("light")}</span>
             <RxSun className="ml-2 h-[2rem] w-[1.5rem]" />
           </div>
           <div
@@ -114,7 +114,7 @@ function UpBar() {
               setTheme("dark");
             }}
           >
-            <span>dark</span>
+            <span>{t("dark")}</span>
             <RxMoon className="ml-2 h-[2rem] w-[1.5rem]" />
           </div>
         </div>
