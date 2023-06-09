@@ -37,7 +37,7 @@ export class AlertService {
       where: { id },
       data: {
         acknowledgedBy: null,
-        attributes: null,
+        attributes: {},
       },
     });
   }
