@@ -18,10 +18,16 @@ import { AppContext } from "../../../../App";
 import Tooltip from "../../../../components/tooltip";
 import { BiExport } from "react-icons/bi";
 import Modal from "../../../../components/modal";
-import { MdCancel, MdOutlineClose, MdWatchLater } from "react-icons/md";
+import {
+  MdCancel,
+  MdLockOpen,
+  MdOutlineClose,
+  MdWatchLater,
+} from "react-icons/md";
 import Select from "react-select";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import { GrPowerReset } from "react-icons/gr";
 
 const defaultParams: Params = {
   pagination: {
@@ -212,7 +218,7 @@ function AlertsTab() {
       description: "Are you sure you want to Acknowledge this alert?",
       onConfirm: () => {
         backendApi
-          .acklowledgeAlerts({
+          .acklowledgeAlert({
             id,
             user: `${user?.firstName} ${user?.lastName}`,
           })
@@ -221,6 +227,24 @@ function AlertsTab() {
           })
           .catch((e) => {
             console.log("error Acknowledging  alert", e);
+          });
+      },
+    });
+  };
+  const handleUnacknowledge = async (id: number) => {
+    confirm({
+      title: "open alert",
+      description: "Are you sure you want to open this alert?",
+      onConfirm: () => {
+        backendApi
+          .unacklowledgeAlert({
+            id,
+          })
+          .then((a) => {
+            getAlerts();
+          })
+          .catch((e) => {
+            console.error("error Acknowledging  alert", e);
           });
       },
     });
@@ -379,6 +403,13 @@ function AlertsTab() {
             <div className="flex items-center gap-2">
               {row.attributes?.user}
               <AiOutlineCheckCircle className="text-green-500" />
+              <Button
+                variant="text"
+                className="hover:bg-primary/10 rounded-full h-8 aspect-square flex-center"
+                onClick={() => handleUnacknowledge(row.id)}
+              >
+                <MdLockOpen />
+              </Button>
             </div>
           );
         return (

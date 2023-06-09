@@ -38,16 +38,16 @@ function Accordion({ items, className, ...props }: Props) {
             style={
               activeIndeces.includes(index)
                 ? {
-                    fontSize: 0,
-                    lineHeight: 0,
-                    padding: 0,
-                    opacity: 0,
-                  }
-                : {
                     lineHeight: "1.5rem",
                     fontSize: "1rem",
                     padding: "0.5rem",
                     opacity: 1,
+                  }
+                : {
+                    fontSize: 0,
+                    lineHeight: 0,
+                    padding: 0,
+                    opacity: 0,
                   }
             }
             className={`transition-[font-size,padding,line-height] duration-500 ease`}

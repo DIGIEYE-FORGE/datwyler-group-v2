@@ -57,11 +57,11 @@ function SideBar() {
             </div>
           );
         })}
-      {/* <span className="water-mark">
+      <span className="water-mark">
         <span>developed by</span>
         <AbaLogo />
-      </span> */}
-      <label htmlFor="toggle-side-bar" className="toggle mt-auto flex-center">
+      </span>
+      <label htmlFor="toggle-side-bar" className="toggle flex-center">
         <DoubleArrowLeftIcon />
       </label>
     </div>

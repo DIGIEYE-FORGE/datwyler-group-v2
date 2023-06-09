@@ -15,7 +15,6 @@ import { useTranslation } from "react-i18next";
 import { CgDarkMode } from "react-icons/cg";
 import { RxMoon, RxSun } from "react-icons/rx";
 import For from "../for";
-import { te } from "date-fns/locale";
 import { FaRegUser } from "react-icons/fa";
 function UpBar() {
   const {
@@ -54,7 +53,6 @@ function UpBar() {
   };
   return (
     <div className="up-bar ">
-      {/* <span className="mx-4">{t("title")}</span> */}
       <select
         className="bg-transparent min-w-[8rem] md:min-w-[10rem]"
         onChange={(e) => {

@@ -152,7 +152,7 @@ export default class BackendApi {
     return res.data;
   }
 
-  async acklowledgeAlerts({
+  async acklowledgeAlert({
     id,
     user,
   }: {
@@ -165,6 +165,14 @@ export default class BackendApi {
       },
       acknowledgedBy: id,
     });
+    return res.data;
+  }
+  async unacklowledgeAlert({
+    id,
+  }: {
+    id: number;
+  }): Promise<Alert> {
+    const res = await this.api.patch(`/alert/${id}/unacknowledge`,);
     return res.data;
   }
   async getDashboardData(): Promise<DashboardData> {
