@@ -19,6 +19,7 @@ import SettingsTab from "./settings";
 import AdminTab from "./admin";
 import DevicesTab from "./devices";
 import TenantsTab from "./tenants";
+import ProfileTab from "./profiles";
 const tabs: Tab[] = [
   {
     name: "dashboard",
@@ -31,32 +32,32 @@ const tabs: Tab[] = [
     component: <GeographicalMapTab />,
   },
   {
-    name: "Alerts",
+    name: "alerts",
     icon: <InfoIcon />,
     component: <AlertsTab />,
   },
   {
-    name: "List of devices",
+    name: "devices",
     icon: <ListIcon />,
     component: <DevicesTab />,
   },
   {
-    name: "Reports",
+    name: "reports",
     icon: <BoardIcon />,
     component: <ReportsTab />,
   },
   {
-    name: "Admin user",
+    name: "users",
     icon: <AdminIcon />,
     component: <AdminTab />,
   },
   {
-    name: "License",
+    name: "licenses",
     icon: <KeyIcon />,
     component: <LicenseTab />,
   },
   {
-    name: "Tenant",
+    name: "tenants",
     icon: <TenantIcon />,
     component: <TenantsTab />,
   },
@@ -66,9 +67,9 @@ const tabs: Tab[] = [
     component: <SupportTab />,
   },
   {
-    name: "Settings",
+    name: "profile settings",
     icon: <SettingsIcon />,
-    component: <SettingsTab />,
+    component: <ProfileTab />,
   },
 ];
 

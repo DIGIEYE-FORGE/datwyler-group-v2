@@ -30,10 +30,10 @@ $h: 2rem;
 }
 
 .layout {
-  @apply h-screen w-screen select-none;
+  @apply h-screen w-screen select-none text-xs sm:text-sm md:text-base;
 
   .up-bar {
-    @apply fixed  top-0 right-0 w-full z-10 bg-light dark:bg-primary-dark transition-[width] flex items-center justify-end  px-2 md:px-4 shadow shadow-black/25 text-primary dark:text-light capitalize gap-1  md:gap-4;
+    @apply fixed  top-0 right-0 w-full z-10 bg-light dark:bg-primary-dark transition-[width] flex items-center justify-end  px-2 md:px-4 shadow shadow-black/25 text-primary dark:text-light capitalize  sm:gap-1  md:gap-4;
     width: calc(100% - #{$compact-side-bar-width});
     height: $up-bar-height;
     & > * {
@@ -114,13 +114,13 @@ $h: 2rem;
 
   input:checked {
     & ~ .side-bar {
+      @apply px-4;
       .link.active {
         .name {
           @apply text-light;
         }
       }
 
-      @apply px-[1rem];
       .logo {
         .logo-name {
           @apply w-[7rem];
@@ -246,7 +246,7 @@ $h: 2rem;
 }
 
 .metric-card {
-  @apply p-4 flex flex-col h-[7.125rem] flex-1 min-w-[10rem];
+  @apply p-4 flex flex-col h-[7.125rem] flex-1 min-w-[12rem];
 }
 
 *::-webkit-scrollbar {

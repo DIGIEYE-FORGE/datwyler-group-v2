@@ -25,6 +25,6 @@ $h: 2rem;
 }
 
 .select-page {
-  @apply min-w-[4rem];
+  @apply min-w-[4rem] h-12;
   height: $h;
 }

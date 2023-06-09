@@ -12,8 +12,10 @@ import { MdDelete, MdEdit, MdMoreVert } from "react-icons/md";
 import { IconButton } from "../dashboard";
 import Modal from "../../../../components/modal";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 function TenantsTab() {
+  const { t } = useTranslation();
   const { tenantId, multiTenancyApi, confirm } = useProvider<AppContext>();
   const [data, setData] = useState<any[]>([]);
   const [state, setState] = useState<"idle" | "loading" | "error">("loading");
@@ -40,19 +42,19 @@ function TenantsTab() {
 
   const handleDelete = useCallback((id: number) => {
     confirm({
-      title: "Delete Tenant",
-      description: "Are you sure you want to delete this tenant?",
+      title: t("delete"),
+      description: t("Are you sure you want to delete this tenant?"),
       onConfirm: async () => {
         try {
           if (!tenantId) return;
           await multiTenancyApi.deleteTenant({
             id,
           });
-          toast.success("Tenant deleted successfully");
+          toast.success(t("operation successful"));
           getTenants();
         } catch (err) {
           console.error(err);
-          toast.error("Error while deleting tenant");
+          toast.error(t("operation failed"));
         }
       },
     });
@@ -66,13 +68,13 @@ function TenantsTab() {
         name: tenant?.name,
         parentId: tenantId,
       });
-      toast.success("Tenant saved successfully");
+      toast.success(t("operation successful"));
       setTenant(null);
       getTenants();
       console.log(res);
     } catch (err) {
       console.error(err);
-      toast.error("Error while saving tenant");
+      toast.error(t("operation failed"));
     }
   }, [tenantId, tenant]);
 
@@ -82,45 +84,45 @@ function TenantsTab() {
 
   const columns: Column[] = [
     {
-      label: "Name",
-      header: "Name",
+      label: t("name"),
+      header: t("name"),
       field: "name",
     },
     {
-      label: "Subtenants",
-      header: "Number of subtenants",
+      label: t("number of subtenants"),
+      header: t("number of subtenants"),
       valueGetter: (row: Tenant) => row._count?.children || 0,
     },
     {
-      label: "Users",
-      header: "Number of users",
+      label: t("number of users"),
+      header: t("number of users"),
       valueGetter: (row: Tenant) => row._count?.users || 0,
     },
     {
-      label: "Created at",
-      header: "Created at",
+      label: t("creation date"),
+      header: t("creation date"),
       valueGetter: (row: Tenant) =>
         format(new Date(row?.createdAt!), "dd/MM/yyyy HH:mm"),
     },
   ];
 
   return (
-    <div className="flex flex-col  gap-6 p-6 min-w-[40rem]">
-      <div className="flex gap-4 items-center flex-wrap justify-end">
+    <div className="flex flex-col  gap-6 p-6 ">
+      <div className="flex gap-4 items-center flex-wrap w-fit ml-auto">
         <Pagination
           value={pagination}
           onChange={setPagination}
           total={data?.length || 0}
         />
         <Button
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 capitalize"
           onClick={() =>
             setTenant({
               name: "",
             })
           }
         >
-          Add
+          {t("add")}
           <BsHouseAdd className="text-lg" />
         </Button>
       </div>
@@ -129,7 +131,7 @@ function TenantsTab() {
         error={state === "error"}
         className="table-fixed  w-full text-left "
         headClassName="h-[5.5rem] bg-dark/5 dark:bg-light/5 text-[#697681] [&>*]:px-2 "
-        rowClassName="h-[4rem] [&>*]:px-2 even:bg-dark/5 dark:even:bg-light/5 hover:bg-dark/10 dark:hover:bg-light/10  "
+        rowClassName="h-[4rem] [&>*]:px-2 even:bg-dark/5 dark:even:bg-light/5 hover:bg-dark/10 dark:hover:bg-light/10 shadow shadow-[#7f7f7f]/20"
         columns={columns}
         rows={data}
         action={(row: Tenant) => (
@@ -139,17 +141,17 @@ function TenantsTab() {
             </IconButton>
             <div className="card  aspect-square -translate-x-1/2 px-2 pt-4  flex flex-col  ">
               <button
-                className="flex w-[6rem] items-center justify-between  p-2 hover:text-info hover:"
+                className="flex w-[7rem] items-center justify-between  p-2 hover:text-info hover:"
                 onClick={() => setTenant(row)}
               >
-                <span>Edit</span>
+                <span>{t("edit")}</span>
                 <MdEdit className="text-xl" />
               </button>
               <button
                 onClick={() => handleDelete(row.id as number)}
-                className="flex w-[6rem] items-center justify-between p-2 hover:text-danger"
+                className="flex w-[7rem] items-center justify-between p-2 hover:text-danger"
               >
-                <span>Delete</span>
+                <span> {t("delete")}</span>
                 <MdDelete className="text-xl" />
               </button>
             </div>
@@ -159,18 +161,20 @@ function TenantsTab() {
       <Modal
         open={!!tenant}
         handleClose={() => setTenant(null)}
-        className="w-11/12 min-w-[20rem] max-w-[30rem] flex flex-col gap-4"
+        className="w-11/12  max-w-[30rem] flex flex-col gap-4"
       >
         <div className="text-center py-4 border-b text-xl capitalize">
-          {tenant?.id ? "edit" : "add"} tenant
+          {tenant?.id ? t("edit") : t("add")}
         </div>
         <div className="flex gap-4 items-center px-4">
-          <label htmlFor="name">name</label>
+          <label htmlFor="name" className="capitalize">
+            {t("name")} <span className="text-red-500">*</span>
+          </label>
           <input
             type="text"
             name="name"
             id="name"
-            placeholder="name"
+            placeholder={t("name") || "name"}
             className="flex-1"
             value={tenant?.name}
             onChange={(e) => setTenant({ ...tenant, name: e.target.value })}
@@ -178,9 +182,9 @@ function TenantsTab() {
         </div>
         <div className="flex p-4 justify-between">
           <Button variant="outlined" onClick={() => setTenant(null)}>
-            cancel
+            {t("cancel")}
           </Button>
-          <Button onClick={handleSave}>save</Button>
+          <Button onClick={handleSave}>{t("save")}</Button>
         </div>
       </Modal>
     </div>

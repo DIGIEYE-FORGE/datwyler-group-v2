@@ -6,25 +6,30 @@ import { FiMoreHorizontal } from "react-icons/fi";
 import For from "../for";
 import Show from "../show";
 import "./index.scss";
+import { useTranslation } from "react-i18next";
 interface PaginationProps {
   total: number;
+  offset?: number;
   value: {
     page: number;
     perPage: number;
   };
-  className?: string;
   style?: React.CSSProperties;
   onChange?: (value: { page: number; perPage: number }) => void;
 }
 
-function Pagination({ total, onChange, className, ...props }: PaginationProps) {
+function Pagination({
+  total,
+  offset = 2,
+  onChange,
+  ...props
+}: PaginationProps) {
   const [{ page, perPage }, setValue] = useState(
     props.value || { page: 1, perPage: 10 }
   );
 
   const max = Math.ceil(total / perPage);
   const pages = Array.from({ length: max }, (_, i) => i + 1);
-  const offset = 2;
 
   const showPages = pages.slice(
     Math.max(0, page - offset - 1),
@@ -41,10 +46,12 @@ function Pagination({ total, onChange, className, ...props }: PaginationProps) {
     setValue({ page: 1, perPage: p });
     if (onChange) onChange({ page: 1, perPage: p });
   };
-
+  const { t } = useTranslation();
   return (
-    <div className={`flex  gap-4 justify-center items-center  ${className}`}>
-      <span className="hidden lg:inline-block">Total {total} items</span>
+    <>
+      <span className="hidden lg:inline-block">
+        Total {total} {t("item")}
+      </span>
       <div className="pagination text-primary underline">
         <button disabled={page === 1} onClick={() => changePage(page - 1)}>
           <AiOutlineLeft />
@@ -80,19 +87,17 @@ function Pagination({ total, onChange, className, ...props }: PaginationProps) {
           <AiOutlineRight />
         </button>
       </div>
-      <div className="flex gap-2 items-center">
-        <select
-          onChange={(e) => changePerPage(Number(e.target.value))}
-          value={perPage}
-          className="select-page"
-        >
-          <option label="5 / page">5</option>
-          <option label="10 / page">10</option>
-          <option label="20 / page">20</option>
-          <option label="50 / page">50</option>
-        </select>
-      </div>
-    </div>
+      <select
+        className="h-8"
+        onChange={(e) => changePerPage(Number(e.target.value))}
+        value={perPage}
+      >
+        <option label="5 / page">5</option>
+        <option label="10 / page">10</option>
+        <option label="20 / page">20</option>
+        <option label="50 / page">50</option>
+      </select>
+    </>
   );
 }
 

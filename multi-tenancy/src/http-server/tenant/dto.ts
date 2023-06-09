@@ -1,6 +1,9 @@
 import { z } from "zod";
 
-const roles = ["USER"] as const;
+const roles = [
+  "USER",
+  "ADMIN",
+] as const;
 
 export type Role = typeof roles[number];
 

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
 import DataGrid, { Column } from "../../../../components/data-grid";
 import Pagination from "../../../../components/pagination";
 import {
@@ -16,6 +16,12 @@ import { AiOutlineAlert } from "react-icons/ai";
 import { useProvider } from "../../../../components/provider";
 import { AppContext } from "../../../../App";
 import Tooltip from "../../../../components/tooltip";
+import { BiExport } from "react-icons/bi";
+import Modal from "../../../../components/modal";
+import { MdCancel, MdOutlineClose, MdWatchLater } from "react-icons/md";
+import Select from "react-select";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const defaultParams: Params = {
   pagination: {
@@ -219,11 +225,12 @@ function AlertsTab() {
       },
     });
   };
+  const { t } = useTranslation();
 
   const columns: Column[] = [
     {
-      label: "location",
-      header: "Location",
+      label: t("location"),
+      header: t("location"),
       valueGetter: (row: Alert) => row.device?.group?.location?.toUpperCase(),
       filter: {
         type: "text",
@@ -236,8 +243,8 @@ function AlertsTab() {
       },
     },
     {
-      label: "site",
-      header: "Site",
+      label: t("site"),
+      header: t("site"),
       valueGetter: (row: Alert) => row.device?.group?.name?.toUpperCase(),
       filter: {
         type: "text",
@@ -250,8 +257,8 @@ function AlertsTab() {
       },
     },
     {
-      label: "System",
-      header: "System",
+      label: t("system"),
+      header: t("system"),
       valueGetter: (row: Alert) => row.device?.name,
       filter: {
         type: "select",
@@ -265,8 +272,8 @@ function AlertsTab() {
       },
     },
     {
-      label: "level",
-      header: "level",
+      label: t("level"),
+      header: t("level"),
       valueGetter: (row: Alert) => (
         <div
           className={classNames("flex items-center gap-2", {
@@ -274,7 +281,7 @@ function AlertsTab() {
             "text-red-600": row.level === "Critical",
           })}
         >
-          <span>{row.level} </span>
+          <span>{t(row.level || "Notice")} </span>
           <AiOutlineAlert className="text-2xl" />
         </div>
       ),
@@ -291,8 +298,8 @@ function AlertsTab() {
     },
 
     {
-      label: "name",
-      header: "Alert Name",
+      label: t("name"),
+      header: t("name"),
       field: "type",
       filter: {
         type: "text",
@@ -302,8 +309,8 @@ function AlertsTab() {
       },
     },
     {
-      label: "message",
-      header: "Alert Message",
+      label: t("message"),
+      header: t("message"),
       valueGetter: (row: Alert) => (
         <Tooltip>
           <span>{strTake(row.message, 25)}</span>
@@ -318,27 +325,27 @@ function AlertsTab() {
       },
     },
     {
-      label: "date",
-      header: "Date",
+      label: t("date"),
+      header: t("date"),
       valueGetter: (row: Alert) =>
         format(new Date(row.updatedAt), "dd/MM/yyyy HH:mm"),
       filter: {
         type: "select",
         options: [
           {
-            label: "last hour",
+            label: t("last hour") || "last hour",
             value: "last hour",
           },
           {
-            label: "last 4 hours",
+            label: t("last 4 hours") || "last 4 hours",
             value: "last 4 hours",
           },
           {
-            label: "last 24 hours",
+            label: t("last 24 hours") || "last 24 hours",
             value: "last 24 hours",
           },
           {
-            label: "last 7 days",
+            label: t("last 7 days") || "last 7 days",
             value: "last 7 days",
           },
         ],
@@ -348,17 +355,17 @@ function AlertsTab() {
       },
     },
     {
-      label: "Acknowledgement",
-      header: "Acknowledgement",
+      label: t("acknowledgement"),
+      header: t("acknowledgement"),
       filter: {
         type: "select",
         options: [
           {
-            label: "Acknowledged",
+            label: t("acknowledged") || "acknowledged",
             value: "true",
           },
           {
-            label: "Not Acknowledged",
+            label: t("not acknowledged") || "not acknowledged",
             value: "false",
           },
         ],
@@ -375,35 +382,156 @@ function AlertsTab() {
             </div>
           );
         return (
-          <Button variant="outlined" onClick={() => handleAcknowledge(row.id)}>
-            Acknowledge
+          <Button
+            variant="outlined"
+            className="capitalize"
+            onClick={() => handleAcknowledge(row.id)}
+          >
+            {t("acknowledge")}
           </Button>
         );
       },
     },
   ];
+  const [rapportData, setRapportData] = useState({
+    type: "pdf",
+    name: "",
+  });
+  const [open, setOpen] = useState(false);
+
+  const generateReport = useMemo(() => {
+    if (!open)
+      return {
+        type: "pdf",
+        name: "",
+        tenantId: tenantId,
+        where: params.where,
+      };
+    return {
+      ...rapportData,
+      tenantId: tenantId,
+      where: params.where,
+    };
+  }, [params.where, tenantId, open, rapportData.name, rapportData.type]);
+
   return (
-    <div className="flex flex-col  w-full gap-6 p-6 min-w-[70rem]">
+    <div className="flex flex-col  w-full gap-6 p-6 ">
       <div className="flex gap-4 items-center flex-wrap justify-end">
         <Pagination
           value={params.pagination}
           onChange={(v) => dispatch({ type: "pagination", payload: v })}
           total={total}
         />
-        {/* <Button className="flex items-center gap-2">
-          export
+        <Button
+          className="flex items-center gap-2 capitalize"
+          disabled={rows.length === 0 || !params?.where?.updatedAt}
+          onClick={() => {
+            setOpen(true);
+          }}
+        >
+          <span>{t("create a report")}</span>
           <BiExport className="text-lg" />
-        </Button> */}
+        </Button>
       </div>
       <DataGrid
         loading={state === "loading"}
         error={state === "error"}
         className="table-fixed  w-full text-left "
         headClassName="h-[5.5rem] bg-dark/5 dark:bg-light/5 text-[#697681] [&>*]:px-2 "
-        rowClassName="h-[4rem] [&>*]:px-2 even:bg-dark/5 dark:even:bg-light/5 hover:bg-dark/10 dark:hover:bg-light/10  "
+        rowClassName="h-[4rem] [&>*]:px-2 even:bg-dark/5 dark:even:bg-light/5 hover:bg-dark/10 dark:hover:bg-light/10 shadow shadow-[#7f7f7f]/20"
         columns={columns}
         rows={rows}
       ></DataGrid>
+      <Modal
+        open={open}
+        handleClose={() => setOpen(false)}
+        className="bg-white w-11/12 max-w-[40rem] rounded [&>*]:border-b [&>*]:border-black/20 max-h-full overflow-auto"
+      >
+        <div className="flex items-center py-4  justify-between px-4">
+          <span className="font-semibold first-letter:uppercase">
+            {t("generate report") || "generate report"}
+          </span>
+          <button
+            onClick={() => setOpen(false)}
+            className="rounded-full hover:bg-dark/10 active:shadow-inner w-8 h-8 flex-center"
+          >
+            <MdOutlineClose className="text-2xl text-gray-500" />
+          </button>
+        </div>
+        <form className="flex flex-col gap-6 py-4 [&>div]:flex [&>div]:flex-col [&>div]:gap-2 [&>div]:px-4">
+          <div>
+            <label className="w-fit" htmlFor="date-range">
+              {t("name")}
+            </label>
+            <input
+              className="h-12 px-4 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              type="text"
+              placeholder={`${t("name")} *`}
+              onChange={(e) => {
+                setRapportData((prev) => ({ ...prev, name: e.target.value }));
+              }}
+            />
+          </div>
+          <div>
+            <label className="w-fit capitalize" htmlFor="type">
+              {t("format")}
+            </label>
+            <Select
+              onChange={(v: any) => {
+                setRapportData((prev) => ({ ...prev, type: v.value }));
+              }}
+              classNames={{
+                option: (state) =>
+                  state.isFocused ? "!bg-primary/10" : "white",
+                control: (state) =>
+                  state.isFocused
+                    ? "!border-2 !border-primary !shadow-none"
+                    : "border border-black/20",
+              }}
+              getOptionLabel={(site: { value: string }) => site.value}
+              defaultValue={{ value: "pdf" }}
+              options={[
+                {
+                  value: "pdf",
+                },
+                {
+                  value: "csv",
+                },
+              ]}
+              isClearable
+              backspaceRemovesValue
+            />
+          </div>
+        </form>
+        <div className="flex justify-between items-center h-20 px-6">
+          <Button
+            className="flex items-center gap-2 py-3 px-4"
+            variant="outlined"
+            onClick={() => setOpen(false)}
+          >
+            <span>{t("cancel") || "cancel"}</span>
+            <MdCancel className="text-2xl" />
+          </Button>
+          <Button
+            onClick={() => {
+              backendApi
+                .alertsGenerate(generateReport)
+                .then((res) => {
+                  toast.success("Rapport generated successfully");
+                  setOpen(false);
+                })
+                .catch((err) => {
+                  toast.error("Error generating rapport");
+                });
+            }}
+            disabled={rapportData.name === ""}
+            className="flex items-center gap-2 py-3 px-4 capitalize"
+          >
+            <span>{t("generate")}</span>
+            <MdWatchLater className="text-2xl" />
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 }

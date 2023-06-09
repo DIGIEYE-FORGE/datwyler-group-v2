@@ -4,7 +4,6 @@ import { AppContext } from "../../../../../App";
 import { useProvider } from "../../../../../components/provider";
 import { useCallback, useEffect, useState } from "react";
 import For from "../../../../../components/for";
-import { HistoryResponse } from "../../../../../api/backend";
 import Show from "../../../../../components/show";
 import { format } from "date-fns";
 import Button from "../../../../../components/button";
@@ -67,7 +66,7 @@ function Overview() {
   }, [getHistory]);
 
   return (
-    <Chart title="Tempurature And Humidity" className="xl:col-span-2">
+    <Chart title="temperature and humidity" className="xl:col-span-2">
       <div className="card-body  overflow-auto p-3 h-full flex flex-col  gap-4">
         <div className="flex gap-2 flex-wrap">
           <select
@@ -154,7 +153,7 @@ function Overview() {
                 type: "datetime",
                 labels: {
                   formatter: function (value, timestamp) {
-                    return format(new Date(timestamp!), "MM/yyyy  HH:mm");
+                    return format(new Date(timestamp!), "MM/yy  HH:mm");
                   },
                 },
               },

@@ -44,6 +44,7 @@ function UpBar() {
   };
   const changeLang = (lang: "en" | "fr" | "ar") => {
     i18n.changeLanguage(lang);
+    localStorage.setItem("lang", lang);
     if (lang === "ar") {
       setRtl(true);
     }
@@ -95,7 +96,7 @@ function UpBar() {
               setTheme("hybrid");
             }}
           >
-            <span>default</span>
+            <span>{t("default")}</span>
             <CgDarkMode className="ml-2 h-[2rem] w-[1.5rem]" />
           </div>
           <div
@@ -104,7 +105,7 @@ function UpBar() {
               setTheme("light");
             }}
           >
-            <span>light</span>
+            <span>{t("light")}</span>
             <RxSun className="ml-2 h-[2rem] w-[1.5rem]" />
           </div>
           <div
@@ -113,7 +114,7 @@ function UpBar() {
               setTheme("dark");
             }}
           >
-            <span>dark</span>
+            <span>{t("dark")}</span>
             <RxMoon className="ml-2 h-[2rem] w-[1.5rem]" />
           </div>
         </div>
@@ -145,15 +146,6 @@ function UpBar() {
             <span>français</span>
             <FrIcon className="ml-2 h-[2rem] w-[1.5rem]" />
           </div>
-          {/* <div
-            className="rounded p-2 hover:bg-primary/10 active:bg-primary/20 flex justify-between items-center"
-            onClick={() => {
-              changeLang("ar");
-            }}
-          >
-            <span>العربية</span>
-            <SaIcon className="ml-2 h-[2rem] w-[1.5rem]" />
-          </div> */}
         </div>
       </Tooltip>
       <div className="notifacations hidden md:flex">
@@ -173,7 +165,7 @@ function UpBar() {
             onClick={logout}
             className="rounded p-2 hover:bg-primary/10 active:bg-primary/20 whitespace-nowrap"
           >
-            <span>log out</span>
+            <span>{t("logout")}</span>
             <BiLogOutCircle className="inline-block ml-2" />
           </div>
           <div

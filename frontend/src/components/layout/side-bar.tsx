@@ -10,8 +10,10 @@ import { ReactComponent as AbaLogo } from "../../assets/aba-logo.svg";
 
 import tabs from "../../pages/home/tabs";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 function SideBar() {
+  const { t } = useTranslation();
   const { activeTab, selectTab, theme, user } = useProvider<AppContext>();
   const role = useMemo<"ADMIN" | "USER">(() => {
     if (user?.tenants?.[0]) {
@@ -51,7 +53,7 @@ function SideBar() {
               })}
             >
               <div className="icon ">{link.icon}</div>
-              <div className="name">{link.name}</div>
+              <div className="name">{t(link.name)}</div>
             </div>
           );
         })}

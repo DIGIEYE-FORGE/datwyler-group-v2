@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import For from "../for";
-import Show from "../show";
 
 interface TabsProps {
   className?: string;

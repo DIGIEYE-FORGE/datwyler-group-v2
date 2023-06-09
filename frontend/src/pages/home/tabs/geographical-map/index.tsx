@@ -7,20 +7,19 @@ import {
   useMap,
 } from "react-leaflet";
 import For from "../../../../components/for";
-import { ReactComponent as DoorAlertIcon } from "../../../../assets/icons/door-alert.svg";
-import { ReactComponent as LeakAlertIcon } from "../../../../assets/icons/lock-alert.svg";
-import { ReactComponent as LockAlertIcon } from "../../../../assets/icons/leak-alert.svg";
-import { ReactComponent as PowerAlertIcon } from "../../../../assets/icons/fire-alert.svg";
-import { ReactComponent as FireAlertIcon } from "../../../../assets/icons/power-alert.svg";
+// import { ReactComponent as DoorAlertIcon } from "../../../../assets/icons/door-alert.svg";
+// import { ReactComponent as LeakAlertIcon } from "../../../../assets/icons/lock-alert.svg";
+// import { ReactComponent as LockAlertIcon } from "../../../../assets/icons/leak-alert.svg";
+// import { ReactComponent as PowerAlertIcon } from "../../../../assets/icons/fire-alert.svg";
+// import { ReactComponent as FireAlertIcon } from "../../../../assets/icons/power-alert.svg";
 import greenMarkerUrl from "../../../../assets/icons/green-marker.svg";
 import redMarkerUrl from "../../../../assets/icons/red-marker.svg";
-import { Alert, Group, Params, toFixed } from "../../../../utils";
+import { Group, Params, toFixed } from "../../../../utils";
 import { useEffect, useMemo, useState } from "react";
 import L from "leaflet";
 import Provider, { useProvider } from "../../../../components/provider";
 import Details from "./details";
 import { AppContext } from "../../../../App";
-import { useLocation } from "react-router-dom";
 import Show from "../../../../components/show";
 import Button from "../../../../components/button";
 import {
@@ -32,6 +31,7 @@ import {
 import Modal from "../../../../components/modal";
 import { GroupData } from "../../../../api/backend";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 export type GeographicalMapTabContext = {
   groups: Group[];
@@ -52,41 +52,6 @@ function MapControls({ bounds }: { bounds?: [number, number][] }) {
   }, [bounds]);
   return null;
 }
-
-const defaulParams: Params = {
-  pagination: {
-    page: 1,
-    perPage: 100,
-  },
-  include: {
-    devices: {
-      include: {
-        lastTelemetries: true,
-        alerts: {
-          include: {
-            device: {
-              select: {
-                serial: true,
-                name: true,
-              },
-            },
-          },
-          where: {
-            acknowledgedBy: null,
-          },
-        },
-      },
-    },
-  },
-  where: {
-    lat: {
-      not: null,
-    },
-    lng: {
-      not: null,
-    },
-  },
-};
 
 interface Props {
   details?: boolean;
@@ -118,13 +83,14 @@ function GeographicalMapTab({ details = true }: Props) {
   const [groupData, setGroupData] = useState<GroupData | null>(null);
   const [selectedGroup, setSelectedGroup] = useState<number | null>(null);
   const [showList, setShowList] = useState<0 | 1 | 2>(0);
+  const { t } = useTranslation();
 
   const deleteGroup = (id: number) => {
     console.log("delete group", id);
 
     confirm({
-      title: "Delete Group",
-      description: "Are you sure you want to delete this group?",
+      title: t("delete"),
+      description: t("Are you sure you want to delete this group?"),
       onConfirm: async () => {
         try {
           const res = await backendApi.deleteGroup(id);
@@ -172,7 +138,7 @@ function GeographicalMapTab({ details = true }: Props) {
       }
       setGroupData(null);
     } catch (e) {
-      console.log(e);
+      console.error(e);
       toast.error("Failed to save group");
     }
   }
@@ -201,8 +167,8 @@ function GeographicalMapTab({ details = true }: Props) {
           <div className="absolute z-[500] top-4 right-4 flex items-center gap-4 ">
             <input
               type="text"
-              className="bg-light/75 dark:bg-primary-dark/75 bg-blur w-[13.5rem] py-1"
-              placeholder="Search by name or location"
+              className="bg-light/75 dark:bg-primary-dark/75 bg-blur w-44 sm:w-48 md:w-56 py-1"
+              placeholder={t("search by name or location") || "search"}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -210,7 +176,7 @@ function GeographicalMapTab({ details = true }: Props) {
               className="flex items-center gap-2 capitalize"
               onClick={() => setGroupData(defaultGroupData)}
             >
-              <span className="hidden md:inline-block">add site</span>
+              <span className="hidden md:inline-block">{t("add site")}</span>
               <MdOutlineAddLocationAlt className="text-lg " />
             </Button>
           </div>
@@ -283,19 +249,12 @@ function GeographicalMapTab({ details = true }: Props) {
                         </Button>
                       </Show>
                     </div>
-                    {/* <div className="flex justify-evenly h-[3.5rem] items-center bg-primary/5 rounded">
-                      <DoorAlertIcon />
-                      <LeakAlertIcon />
-                      <LockAlertIcon />
-                      <FireAlertIcon />
-                      <PowerAlertIcon />
-                    </div> */}
                     <div className="grid grid-cols-2 py-2 gap-y-2">
                       <div className="text-[#82848E]">lat, lng:</div>
                       <div className="font-bold">
                         {toFixed(group.lat, 5)}, {toFixed(group.lng, 5)}
                       </div>
-                      <div className="text-[#82848E]">location: </div>
+                      <div className="text-[#82848E]">{t("location")}: </div>
                       <div className="font-bold">{group.location}</div>
                     </div>
                     <Show when={details}>
@@ -305,7 +264,7 @@ function GeographicalMapTab({ details = true }: Props) {
                         }}
                         className="outline outline-1 rounded py-2 text-lg text-primary capitalize hover:bg-primary/5 active:bg-primary/10 transition-colors"
                       >
-                        more details
+                        {t("more details")}
                       </button>
                     </Show>
                   </div>
@@ -326,9 +285,9 @@ function GeographicalMapTab({ details = true }: Props) {
         className="grid grid-cols-4 [&>label]:col-span-1 [&>input]:col-span-3 gap-y-4 p-4 min-w-[20rem] bg-blur !bg-light/75 dark:!bg-primary-dark/75 !z-[500]"
       >
         <div className="capitalize text-center text-xl border-b pb-2 col-span-full">
-          {groupData?.id ? "edit" : "add"} site
+          {groupData?.id ? t("edit") : t("add")}
         </div>
-        <label htmlFor="name">name</label>
+        <label htmlFor="name">{t("name")}</label>
         <input
           type="text"
           id="name"
@@ -341,7 +300,7 @@ function GeographicalMapTab({ details = true }: Props) {
             });
           }}
         />
-        <label htmlFor="location">location</label>
+        <label htmlFor="location">{t("location")}</label>
         <input
           type="text"
           id="location"
@@ -404,7 +363,7 @@ function GeographicalMapTab({ details = true }: Props) {
             }
             onClick={handleSave}
           >
-            <span className="capitalize">save</span>
+            <span className="capitalize">{t("save")}</span>
             <MdOutlineSave className="text-xl" />
           </Button>
         </div>

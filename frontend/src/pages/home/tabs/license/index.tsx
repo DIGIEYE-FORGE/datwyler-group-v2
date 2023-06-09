@@ -1,29 +1,18 @@
 import { useEffect, useReducer, useState } from "react";
 import DataGrid, { Column } from "../../../../components/data-grid";
 import Pagination from "../../../../components/pagination";
-import {
-  Device,
-  Group,
-  License,
-  Params,
-  Report,
-  ReportDevice,
-} from "../../../../utils";
-import { ReactComponent as CsvIcon } from "../../../../assets/icons/csv.svg";
-import { ReactComponent as PdfIcon } from "../../../../assets/icons/pdf.svg";
-import Tooltip from "../../../../components/tooltip";
-import { format, set } from "date-fns";
+import { Device, License, Params } from "../../../../utils";
+import { format } from "date-fns";
 import Button from "../../../../components/button";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import Modal from "../../../../components/modal";
 import { MdOutlineClose, MdWatchLater, MdCancel } from "react-icons/md";
-import Select from "react-select";
 import { useProvider } from "../../../../components/provider";
 import { AppContext } from "../../../../App";
 import { addHours, addDays } from "date-fns";
-import BackendApi from "../../../../api/backend";
 
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const defaultParams: Params = {
   pagination: {
@@ -58,77 +47,18 @@ const paramsReducer = (
 };
 
 function LicenseTab() {
+  const { t } = useTranslation();
   const [params, setParams] = useReducer(paramsReducer, defaultParams);
   const [total, setTotal] = useState(100);
   const [rows, setRows] = useState<License[]>([]);
   const [backUpRows, setBackUpRows] = useState<License[]>([]);
   const { theme, user, tenantId, licenseApi } = useProvider<AppContext>();
-  //   const action = (row: any) => {
-  //     if (row.format === "pdf")
-  //       return (
-  //         <div className="w-full h-full flex-center z-10">
-  //           <Tooltip>
-  //             <button
-  //               className="w-[2.5rem] aspect-square rounded-full flex-center  hover:bg-dark/5 active:bg-dark/10 transition-colors"
-  //               onClick={() => {
-  //                 backendApi
-  //                   .downloadFile({
-  //                     name: row.url,
-  //                     type: row.type,
-  //                   })
-  //                   .then((res) => {})
-  //                   .catch((err) => {
-  //                     toast.error(err.message);
-  //                   });
-  //               }}
-  //             >
-  //               <PdfIcon />
-  //             </button>
-  //             <div className="bg-dark/50  text-light rounded-full px-2 py-1 whitespace-nowrap mr-[4rem]">
-  //               export as pdf
-  //             </div>
-  //           </Tooltip>
-  //         </div>
-  //       );
-  //     return (
-  //       <div className="w-full h-full flex-center">
-  //         <Tooltip>
-  //           <button
-  //             onClick={() => {
-  //               backendApi
-  //                 .downloadFile({
-  //                   name: row.url,
-  //                   type: row.type,
-  //                 })
-  //                 .then((res) => {})
-  //                 .catch((err) => {
-  //                   toast.error(err.message);
-  //                 });
-  //             }}
-  //             className="w-[2.5rem] aspect-square rounded-full flex-center  hover:bg-dark/5 active:bg-dark/10 transition-colors"
-  //           >
-  //             <CsvIcon />
-  //           </button>
-  //           <div className="bg-dark/50 text-light rounded-full px-2 py-1 whitespace-nowrap mr-[4rem]">
-  //             export as csv
-  //           </div>
-  //         </Tooltip>
-  //       </div>
-  //     );
-  //   };
   const getLicense = async () => {
     const res = await licenseApi.getLicense({
       tenantId: tenantId,
     });
     return res;
   };
-
-  //   const getTenant = async (id:number) => {
-  //     const res = await .getTenant({
-  //         id: id,
-  //     });
-  //     return res;
-  //     };
 
   const [createLicese, setCreateLicese] = useState<{
     name: string;
@@ -155,8 +85,8 @@ function LicenseTab() {
 
   const columns: Column[] = [
     {
-      label: "name",
-      header: "license name",
+      label: t("name"),
+      header: t("name"),
       field: "name",
       filter: {
         type: "text",
@@ -172,28 +102,44 @@ function LicenseTab() {
       },
     },
     {
-      label: "date",
-      header: "created at",
-
+      label: t("serial"),
+      header: t("serial"),
+      valueGetter: (row) => row.serialNumber || "----",
+      filter: {
+        type: "text",
+        onChange: (e) => {
+          if (e != "")
+            setRows(
+              backUpRows.filter(
+                (row: any) => row?.serialNumber?.includes(e) || undefined
+              )
+            );
+          else setRows(backUpRows);
+        },
+      },
+    },
+    {
+      label: t("date"),
+      header: t("date"),
       valueGetter: (row) => format(new Date(row.createdAt), "dd/MM/yyyy HH:mm"),
       filter: {
         type: "select",
         options: [
           {
             value: "lasthour",
-            label: "last hour",
+            label: t("last hour") || "last hour",
           },
           {
             value: "last4hours",
-            label: "last 4 hours",
+            label: t("last 4 hours") || "last 4 hours",
           },
           {
             value: "last12hours",
-            label: "last 12 hours",
+            label: t("last 12 hours") || "last 12 hours",
           },
           {
             value: "lastday",
-            label: "last day",
+            label: t("last day") || "last day",
           },
         ],
         onChange: (e: string) => {
@@ -388,8 +334,8 @@ function LicenseTab() {
       });
   }, [tenantId]);
   return (
-    <div className="flex flex-col  gap-6 p-6 min-w-[80rem]">
-      <div className="flex gap-4 items-center flex-wrap justify-end ">
+    <div className="flex flex-col  gap-6 p-6 ">
+      <div className="flex gap-4 items-center flex-wrap w-fit ml-auto">
         <Pagination
           value={params.pagination}
           onChange={(v) => setParams({ type: "pagination", payload: v })}
@@ -399,14 +345,14 @@ function LicenseTab() {
           className="flex items-center gap-2"
           onClick={() => setOpen(true)}
         >
-          Generate License
+          <span>{t("create")}</span>
           <AiOutlinePlusCircle className="text-lg" />
         </Button>
       </div>
       <DataGrid
         className=" table-fixed w-full text-left "
         headClassName="h-[5.5rem] bg-dark/5 dark:bg-light/5 text-[#697681] [&>*]:px-2 "
-        rowClassName="h-[4rem] [&>*]:px-2 even:bg-dark/5 dark:even:bg-light/5 hover:bg-dark/10 dark:hover:bg-light/10"
+        rowClassName="h-[4rem] [&>*]:px-2 even:bg-dark/5 dark:even:bg-light/5 hover:bg-dark/10 dark:hover:bg-light/10 shadow shadow-[#7f7f7f]/20"
         columns={columns}
         rows={rows.slice(
           (params.pagination.page - 1) * params.pagination.perPage,
@@ -419,8 +365,10 @@ function LicenseTab() {
         handleClose={() => setOpen(false)}
         className="bg-white w-11/12 max-w-[40rem] rounded [&>*]:border-b [&>*]:border-black/20 max-h-full overflow-auto"
       >
-        <div className="flex items-center py-4  justify-between px-4">
-          <span className="font-semibold">Create a License</span>
+        <div className="flex items-center py-2 md:py-4  justify-between px-4">
+          <span className="font-semibold capitalize">
+            {t("create new license")}
+          </span>
           <button
             onClick={() => setOpen(false)}
             className="rounded-full hover:bg-dark/10 active:shadow-inner w-8 h-8 flex-center"
@@ -428,16 +376,13 @@ function LicenseTab() {
             <MdOutlineClose className="text-2xl text-gray-500" />
           </button>
         </div>
-        <form className="flex flex-col gap-6 py-4 [&>div]:flex [&>div]:flex-col [&>div]:gap-2 [&>div]:px-4">
+        <form className="flex flex-col gap-2 sm:gap-4 md:gap-6 py-2  md:py-4 [&>div]:flex [&>div]:flex-col [&>div]:gap-2 px-2 md:px-4">
           <div>
-            <label
-              className="w-fit"
-              htmlFor="License-name"
-              placeholder="License name"
-            >
-              License name
+            <label className="w-fit capitalize" htmlFor="License-name">
+              {t("name")}
             </label>
             <input
+              placeholder={t("name") || "name"}
               id="License-name"
               className="h-11"
               onChange={(e) => {
@@ -447,14 +392,11 @@ function LicenseTab() {
           </div>
 
           <div>
-            <label
-              className="w-fit"
-              htmlFor="description"
-              placeholder="description"
-            >
-              description
+            <label className="w-fit capitalize" htmlFor="description">
+              {t("description")}
             </label>
             <input
+              placeholder={t("description") || "description"}
               id="description"
               className="h-11"
               onChange={(e) => {
@@ -466,17 +408,14 @@ function LicenseTab() {
             />
           </div>
           <div>
-            <label
-              className="w-fit"
-              htmlFor="startDate"
-              placeholder="startDate"
-            >
-              startDate
+            <label className="w-fit" htmlFor="startDate">
+              {t("start date")}
             </label>
             <input
+              placeholder={t("start date") || "startDate"}
               type="date"
               id="startDate"
-              className="h-11"
+              className="h-11 w-full"
               onChange={(e) => {
                 setCreateLicese({
                   ...createLicese,
@@ -486,17 +425,14 @@ function LicenseTab() {
             />
           </div>
           <div>
-            <label
-              className="w-fit"
-              htmlFor="expiredAt"
-              placeholder="expiredAt"
-            >
-              expiredAt
+            <label className="w-fit" htmlFor="expiredAt">
+              {t("expiration date")}
             </label>
             <input
+              placeholder={t("expiration date") || "expiration date"}
               type="date"
               id="expiredAt"
-              className="h-11"
+              className="h-11 w-full"
               onChange={(e) => {
                 setCreateLicese({
                   ...createLicese,
@@ -506,14 +442,11 @@ function LicenseTab() {
             />
           </div>
           <div>
-            <label
-              className="w-fit"
-              htmlFor="numberOfUsers"
-              placeholder="numberOfUsers"
-            >
-              number of users
+            <label className="w-fit" htmlFor="numberOfUsers">
+              {t("number of users")}
             </label>
             <input
+              placeholder={t("number of users") || "numberOfUsers"}
               type="number"
               min={0}
               id="numberOfUsers"
@@ -527,14 +460,11 @@ function LicenseTab() {
             />
           </div>
           <div>
-            <label
-              className="w-fit"
-              htmlFor="numberOfDataCenters"
-              placeholder="numberOfDataCenters"
-            >
-              number of data centers
+            <label className="w-fit" htmlFor="numberOfDataCenters">
+              {t("number of data centers")}
             </label>
             <input
+              placeholder={t("number of data centers") || "numberOfDataCenters"}
               type="number"
               min={0}
               id="numberOfUsers"
@@ -548,17 +478,17 @@ function LicenseTab() {
             />
           </div>
         </form>
-        <div className="flex justify-between items-center h-20 px-6">
+        <div className="flex justify-between items-center py-2 md:py-4 px-4">
           <Button
-            className="flex items-center gap-2 py-3 px-4"
+            className="flex items-center gap-2 py-2 md:py-3 px-2 md:px-4"
             variant="outlined"
             onClick={() => setOpen(false)}
           >
-            <span>Cancel</span>
+            <span>{t("cancel")}</span>
             <MdCancel className="text-2xl" />
           </Button>
           <Button
-            className="flex items-center gap-2 py-3 px-4"
+            className="flex items-center gap-2 py-2 md:py-3 px-2 md:px-4"
             onClick={() => {
               licenseApi
                 .addLicense(createLicese)
@@ -583,7 +513,7 @@ function LicenseTab() {
                 });
             }}
           >
-            <span>Genarate</span>
+            <span>{t("create")}</span>
             <MdWatchLater className="text-2xl" />
           </Button>
         </div>

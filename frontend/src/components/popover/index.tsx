@@ -66,7 +66,8 @@ function Popover(props: PopoverProps) {
       <div ref={popoverRef} className={`relative w-fit ${props.className}`}>
         <span
           className="cursor-pointer"
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             setOpenPopover((current) => !current);
           }}
         >
