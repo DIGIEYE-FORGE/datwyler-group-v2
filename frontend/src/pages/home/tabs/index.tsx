@@ -32,32 +32,32 @@ const tabs: Tab[] = [
     component: <GeographicalMapTab />,
   },
   {
-    name: "Alerts",
+    name: "alerts",
     icon: <InfoIcon />,
     component: <AlertsTab />,
   },
   {
-    name: "List of devices",
+    name: "devices",
     icon: <ListIcon />,
     component: <DevicesTab />,
   },
   {
-    name: "Reports",
+    name: "reports",
     icon: <BoardIcon />,
     component: <ReportsTab />,
   },
   {
-    name: "Admin user",
+    name: "users",
     icon: <AdminIcon />,
     component: <AdminTab />,
   },
   {
-    name: "License",
+    name: "licenses",
     icon: <KeyIcon />,
     component: <LicenseTab />,
   },
   {
-    name: "Tenant",
+    name: "tenants",
     icon: <TenantIcon />,
     component: <TenantsTab />,
   },
@@ -67,7 +67,7 @@ const tabs: Tab[] = [
     component: <SupportTab />,
   },
   {
-    name: "Profile settings",
+    name: "profile settings",
     icon: <SettingsIcon />,
     component: <ProfileTab />,
   },

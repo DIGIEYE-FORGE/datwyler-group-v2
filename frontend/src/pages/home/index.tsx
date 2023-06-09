@@ -7,6 +7,7 @@ import alltabs from "./tabs";
 import { ReactComponent as XIcon } from "../../assets/icons/x.svg";
 import Lottie from "react-lottie";
 import animationData from "./no-tab-lottie.json";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   children: React.ReactNode[] | React.ReactNode;
@@ -39,6 +40,7 @@ const SwipeableTabs = (props: Props) => {
 };
 
 function HomePage() {
+  const { t } = useTranslation();
   const { selectedTabs, activeTab, selectTab, closeTab, user } =
     useProvider<AppContext>();
 
@@ -80,7 +82,7 @@ function HomePage() {
                   onClick={() => selectTab(tabIdx)}
                 >
                   <span>{tabs[tabIdx].icon}</span>
-                  <span>{tabs[tabIdx].name}</span>
+                  <span>{t(tabs[tabIdx].name)}</span>
                   <span
                     className="close-tab"
                     onClick={(e) => {
@@ -107,12 +109,12 @@ function HomePage() {
           ) : (
             <div className="flex-center  h-full gap-6 p-6 ">
               <div className="flex flex-col gap-4">
-                <h1 className="text-4xl font-bold text-primary   uppercase">
-                  <span className="text-accent mr-2">No</span>
-                  <span>tab selected</span>
+                <h1 className="text-2xl md:text-4xl font-bold text-primary   uppercase">
+                  <span className="text-accent mr-2">{t("No")}</span>
+                  <span>{t("tab selected")}</span>
                 </h1>
-                <p className="mt-2 text-2xl dark:text-light">
-                  Please select a tab from the sidebar
+                <p className="mt-2 text-base md:text-2xl dark:text-light">
+                  {t("please select a tab from the sidebar")}
                 </p>
               </div>
               <div className="pointer-events-none">

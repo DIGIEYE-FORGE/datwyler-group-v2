@@ -110,5 +110,16 @@
   "Confirm Account Closure": "Confirmer la fermeture du compte",
   "old password": "ancien mot de passe",
   "new password": "nouveau mot de passe",
-  "confirm password": "confirmation du mot de passe"
+  "confirm password": "confirmation du mot de passe",
+  "please select a tab from the sidebar": "veuillez sélectionner un onglet dans la barre latérale",
+  "No": "Aucun",
+  "tab selected": "onglet sélectionné",
+  "dashboard": "tableau de bord",
+  "report": "rapport",
+  "reports": "rapports",
+  "users": "utilisateurs",
+  "licenses": "licences",
+  "tenants": "locataires",
+  "support": "support",
+  "profile settings": "paramètres du profil"
 }
