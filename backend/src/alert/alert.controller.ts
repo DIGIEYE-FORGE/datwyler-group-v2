@@ -14,11 +14,10 @@ import { Alert, CreateAlertDto, UpdateAlertDto } from './entities';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { FindAllQuery, FindOneQuery } from 'src/utils';
 
-
 @ApiTags('alert')
 @Controller('alert')
 export class AlertController {
-  constructor(private readonly alertService: AlertService) {}
+  constructor(private readonly alertService: AlertService) { }
 
   @ApiOkResponse({ type: [Alert] })
   @Get()
@@ -42,6 +41,11 @@ export class AlertController {
   @Patch(':id')
   update(@Param('id', ParseIntPipe) id: number, @Body() data: UpdateAlertDto) {
     return this.alertService.update(id, data);
+  }
+  @ApiOkResponse({ type: Alert })
+  @Patch(':id/unacknowledge')
+  unacknowledge(@Param('id', ParseIntPipe) id: number) {
+    return this.alertService.unacknowledge(id);
   }
 
   @ApiOkResponse({ type: Alert })

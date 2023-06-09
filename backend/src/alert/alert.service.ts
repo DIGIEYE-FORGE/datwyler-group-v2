@@ -5,7 +5,7 @@ import { CreateAlertDto, UpdateAlertDto } from './entities';
 
 @Injectable()
 export class AlertService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   @FindAllOptions({})
   @HandleRequestErrors()
@@ -30,6 +30,16 @@ export class AlertService {
   @HandleRequestErrors()
   async update(id: number, data: UpdateAlertDto) {
     return await this.prisma.alert.update({ where: { id }, data });
+  }
+  @HandleRequestErrors()
+  async unacknowledge(id: number) {
+    return await this.prisma.alert.update({
+      where: { id },
+      data: {
+        acknowledgedBy: null,
+        attributes: null,
+      },
+    });
   }
 
   @HandleRequestErrors()
