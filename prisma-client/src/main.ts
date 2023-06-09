@@ -2250,8 +2250,8 @@ async function freshStart() {
 
   // }, 1000);
 
-  
 
+  console.log({ history: JSON.stringify(history, null, 2) });
 }
 
 async function main() {
