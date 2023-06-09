@@ -35,9 +35,22 @@ function Accordion({ items, className, ...props }: Props) {
             <span>{item.title}</span>
           </Button>
           <span
-            className={`${
-              activeIndeces.includes(index) ? "text-sm px-4 py-2" : "text-[0] "
-            } transition-[font-size,padding] duration-500 ease-in-out`}
+            style={
+              activeIndeces.includes(index)
+                ? {
+                    fontSize: 0,
+                    lineHeight: 0,
+                    padding: 0,
+                    opacity: 0,
+                  }
+                : {
+                    lineHeight: "1.5rem",
+                    fontSize: "1rem",
+                    padding: "0.5rem",
+                    opacity: 1,
+                  }
+            }
+            className={`transition-[font-size,padding,line-height] duration-500 ease`}
           >
             {item.content}
           </span>

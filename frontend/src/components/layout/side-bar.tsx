@@ -61,7 +61,7 @@ function SideBar() {
         <span>developed by</span>
         <AbaLogo />
       </span> */}
-      <label htmlFor="toggle-side-bar" className="toggle mt-auto">
+      <label htmlFor="toggle-side-bar" className="toggle mt-auto flex-center">
         <DoubleArrowLeftIcon />
       </label>
     </div>
