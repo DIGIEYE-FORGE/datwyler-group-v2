@@ -7,8 +7,10 @@ import { toast } from "react-toastify";
 import Button from "../../../../components/button";
 import Modal from "../../../../components/modal";
 import Avatar from "../../../../components/avatar";
+import { useTranslation } from "react-i18next";
 
 function ProfileTab() {
+  const { t } = useTranslation();
   const { user, authApi, setUser, confirm, multiTenancyApi, tenantId } =
     useProvider<AppContext>();
   const [data, setData] = useState<User>(user!);
@@ -53,8 +55,8 @@ function ProfileTab() {
   return (
     <div className=" p-3 md:p-4 lg:p-6 grid md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4 lg:gap-6">
       <div className="card md:col-span-2 lg:col-span-2 lg:row-span-2 p-4 lg:p-6 xl:p-8 flex flex-col gap-3 md:gap-4 xl:gap-6">
-        <h3 className="text-black dark:text-light font-bold text-2xl">
-          Profile details
+        <h3 className="text-black dark:text-light font-bold text-2xl capitalize">
+          {t("profile details")}
         </h3>
         <div className="flex flex-wrap gap-4 ">
           <span className="flex-1 flex-center">
@@ -88,19 +90,23 @@ function ProfileTab() {
             />
             <label
               htmlFor="avatar"
-              className="h-[3rem] px-4 max-w-[17rem] whitespace-nowrap bg-primary/10 inline-block flex-center text-primary font-semibold rounded"
+              className="h-[3rem] px-4 max-w-[17rem] whitespace-nowrap bg-primary/10 inline-block flex-center text-primary font-semibold rounded capitalize cursor-pointer hover:shadow-lg hover:shadow-primary/10"
             >
-              Upload Profile Photo
+              {t("upload profile picture")}
             </label>
             <div className="font-light text-sm md:text-base text-[#a6a8a8] max-w-[30rem]">
-              *Image size should be at least 320px big, and less than 500kb.
-              Allowed files .png and .jpg.
+              {t(
+                "*Image size should be at least 320px big, and less than 500kb."
+              )}
+              {t("Allowed files .png and .jpg.")}
             </div>
           </div>
         </div>
         <div className=" flex-1 grid md:grid-cols-2 items-center xl:grid-cols-4 py-6 gap-4 [&>div]:flex-1 [&>div]:flex [&>div]:flex-col [&>div]:gap-2 [&>div>label]:capitalize [&>div>input]:py-4 md:[&>div>input]:py- xl:[&>div>input]:py-6">
           <div className="md:col-span-2">
-            <label htmlFor="firstname">firtt name</label>
+            <label htmlFor="firstname" className="capitalize">
+              {t("first name")}
+            </label>
             <input
               type="text"
               id="firstname"
@@ -114,7 +120,7 @@ function ProfileTab() {
             />
           </div>
           <div className="md:col-span-2">
-            <label htmlFor="lastname">last name</label>
+            <label htmlFor="lastname">{t("last name")}</label>
             <input
               type="text"
               id="lastname"
@@ -128,7 +134,7 @@ function ProfileTab() {
             />
           </div>
           <div className="md:col-span-2">
-            <label htmlFor="contactnumber">contact number</label>
+            <label htmlFor="contactnumber">{t("phone number")}</label>
             <input
               type="text"
               id="contactnumber"
@@ -142,7 +148,7 @@ function ProfileTab() {
             />
           </div>
           <div className="md:col-span-2">
-            <label htmlFor="email">email address</label>
+            <label htmlFor="email">{t("email")}</label>
             <input
               type="text"
               id="email"
@@ -156,7 +162,7 @@ function ProfileTab() {
             />
           </div>
           <div>
-            <label htmlFor="city">city </label>
+            <label htmlFor="city">{t("city")}</label>
             <input
               type="text"
               id="city"
@@ -173,7 +179,7 @@ function ProfileTab() {
             />
           </div>
           <div>
-            <label htmlFor="country">country </label>
+            <label htmlFor="country">{t("country")}</label>
             <input
               type="text"
               id="country"
@@ -190,7 +196,7 @@ function ProfileTab() {
             />
           </div>
           <div>
-            <label htmlFor="state">state </label>
+            <label htmlFor="state">{t("state")}</label>
             <input
               type="text"
               id="state"
@@ -207,7 +213,7 @@ function ProfileTab() {
             />
           </div>
           <div>
-            <label htmlFor="zipcode">zip code </label>
+            <label htmlFor="zipcode">{t("zip code")}</label>
             <input
               type="text"
               id="zipcode"
@@ -235,7 +241,7 @@ function ProfileTab() {
               setData(user!);
             }}
           >
-            reset
+            {t("reset")}
           </Button>
           <Button
             className=" bg-[#0091AE]/90"
@@ -277,36 +283,37 @@ function ProfileTab() {
                 });
             }}
           >
-            update
+            {t("update")}
           </Button>
         </div>
       </div>
       <div className="card flex flex-col justify-evenly p-6 xl:p-12 gap-4 xl:gap-6">
         <h1 className="font-bolder capitalize font-bold text-2xl">
-          change password
+          {t("change password")}
         </h1>
         <p>
-          Ensure the safety of your account by regularly updating your password.
-          Click here to change your password and enhance your online security.
+          {t(
+            "Ensure the safety of your account by regularly updating your password. Click here to change your password and enhance your online security."
+          )}
         </p>
         <Button
           onClick={() => setChangePassword(true)}
           className="flex-center text-base md:text-lg xl:text-xl py-2 md:py-3 capitalize"
         >
-          <span>Update Your Security</span>
+          <span>{t("update your security")}</span>
         </Button>
       </div>
       <div className="card flex flex-col justify-evenly p-6 xl:p-12 gap-4 xl:gap-6">
         <h1 className="font-bolder capitalize font-bold text-2xl">
-          close account
+          {t("close account")}
         </h1>
         <p>
-          Please exercise caution before proceeding with closing your account.
-          This irreversible action will permanently delete all your data and
-          transactions.
+          {t(
+            "Please exercise caution before proceeding with closing your account. This irreversible will  permanently delete all your data and transactions."
+          )}
         </p>
         <Button className="flex-center text-base md:text-lg xl:text-xl py-2 md:py-3 capitalize">
-          <span>Confirm Account Closure</span>
+          <span>{t("Confirm Account Closure")}</span>
         </Button>
       </div>
       <Modal
@@ -317,16 +324,15 @@ function ProfileTab() {
         }}
       >
         <div className="w-[100%] h-[10%] flex items-center flex-col border-b py-2 md:py-4">
-          <div className="text-black dark:text-white font-bold text-2xl">
-            Change password
-          </div>
-          <div className="text-[#656868]">
-            You can update your password here
+          <div className="text-black dark:text-white font-bold text-2xl first-letter:capitalize">
+            {t("change password")}
           </div>
         </div>
         <div className="flex flex-col gap-4 md:gap-6 p-4">
           <div className="">
-            <label htmlFor="userName">Old Password</label>
+            <label htmlFor="userName" className="capitalize">
+              {t("old password")}
+            </label>
             <input
               type="password"
               className="h-10 w-full"
@@ -339,7 +345,7 @@ function ProfileTab() {
             />
           </div>
           <div className="pt-4">
-            <label htmlFor="userName">New Password</label>
+            <label htmlFor="userName">{t("new password")}</label>
             <input
               type="password"
               className="h-10 w-full"
@@ -352,7 +358,7 @@ function ProfileTab() {
             />
           </div>
           <div className="">
-            <label htmlFor="userName">Confirm Password</label>
+            <label htmlFor="userName">{t("confirm password")}</label>
             <br />
             <input
               type="password"
@@ -368,7 +374,7 @@ function ProfileTab() {
         </div>
         <div className="flex justify-between py-2 md:py-4 border-t px-4">
           <Button
-            className="py-2 md:py-3 w-[6rem] bg-transparent text-[#0091AE]"
+            className="py-2 md:py-3 w-[6rem] bg-transparent text-[#0091AE] capitalize"
             style={{
               border: "1px solid #0091AE",
               color: "#0091AE",
@@ -377,10 +383,10 @@ function ProfileTab() {
               setChangePassword(false);
             }}
           >
-            Cancel
+            {t("cancel")}
           </Button>
           <Button
-            className="py-2 md:py-3 w-[6rem] bg-[#0091AE]/90"
+            className="py-2 md:py-3 w-[7rem] bg-[#0091AE]/90"
             onClick={() => {
               if (
                 datachangePassword.newPassword !==
@@ -409,7 +415,7 @@ function ProfileTab() {
               datachangePassword.confirmPassword === ""
             }
           >
-            Save
+            {t("update")}
           </Button>
         </div>
       </Modal>
