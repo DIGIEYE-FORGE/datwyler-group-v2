@@ -100,7 +100,14 @@ function Row({ row }: { row: JsonObject }) {
             >
               {restColumns.map((column, index) => (
                 <React.Fragment key={index}>
-                  <span>{column.header}</span>
+                  <span
+                    style={{
+                      color: "#7f7f7f",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {column.header}
+                  </span>
                   <span>
                     {column.valueGetter ? (
                       column.valueGetter(row)

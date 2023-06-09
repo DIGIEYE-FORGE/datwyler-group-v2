@@ -79,7 +79,7 @@ export default class BackendApi {
 
   async alertsGenerate(data: {
     name: string;
-    tenantId: number|undefined;
+    tenantId: number | undefined;
     type: string;
     where: {
       [key: string]: any;
@@ -132,7 +132,7 @@ export default class BackendApi {
     return res.data;
   }
 
-  async addEditGroup({ id, ...groupData }: GroupData & {
+  async addEditGroup({ id, tenantParentId, ...groupData }: GroupData & {
     tenantId: number;
     tenantParentId?: number;
   }): Promise<Group> {
@@ -140,7 +140,10 @@ export default class BackendApi {
       const res = await this.api.patch(`/group/${id}`, groupData);
       return res.data;
     }
-    const res = await this.api.post("/group", groupData);
+    const res = await this.api.post("/group", {
+      tenantParentId,
+      ...groupData
+    });
     return res.data;
   }
 

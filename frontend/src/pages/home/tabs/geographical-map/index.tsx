@@ -138,7 +138,7 @@ function GeographicalMapTab({ details = true }: Props) {
       }
       setGroupData(null);
     } catch (e) {
-      console.log(e);
+      console.error(e);
       toast.error("Failed to save group");
     }
   }
