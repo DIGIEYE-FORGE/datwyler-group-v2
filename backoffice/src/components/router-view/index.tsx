@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Router } from "react-router-dom";
 import HomePage from "../../pages/home";
 import DevicesPage from "../../pages/devices";
 import NotFoundPage from "../../pages/not-found";
@@ -11,6 +11,7 @@ import SignUpPage from "../../pages/signup";
 import FilePage from "../../pages/file";
 import User from "../../pages/users";
 import TenantPage from "../../pages/tenant";
+import Flow from "../../pages/flow";
 const RouterView = () => {
   return (
     <Routes>
@@ -25,6 +26,7 @@ const RouterView = () => {
       <Route path="/files" element={<FilePage />} />
       <Route path="/users" element={<User />} />
       <Route path="/tenants" element={<TenantPage />} />
+      <Route path="flow" element={<Flow/>}/>
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

@@ -9,13 +9,8 @@ import Card from "../card";
 import { useProvider } from "../provider";
 import appsIcon from "../../assets/icons/apps.svg";
 import HomeIcon from "../icons/home";
-// import FireIcon from "../icons/fire";
-// import CalenderIcon from "../icons/calender";
-// import ChatIcon from "../icons/chat";
-// import WatchIcon from "../icons/watch";
 import SettingsIcon from "../icons/settings";
-import { memo, useEffect, useState } from "react";
-import Input from "../input";
+import { memo, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import FullScreen from "../../assets/icons/full-screen.svg";
 import useLocalStorage from "../../hooks/use-local-storage";
@@ -31,6 +26,7 @@ import DigiCo2Logo from "../../assets/images/digi-co2-logo.svg";
 import { UserContext } from "../../App";
 import Select from "../select";
 import SelectV2 from "../select-version2";
+import FlowIcons from "../icons/flow";
 
 const XIcon = () => (
   <svg
@@ -584,8 +580,20 @@ const Layout = (props: Props) => {
           </Popover>
           <span className="mt-auto "></span>
           <div
-            className="link active "
+            className={`link ${window.location.pathname === '/backoffice/flow' && 'active'} `}
             onClick={(e) => {
+              setSubMenuOpen(false);
+              navigate("/flow");
+            }}
+          >
+            <span className="icon-wrap">
+              <FlowIcons color="white" />
+            </span>
+          </div>
+          <div
+            className={`link ${window.location.pathname !== '/backoffice/flow' && 'active'} `}
+            onClick={(e) => {
+              navigate("/");
               setSubMenuOpen((curr) => !curr);
             }}
           >
@@ -626,7 +634,7 @@ const Layout = (props: Props) => {
           </div>
           <div className="seceondary-menu"></div>
         </div>
-        <div className={`sub-menu ${subMenuOpen && "open"}`}>
+        <div className={`sub-menu ${subMenuOpen  && "open"}`}>
           <div className="content ">
             <div className="title">gestion device</div>
             <Select
@@ -694,7 +702,7 @@ function RouterLink(props: RouterLinkProps) {
         <span
           className="label"
           style={{
-            color: isActive ? "#4E5064" : "",
+            color: isActive ? "#4E5064" : "", 
             fontWeight: location.pathname === path ? "600" : "",
           }}
         >
@@ -711,16 +719,17 @@ function RouterLink(props: RouterLinkProps) {
           </span>
         )}
       </div>
-      <div
-        className="sub-routes"
-        style={{
-          maxHeight: open ? (route.routes?.length || 0) * 40 : 0,
-        }}
-      >
-        {route.routes?.map((route) => {
-          return <RouterLink key={route.label} route={route} />;
-        })}
-      </div>
+ 
+         <div
+         className="sub-routes"
+         style={{
+           maxHeight: open ? (route.routes?.length || 0) * 40 : 0,
+         }}
+       >
+         {route.routes?.map((route) => {
+           return <RouterLink key={route.label} route={route} />;
+         })}
+       </div>
     </div>
   );
 }
