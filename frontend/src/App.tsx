@@ -59,6 +59,12 @@ export type AppContext = {
   groups: Group[];
   setGroups: React.Dispatch<React.SetStateAction<Group[]>>;
   tenantParentId: number | undefined;
+  where:{
+    [key: string]: any;
+  }
+  setWhere: React.Dispatch<React.SetStateAction<{
+    [key: string]: any;
+  }>>;
 };
 
 export const defaulParams: Params = {

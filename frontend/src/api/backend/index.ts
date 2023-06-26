@@ -176,7 +176,13 @@ export default class BackendApi {
     return res.data;
   }
   async getDashboardData(): Promise<DashboardData> {
-    const res = await this.api.get("/dashboard");
+    const res = await this.api.get("/dashboard",{
+      params: {
+        where: JSON.stringify({
+        })
+      }
+
+    });
     return res.data;
   }
 

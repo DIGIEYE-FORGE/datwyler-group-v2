@@ -10,7 +10,7 @@ import Card from "../../../../components/card";
 import { GiSmokeBomb } from "react-icons/gi";
 import Provider, { useProvider } from "../../../../components/provider";
 import { AppContext } from "../../../../App";
-import { DashboardData, strTake } from "../../../../utils";
+import { Alert, DashboardData, strTake } from "../../../../utils";
 import GeographicalMap from "./goegraphical-map";
 import { format } from "date-fns";
 import Loader from "../../../../components/loader";
@@ -220,10 +220,30 @@ const alerts = [
 function RecentAlarms() {
   const dashboardData = useProvider<DashboardData | null>();
   const alarms = dashboardData?.upsAlarms ?? [];
+  const [data, setData] = useState(alarms);
   return (
     <Chart title="UPS" className="flex h-full ">
       <div className="flex gap-3  h-[calc(100%-3rem)] p-3">
-        <div className="flex-[3] md:flex-[3] flex justify-center items-center h-full">
+        <div className="flex-[3] md:flex-[3] flex justify-center items-center h-full relative">
+          <span className="absolute top-0 left-0 h-[2.5rem] w-full">
+            <input type="text" 
+            placeholder="Search"
+            onChange={(e) => {
+              const value = e.target.value;
+              if (value === "") {
+                setData(alarms);
+                return;
+              }
+              const filtered = alarms.filter((alarm) =>
+                alarm?.type?.toLowerCase().includes(value.toLowerCase()) ||
+                alarm?.message?.toLowerCase().includes(value.toLowerCase()) ||
+                alarm?.level?.toLowerCase().includes(value.toLowerCase())
+              );
+              setData(filtered);
+            }
+            }
+            className="w-full h-full border p-2"/>
+          </span>
           <div className="h-20  md:h-1/2 max-h-full aspect-square rounded-full  outline  outline-4 md:outline-8 outline-primary   relative">
             <div className="absolute-center flex flex-col items-center">
               <div className="text-2xl md:text-5xl text-black dark:text-white">
@@ -261,14 +281,33 @@ function RecentAlarms() {
 function WaterFlow() {
   const dashboardData = useProvider<DashboardData | null>();
   const alarms = dashboardData?.coolingUnitAlarms ?? [];
+  const [data, setData] = useState<any>(alarms);
+  const context = useProvider<any>();
+  const [shearch, setShearch] = useState("");
   return (
     <Chart title="cooling unit" className="flex h-full ">
       <div className="flex gap-3  h-[calc(100%-3rem)] p-3">
-        <div className="flex-[3] md:flex-[3] flex justify-center items-center h-full">
+        <div className="flex-[3] md:flex-[3] flex justify-center items-center h-full relative">
+          <span className="absolute top-0 left-0 h-[2.5rem] w-full">
+            <input type="text" 
+            placeholder="Search"
+            onChange={(e)=>{
+              const value = e.target.value;
+              if (value === "") {
+                setData(alarms);
+                return;
+              }
+              setData(alarms.filter((alarm: Alert)=>
+              alarm?.type?.toLowerCase().includes(value.toLowerCase()) ||
+              alarm?.message?.toLowerCase().includes(value.toLowerCase()) ||
+              alarm?.level?.toLowerCase().includes(value.toLowerCase())))
+            }}
+            className="w-full h-full border p-2"/>
+          </span>
           <div className="h-20  md:h-1/2 max-h-full aspect-square rounded-full  outline  outline-4 md:outline-8 outline-primary   relative">
             <div className="absolute-center flex flex-col items-center">
               <div className="text-2xl md:text-5xl text-black dark:text-white">
-                {alarms.length}
+                {data.length}
               </div>
               <div className="font-xl text-[#00323C]">Alarm</div>
             </div>
@@ -305,7 +344,7 @@ function DashboardTab() {
   const { backendApi, tenantId, activeTab, loginState } = context;
   const [data, setData] = useState<DashboardData | {}>({});
   const [state, setState] = useState<"idle" | "loading" | "error">("loading");
-
+  const [where, setWhere] = useState<any>({});
   async function fetchDashboardData(firstTime = false) {
     try {
       if (firstTime) setState("loading");
@@ -342,6 +381,8 @@ function DashboardTab() {
       value={{
         ...context,
         ...data,
+        where,
+        setWhere,
       }}
     >
       <div className="container text-sm md:text-base items-center w-full min-h-full flex flex-col gap-6 overflow-x-hidden p-4 sm:p-4 md:p-6 ">
