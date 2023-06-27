@@ -127,7 +127,7 @@ function Metrics() {
             <Cards title={item.title+""} value={item.value} icon={item.icon} deleteWidget={deleteWidget}/>
           )}
         />
-        <button  className="w-[5rem] h-[4rem]  flex items-center justify-center translate-y-1/2" onClick={()=>{
+        <button  className="w-[5rem] flex items-center justify-center" onClick={()=>{
             setOpen(true)
           }
           }>
