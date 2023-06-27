@@ -20,6 +20,8 @@ import { useTranslation } from "react-i18next";
 import useLocalStorage from "../../../../hooks/use-local-storage";
 import Modal from "../../../../components/modal";
 import { RiDeleteBin5Line } from "react-icons/ri";
+import { da } from "date-fns/locale";
+import { color } from "framer-motion";
 interface IconButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   tooltip?: string;
 }
@@ -50,10 +52,11 @@ export function IconButton({ children, className, ...props }: IconButtonProps) {
   );
 }
 
-function Cards({title,icon, value, deleteWidget}:{
+function Cards({title,icon, value, deleteWidget,color}:{
   title:string;
-  icon:React.ReactNode;
+  icon:number;
   value:any,
+  color?:string,
   deleteWidget:(title:string)=>void
 })
   {
@@ -85,12 +88,13 @@ function Cards({title,icon, value, deleteWidget}:{
         </span>
         <span className={`w-[2.75rem] aspect-square flex-center  rounded-full`} style={{
         }}>
-         {icon}
+         {iconsArray[icon]({className:`text-3xl`,style:{color:color}})}
         </span>
       </div>
       </Card>
     )
   }
+const iconsArray= [BsAlarm,BsCpu,BsDoorClosedFill,GiLeak,GiSmokeBomb,TbBellRinging]
 function Metrics() {
   const { t } = useTranslation();
   const dashboardData = useProvider<DashboardData | null>()
@@ -99,8 +103,8 @@ function Metrics() {
   const [iconActive,setIconActive] = useState<string>("");
   const {open,setOpen} = context;
 
-
   const deleteWidget = (title:string)=>{
+    console.log("test", data);
     const newData = data.filter((item,i)=>{
       return item.title != title
     })
@@ -124,10 +128,10 @@ function Metrics() {
         <For
           each={data}
           children={(item, index) => (
-            <Cards title={item.title+""} value={item.value} icon={item.icon} deleteWidget={deleteWidget}/>
+            <Cards title={item.title+""} value={item.value} icon={+item.icon}  deleteWidget={deleteWidget} color={item.color}/>
           )}
         />
-        <button  className="w-[5rem] flex items-center justify-center" onClick={()=>{
+        <button  className="w-[5rem] h-[4rem]  flex items-center justify-center translate-y-1/2" onClick={()=>{
             setOpen(true)
           }
           }>
@@ -169,14 +173,12 @@ function Metrics() {
           }}/>
           <label htmlFor="">Icon</label>
           <div className="w-full h- full flex flex-wrap">
-            {[BsAlarm,BsCpu,BsDoorClosedFill,GiLeak,GiSmokeBomb,TbBellRinging].map((Icon,index)=>(
+            {iconsArray.map((Icon,index:number)=>(
               <div key={index} className="w-[2.75rem] aspect-square flex-center bg-primary/20 rounded-full m-1">
                 <IconButton className={`${iconActive=== Icon.name && 'bg-primary/70  hover:bg-primary/70'}`} onClick={()=>{
                   setAddWidget({
                     ...addWidget,
-                    icon:<Icon fontSize={24} style={{
-                      color:addWidget.color
-                    }}/>
+                      icon:index 
                   })
                   setIconActive(Icon.name)
                 }}>
@@ -206,66 +208,6 @@ function Metrics() {
           </Button>
         </div>
       </Modal>
-      {/* <Card className="metric-card ">
-        <div className=" rounded bg-primary/10 p-2 capitalize">
-          {t("online devices")}
-        </div>
-        <div className="flex-1 flex justify-between items-center p-2 ">
-          <span className="text-2xl">
-            {dashboardData?.devices?.online ?? 0} /
-            {dashboardData?.devices?.total ?? 0}
-          </span>
-          <span className="w-[2.75rem] aspect-square flex-center bg-primary/20 rounded-full">
-            <BsCpu className="text-primary" fontSize={24} />
-          </span>
-        </div>
-      </Card>
-      <Card className="metric-card ">
-        <div className=" rounded bg-primary/10 p-2 capitalize">
-          {t("critical alarms")}
-        </div>
-        <div className="flex-1 flex justify-between items-center p-2 ">
-          <span className="text-2xl">{dashboardData?.criticalAlarms ?? 0}</span>
-          <span className="w-[2.75rem] aspect-square flex-center bg-accent/20 rounded-full">
-            <BsAlarm className="text-accent" fontSize={24} />
-          </span>
-        </div>
-      </Card>
-      <Card className="metric-card ">
-        <div className=" rounded bg-primary/10 p-2 capitalize">
-          {t("door alarms")}
-        </div>
-        <div className="flex-1 flex justify-between items-center p-2 ">
-          <span className="text-2xl">{dashboardData?.doorAlarms ?? 0}</span>
-          <span className="w-[2.75rem] aspect-square flex-center bg-[#F86F28]/20 rounded-full">
-            <BsDoorClosedFill color="#F86F28" fontSize={24} />
-          </span>
-        </div>
-      </Card>
-      <Card className="metric-card ">
-        <div className=" rounded bg-primary/10 p-2 capitalize">
-          {t("water leak")}
-        </div>
-        <div className="flex-1 flex justify-between items-center p-2 ">
-          <span className="text-2xl">
-            {dashboardData?.waterLeakAlarms ?? 0}
-          </span>
-          <span className="w-[2.75rem] aspect-square flex-center bg-blue-500/20 rounded-full">
-            <GiLeak className="text-blue-500" fontSize={24} />
-          </span>
-        </div>
-      </Card>
-      <Card className="metric-card ">
-        <div className=" rounded bg-primary/10 p-2 capitalize">
-          {t("smoke alarms")}
-        </div>
-        <div className="flex-1 flex justify-between items-center p-2 ">
-          <span className="text-2xl">{dashboardData?.smokeAlarms ?? 0}</span>
-          <span className="w-[2.75rem] aspect-square flex-center bg-gray-500/20 rounded-full">
-            <GiSmokeBomb className="text-gray-600" fontSize={24} />
-          </span>
-        </div>
-      </Card> */}
     </div>
   );
 }
