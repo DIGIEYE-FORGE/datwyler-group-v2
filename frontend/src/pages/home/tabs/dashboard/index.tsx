@@ -373,7 +373,6 @@ function RecentAlarms() {
   const dashboardData = useProvider<DashboardData | null>();
   const alarms = dashboardData?.upsAlarms ?? [];
   const context = useProvider<any>();
-  const {open, setOpen} = context;
   const [data, setData] = useState(alarms);
   return (
     <Chart title="UPS" className="flex h-full ">
@@ -497,7 +496,7 @@ function DashboardTab() {
   const [data, setData] = useState<DashboardData | {}>({});
   const [state, setState] = useState<"idle" | "loading" | "error">("loading");
   const [where, setWhere] = useState<any>({});
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   async function fetchDashboardData(firstTime = false) {
     try {
       if (firstTime) setState("loading");
