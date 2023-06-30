@@ -41,6 +41,18 @@ model Group {
   @@map("groups")
 }
 
+model DashbordAlert{
+  id       Int      @id @default(autoincrement())
+  userId   Int      @map("user_id")
+  data    Json?    @db.Json @default("[]")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  tenantId Int?     @map("tenant_id")
+
+  @@unique([userId, tenantId])
+  @@map("dashbord_alerts")
+  @@index([tenantId], name: "dashbord_alerts_tenant_id_index")
+}
 model Alert {
   id             Int       @id @default(autoincrement())
   deviceId       Int
@@ -55,7 +67,6 @@ model Alert {
   deviceName     String?   @map("device_name")
   startTime      DateTime? @map("start_times")
   endTime        DateTime? @map("end_times")
-
   @@map("alert")
 }
 

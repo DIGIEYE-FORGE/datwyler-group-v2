@@ -1,3 +1,4 @@
+import { DashbordAlertsModule } from './dashbordalerts/dashbordalerts.module';
 import { ReportModule } from './report/report.module';
 import { GroupModule } from './group/group.module';
 import { VmqAuthAclModule } from './vmqauthacl/vmqauthacl.module';
@@ -43,6 +44,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
+    DashbordAlertsModule,
     ReportModule,
     GroupModule,
     ConfigModule.forRoot(),

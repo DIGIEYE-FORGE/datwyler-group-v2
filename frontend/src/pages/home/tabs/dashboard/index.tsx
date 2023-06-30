@@ -22,6 +22,8 @@ import Modal from "../../../../components/modal";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { da } from "date-fns/locale";
 import { color } from "framer-motion";
+import { use } from "i18next";
+import AlertsTab from "../alertes";
 interface IconButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   tooltip?: string;
 }
@@ -101,18 +103,62 @@ function Metrics() {
   const context = useProvider<any>();
   const [addWidget,setAddWidget] = useState<any>({});
   const [iconActive,setIconActive] = useState<string>("");
-  const {open,setOpen} = context;
-
+  const {open,setOpen,activeTab, dashbordAlerts,loginState,backendApi} = context;
+  const [contAlert,setContAlert] = useState<{
+    [key: string]: string | number;
+  }>({});
   const deleteWidget = (title:string)=>{
-    console.log("test", data);
     const newData = data.filter((item,i)=>{
       return item.title != title
     })
-    setData(newData)
+        backendApi.updateDashboard({
+          data:[newData]
+      }, dashbordAlerts?.results?.[0]?.id || 0).then((res:any)=>{
+          setData(newData)
+          
+              }).catch((err:any)=>{
+                console.log(err);
+              }
+              )  
   }
+
+
   const [data,setData] = useState<{
     [key: string]: string | number;
-  }[]>([]);
+  }[]>(dashbordAlerts?.results?.[0]?.data || []);
+
+  useEffect(()=>{
+    if (activeTab !== 0 || loginState !== "idle") return;
+    if(dashbordAlerts?.results?.[0]?.data){
+      setData(dashbordAlerts?.results?.[0]?.data)
+      backendApi.test({
+        where:{
+          userId:dashbordAlerts?.results?.[0]?.userId || 0,
+          tenantId:dashbordAlerts?.results?.[0]?.tenantId || 0,
+        },
+      }).then((res:any)=>{
+        setContAlert(res);
+      }).catch((err:any)=>{
+        console.log(err);
+      })
+    }
+    const interval = setInterval(() => {
+    if(dashbordAlerts?.results?.[0]?.data){
+      setData(dashbordAlerts?.results?.[0]?.data)
+      backendApi.test({
+        where:{
+          userId:dashbordAlerts?.results?.[0]?.userId || 0,
+          tenantId:dashbordAlerts?.results?.[0]?.tenantId || 0,
+        },
+      }).then((res:any)=>{
+        setContAlert(res);
+      }).catch((err:any)=>{
+        console.log(err);
+      })
+    }
+    }, 8000);
+    return () => clearInterval(interval);
+  },[dashbordAlerts?.results?.[0]?.data,activeTab,loginState])
   return (
     <div className="w-full flex gap-6 flex-wrap border min-h-[6rem] shadow-xl h-fit p-2">
       {data.length == 0 ? (
@@ -128,7 +174,11 @@ function Metrics() {
         <For
           each={data}
           children={(item, index) => (
-            <Cards title={item.title+""} value={item.value} icon={+item.icon}  deleteWidget={deleteWidget} color={item.color}/>
+            <>
+            <Cards title={item.title+""} value={
+              contAlert?.[item?.alertType]
+            } icon={+item.icon}  deleteWidget={deleteWidget} color={item.color+""}/>
+            </>
           )}
         />
         <button  className="w-[5rem] h-[4rem]  flex items-center justify-center translate-y-1/2" onClick={()=>{
@@ -200,8 +250,15 @@ function Metrics() {
           <Button
             className="capitalize"
             onClick={() => {
+              backendApi.updateDashboard({
+                data:[...data,addWidget]
+              }, dashbordAlerts?.results?.[0]?.id || 0).then((res:any)=>{
               setData([...data,addWidget])
               setOpen(false)
+              }).catch((err:any)=>{
+                console.log(err);
+              }
+              )
             }}
           >
             {t("confirm")}
@@ -314,8 +371,7 @@ const alerts = [
 function RecentAlarms() {
   const dashboardData = useProvider<DashboardData | null>();
   const alarms = dashboardData?.upsAlarms ?? [];
-  const context = useProvider<any>();
-  const [data, setData] = useState(alarms);
+  const [, setData] = useState(alarms);
   return (
     <Chart title="UPS" className="flex h-full ">
       <div className="flex gap-3  h-[calc(100%-3rem)] p-3">
@@ -434,11 +490,31 @@ function WaterFlow() {
 function DashboardTab() {
   const { t } = useTranslation();
   const context = useProvider<AppContext>();
-  const { backendApi, tenantId, activeTab, loginState } = context;
+  const { backendApi, tenantId, activeTab, loginState, user } = context;
   const [data, setData] = useState<DashboardData | {}>({});
   const [state, setState] = useState<"idle" | "loading" | "error">("loading");
   const [where, setWhere] = useState<any>({});
   const [open, setOpen] = useState(false);
+  const [dashbordAlerts, setDashbordAlerts] = useState<any>({
+    data: [],
+  });
+
+
+  useEffect(() => {
+    backendApi.getDashbord({
+      where: {
+        tenantId: tenantId,
+        userId: user?.id,
+      },
+      pagination:{
+        page: 1,
+        perPage: 1000
+      }
+    }).then((res) => {
+      console.log(res);
+      setDashbordAlerts(res);
+    })
+  }, []);
   async function fetchDashboardData(firstTime = false) {
     try {
       if (firstTime) setState("loading");
@@ -479,6 +555,8 @@ function DashboardTab() {
         open,
         setOpen,
         setWhere,
+        dashbordAlerts,
+        backendApi,
       }}
     >
       <div className="container text-sm md:text-base items-center w-full min-h-full flex flex-col gap-6 overflow-x-hidden p-4 sm:p-4 md:p-6 ">

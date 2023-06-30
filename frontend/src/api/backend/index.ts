@@ -77,6 +77,19 @@ export default class BackendApi {
     return res.data;
   }
 
+  async getDashbord (params: Params): Promise<any> {
+    const res = await this.api.get("/dashbordalerts", {
+      params: convertParams(params),
+    });
+    return res.data;
+  }
+
+
+  async updateDashboard (res:any[],id:number ): Promise<any> {
+    const results = await this.api.patch(`/dashbordalerts/${id}`, res);
+    return results.data;
+  }
+  
   async alertsGenerate(data: {
     name: string;
     tenantId: number | undefined;
@@ -86,6 +99,20 @@ export default class BackendApi {
     };
   }): Promise<ManyResponse<any>> {
     const res = await this.api.post("/report/alertsGenerate", data);
+    return res.data;
+  }
+
+  async test(params:{
+    where: {
+     userId: number;
+      groupId: number;
+    };
+  }): Promise<any> {
+    const res = await this.api.get("/dashbordalerts/test/test1",{
+      params:{
+        where: JSON.stringify(params.where)
+      }
+    });
     return res.data;
   }
 

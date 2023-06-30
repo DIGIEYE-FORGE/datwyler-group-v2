@@ -1,15 +1,25 @@
-FROM node:latest
+FROM node:16.18.1 as build
 
 WORKDIR /usr/src/app
 
-RUN npm i -g --force yarn 
+
+RUN npm install -g --force yarn
+
+# RUN npm cache clean --force
+RUN yarn cache clean --force
+
+
 COPY package*.json ./
-RUN yarn 
-# RUN npm i -g prisma
+RUN yarn install
 COPY ./ ./
-RUN yarn generate:postgres 
-# RUN yarn build 
+RUN yarn generate:postgres
+
+COPY *.proto ./dest
+ARG HTTP_PORT=3000
+ARG GRPC_PORT=3001
+
 EXPOSE 3000
 
 CMD  yarn dev
+
 

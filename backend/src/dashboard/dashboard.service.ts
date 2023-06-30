@@ -46,7 +46,7 @@ export class DashboardService {
 
   async findAll(query: { where?: string }) {
     const where = query?.where ? JSON.parse(query.where) : {};
-    console.log(where);
+    console.log('find all', where);
     const totalDevices = await this.prisma.device.count({
       where: {
         ...where,
@@ -101,12 +101,14 @@ export class DashboardService {
       },
     });
     const upsAlarms = await this.prisma.alert.findMany({
+      take: 10000,
       where: {
         device: { name: 'UPS', ...where },
         acknowledgedBy: null,
       },
     });
     const coolingUnitAlarms = await this.prisma.alert.findMany({
+      take: 10000,
       where: {
         device: { name: 'COOLING UNIT', ...where },
         acknowledgedBy: null,
