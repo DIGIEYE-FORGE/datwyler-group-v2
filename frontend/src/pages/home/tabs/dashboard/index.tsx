@@ -129,6 +129,25 @@ function Metrics() {
 
   useEffect(()=>{
     if (activeTab !== 0 || loginState !== "idle") return;
+    const interval = setInterval(() => {
+      if(dashbordAlerts?.results?.[0]?.data){
+        setData(dashbordAlerts?.results?.[0]?.data)
+        backendApi.test({
+          where:{
+            userId:dashbordAlerts?.results?.[0]?.userId || 0,
+            tenantId:dashbordAlerts?.results?.[0]?.tenantId || 0,
+          },
+        }).then((res:any)=>{
+          setContAlert(res);
+        }).catch((err:any)=>{
+          console.log(err);
+        })
+      }
+      }, 8000);
+      return () => clearInterval(interval);
+  },[])
+  useEffect(()=>{
+    if (activeTab !== 0 || loginState !== "idle") return;
     if(dashbordAlerts?.results?.[0]?.data){
       setData(dashbordAlerts?.results?.[0]?.data)
       backendApi.test({
@@ -142,23 +161,7 @@ function Metrics() {
         console.log(err);
       })
     }
-    // const interval = setInterval(() => {
-    // if(dashbordAlerts?.results?.[0]?.data){
-    //   setData(dashbordAlerts?.results?.[0]?.data)
-    //   backendApi.test({
-    //     where:{
-    //       userId:dashbordAlerts?.results?.[0]?.userId || 0,
-    //       tenantId:dashbordAlerts?.results?.[0]?.tenantId || 0,
-    //     },
-    //   }).then((res:any)=>{
-    //     setContAlert(res);
-    //   }).catch((err:any)=>{
-    //     console.log(err);
-    //   })
-    // }
-    // }, 8000);
-    // return () => clearInterval(interval);
-  },[dashbordAlerts?.results?.[0]?.data,activeTab,loginState])
+  },[dashbordAlerts?.results?.[0]?.data])
   return (
     <div className="w-full flex gap-6 flex-wrap border min-h-[6rem] shadow-xl h-fit p-2">
       {data.length == 0 ? (
