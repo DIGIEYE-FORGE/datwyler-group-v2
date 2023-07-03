@@ -28,7 +28,7 @@ export class DashbordAlertsService {
           data: options?.where?.data || [],
         },
       });
-      return { totalResult: 1, results: [data] };
+      return { totalResult: 1, results: data };
     }
     const results = await this.prisma.dashbordAlert.findMany(options);
     return { totalResult, results };
