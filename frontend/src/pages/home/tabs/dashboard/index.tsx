@@ -102,7 +102,13 @@ function Metrics() {
   const { t } = useTranslation();
   const dashboardData = useProvider<DashboardData | null>()
   const context = useProvider<any>();
-  const [addWidget,setAddWidget] = useState<any>({});
+  const [addWidget,setAddWidget] = useState<any>({
+    title:"",
+    icon:0,
+    color:"",
+    alertType:"",
+
+  });
   const [iconActive,setIconActive] = useState<string>("");
   const {open,setOpen,activeTab, dashbordAlerts,loginState,backendApi} = context;
   const [contAlert,setContAlert] = useState<{
@@ -138,6 +144,7 @@ function Metrics() {
     if (activeTab !== 0 || loginState !== "idle") return;
     const interval = setInterval(() => {
       if(dashbordAlerts?.results?.[0]?.data){
+        // setData(dashbordAlerts?.results?.[0]?.data)
         backendApi.test({
           where:{
             userId:dashbordAlerts?.results?.[0]?.userId || 0,
@@ -267,6 +274,12 @@ function Metrics() {
                 data:[...data,addWidget]
               }, dashbordAlerts?.results?.[0]?.id || 0).then((res:any)=>{
               setData([...data,addWidget])
+              setAddWidget({
+                title:"",
+                icon:0,
+                color:"",
+                alertType:"",
+              });
               setOpen(false)
               }).catch((err:any)=>{
                 console.log(err);
