@@ -53,6 +53,8 @@ model DashbordAlert{
   @@map("dashbord_alerts")
   @@index([tenantId], name: "dashbord_alerts_tenant_id_index")
 }
+
+
 model Alert {
   id             Int       @id @default(autoincrement())
   deviceId       Int

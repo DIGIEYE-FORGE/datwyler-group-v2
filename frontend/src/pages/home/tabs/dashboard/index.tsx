@@ -24,6 +24,7 @@ import { da } from "date-fns/locale";
 import { color } from "framer-motion";
 import { use } from "i18next";
 import AlertsTab from "../alertes";
+import { toast } from "react-toastify";
 interface IconButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
   tooltip?: string;
 }
@@ -90,7 +91,7 @@ function Cards({title,icon, value, deleteWidget,color}:{
         </span>
         <span className={`w-[2.75rem] aspect-square flex-center  rounded-full`} style={{
         }}>
-         {iconsArray[icon]({className:`text-3xl`,style:{color:color}})}
+         {iconsArray?.[icon]({className:`text-3xl`,style:{color:color}})}
         </span>
       </div>
       </Card>
@@ -107,15 +108,21 @@ function Metrics() {
   const [contAlert,setContAlert] = useState<{
     [key: string]: string | number;
   }>({});
+
   const deleteWidget = (title:string)=>{
-    const newData = data.filter((item,i)=>{
+    let newData:any;
+    if (data.length ==1)
+    {
+      newData = []
+    }
+    else
+     newData = data.filter((item,i)=>{
       return item.title != title
     })
-        backendApi.updateDashboard({
-          data:[newData]
+    backendApi.updateDashboard({
+      data:[newData]
       }, dashbordAlerts?.results?.[0]?.id || 0).then((res:any)=>{
           setData(newData)
-          
               }).catch((err:any)=>{
                 console.log(err);
               }
@@ -131,7 +138,6 @@ function Metrics() {
     if (activeTab !== 0 || loginState !== "idle") return;
     const interval = setInterval(() => {
       if(dashbordAlerts?.results?.[0]?.data){
-        setData(dashbordAlerts?.results?.[0]?.data)
         backendApi.test({
           where:{
             userId:dashbordAlerts?.results?.[0]?.userId || 0,
@@ -145,7 +151,7 @@ function Metrics() {
       }
       }, 8000);
       return () => clearInterval(interval);
-  },[])
+  },[dashbordAlerts?.results?.[0]?.data])
   useEffect(()=>{
     if (activeTab !== 0 || loginState !== "idle") return;
     if(dashbordAlerts?.results?.[0]?.data){
@@ -175,7 +181,7 @@ function Metrics() {
       ):(
       <div className="h-full w-full flex gap-6  flex-wrap">
         <For
-          each={data}
+          each={data?.filter((item)=>item.title)}
           children={(item, index) => (
             <>
             <Cards title={item.title+""} value={
@@ -226,7 +232,7 @@ function Metrics() {
           }}/>
           <label htmlFor="">Icon</label>
           <div className="w-full h- full flex flex-wrap">
-            {iconsArray.map((Icon,index:number)=>(
+            {iconsArray?.map((Icon,index:number)=>(
               <div key={index} className="w-[2.75rem] aspect-square flex-center bg-primary/20 rounded-full m-1">
                 <IconButton className={`${iconActive=== Icon.name && 'bg-primary/70  hover:bg-primary/70'}`} onClick={()=>{
                   setAddWidget({
@@ -253,6 +259,10 @@ function Metrics() {
           <Button
             className="capitalize"
             onClick={() => {
+              if (!addWidget?.title || !addWidget?.alertType || !addWidget?.color || !addWidget?.icon) {
+                toast.error("Please fill all fields");
+                return;
+              }
               backendApi.updateDashboard({
                 data:[...data,addWidget]
               }, dashbordAlerts?.results?.[0]?.id || 0).then((res:any)=>{
