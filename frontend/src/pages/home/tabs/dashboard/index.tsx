@@ -177,7 +177,7 @@ function Metrics() {
   },[dashbordAlerts?.results?.[0]?.data])
   return (
     <div className="w-full flex gap-6 flex-wrap border min-h-[6rem] shadow-xl h-fit p-2">
-      {data.length == 0 ? (
+      {data?.filter((item)=>item.title).length === 0 ? (
         <div className="w-full h-[6rem] flex justify-center items-center">
           <IconButton onClick={()=>{
             setOpen(true)
